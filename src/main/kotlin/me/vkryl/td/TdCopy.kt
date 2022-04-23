@@ -288,6 +288,24 @@ fun StickerSet?.copyOf (): StickerSet? {
   }
 }
 
+fun ChatAdministratorRights?.copyOf (): ChatAdministratorRights? {
+  return this?.let {
+    ChatAdministratorRights(
+      this.canManageChat,
+      this.canChangeInfo,
+      this.canPostMessages,
+      this.canEditMessages,
+      this.canDeleteMessages,
+      this.canInviteUsers,
+      this.canRestrictMembers,
+      this.canPinMessages,
+      this.canPromoteMembers,
+      this.canManageVideoChats,
+      this.isAnonymous
+    )
+  }
+}
+
 fun ChatMemberStatus?.copyOf (): ChatMemberStatus? {
   return this?.let {
     when (constructor) {
@@ -299,17 +317,7 @@ fun ChatMemberStatus?.copyOf (): ChatMemberStatus? {
       ChatMemberStatusAdministrator.CONSTRUCTOR -> ChatMemberStatusAdministrator(
         (this as ChatMemberStatusAdministrator).customTitle,
         this.canBeEdited,
-        this.canManageChat,
-        this.canChangeInfo,
-        this.canPostMessages,
-        this.canEditMessages,
-        this.canDeleteMessages,
-        this.canInviteUsers,
-        this.canRestrictMembers,
-        this.canPinMessages,
-        this.canPromoteMembers,
-        this.canManageVideoChats,
-        this.isAnonymous
+        this.rights.copyOf()
       )
       ChatMemberStatusBanned.CONSTRUCTOR -> ChatMemberStatusBanned((this as ChatMemberStatusBanned).bannedUntilDate)
       ChatMemberStatusLeft.CONSTRUCTOR -> ChatMemberStatusLeft()

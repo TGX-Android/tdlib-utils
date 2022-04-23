@@ -37,6 +37,26 @@ fun ChatList?.equalsTo(b: ChatList?): Boolean {
   }
 }
 
+fun ChatAdministratorRights?.equalsTo(b: ChatAdministratorRights?): Boolean {
+  return when {
+    this === b -> true
+    this === null || b === null -> false
+    else -> {
+      this.canManageChat == b.canManageChat &&
+      this.canChangeInfo == b.canChangeInfo &&
+      this.canPostMessages == b.canPostMessages &&
+      this.canEditMessages == b.canEditMessages &&
+      this.canDeleteMessages == b.canDeleteMessages &&
+      this.canInviteUsers == b.canInviteUsers &&
+      this.canRestrictMembers == b.canRestrictMembers &&
+      this.canPinMessages == b.canPinMessages &&
+      this.canPromoteMembers == b.canPromoteMembers &&
+      this.canManageVideoChats == b.canManageVideoChats &&
+      this.isAnonymous == b.isAnonymous
+    }
+  }
+}
+
 fun ChatMemberStatus.equalsTo(b: ChatMemberStatus): Boolean {
   return when {
     this === b -> true
@@ -57,17 +77,7 @@ fun ChatMemberStatus.equalsTo(b: ChatMemberStatus): Boolean {
 
       ChatMemberStatusAdministrator.CONSTRUCTOR -> {
         require(this is ChatMemberStatusAdministrator && b is ChatMemberStatusAdministrator)
-        this.canChangeInfo == b.canChangeInfo &&
-        this.canPostMessages == b.canPostMessages &&
-        this.canEditMessages == b.canEditMessages &&
-        this.canDeleteMessages == b.canDeleteMessages &&
-        this.canInviteUsers == b.canInviteUsers &&
-        this.canRestrictMembers == b.canRestrictMembers &&
-        this.canPinMessages == b.canPinMessages &&
-        this.canPromoteMembers == b.canPromoteMembers &&
-        this.isAnonymous == b.isAnonymous &&
-        this.canManageChat == b.canManageChat &&
-        this.canManageVideoChats == b.canManageVideoChats &&
+        this.rights.equalsTo(b.rights)
         this.customTitle.equalsOrBothEmpty(b.customTitle)
         // ignored: this.canBeEdited == b.canBeEdited
       }

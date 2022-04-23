@@ -666,7 +666,7 @@ fun buildOutline(contours: Array<ClosedVectorPath>?, ratio: Float, out: Path? = 
 fun ChatMemberStatus?.isAnonymous (): Boolean {
   return when (this?.constructor) {
     ChatMemberStatusCreator.CONSTRUCTOR -> (this as ChatMemberStatusCreator).isAnonymous
-    ChatMemberStatusAdministrator.CONSTRUCTOR -> (this as ChatMemberStatusAdministrator).isAnonymous
+    ChatMemberStatusAdministrator.CONSTRUCTOR -> (this as ChatMemberStatusAdministrator).rights.isAnonymous
     else -> false
   }
 }
