@@ -24,3 +24,7 @@ dependencies {
     implementation(project(":tdlib"))
     implementation(project(":vkryl:core"))
 }
+
+android {
+  namespace = "me.vkryl.td"
+}
