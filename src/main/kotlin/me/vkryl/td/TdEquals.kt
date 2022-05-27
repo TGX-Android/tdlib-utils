@@ -77,16 +77,15 @@ fun ChatMemberStatus.equalsTo(b: ChatMemberStatus): Boolean {
 
       ChatMemberStatusAdministrator.CONSTRUCTOR -> {
         require(this is ChatMemberStatusAdministrator && b is ChatMemberStatusAdministrator)
-        this.rights.equalsTo(b.rights)
-        this.customTitle.equalsOrBothEmpty(b.customTitle)
+        this.rights.equalsTo(b.rights) && this.customTitle.equalsOrBothEmpty(b.customTitle)
         // ignored: this.canBeEdited == b.canBeEdited
       }
 
       ChatMemberStatusRestricted.CONSTRUCTOR -> {
         require(this is ChatMemberStatusRestricted && b is ChatMemberStatusRestricted)
         this.isMember == b.isMember &&
-          this.restrictedUntilDate == b.restrictedUntilDate &&
-          this.permissions.equalsTo(b.permissions)
+        this.restrictedUntilDate == b.restrictedUntilDate &&
+        this.permissions.equalsTo(b.permissions)
       }
 
       else -> error(this.toString())
