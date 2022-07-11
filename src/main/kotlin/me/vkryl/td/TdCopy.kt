@@ -77,6 +77,8 @@ fun User.copyTo (dst: User) {
   dst.haveAccess = this.haveAccess
   dst.type = this.type
   dst.languageCode = this.languageCode
+  dst.isPremium = this.isPremium
+  dst.addedToAttachmentMenu = this.addedToAttachmentMenu
 }
 
 fun Message.copyTo (dst: Message) {

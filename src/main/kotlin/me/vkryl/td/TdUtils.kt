@@ -22,6 +22,7 @@ package me.vkryl.td
 
 import android.graphics.Path
 import me.vkryl.core.UTF_8
+import me.vkryl.core.limit
 import me.vkryl.core.wrapHttps
 import org.drinkless.td.libcore.telegram.Client
 import org.drinkless.td.libcore.telegram.TdApi.*
@@ -37,6 +38,19 @@ fun LanguagePackInfo?.isInstalled (): Boolean {
 }
 
 fun File?.getId (): Int = this?.id ?: 0
+
+private fun stringOption (optionName: String): String? {
+  val result = Client.execute(GetOption(optionName))
+  return if (result is OptionValueString) {
+    result.value
+  } else {
+    null
+  }
+}
+
+fun tdlibVersion (): String? = stringOption("version")
+fun tdlibCommitHashFull (): String? = stringOption("commit_hash")
+fun tdlibCommitHash (): String? = tdlibCommitHashFull().limit(7)
 
 fun String?.findEntities (): Array<TextEntity>? {
   this?.isNotEmpty().let {

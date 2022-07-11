@@ -20,7 +20,6 @@
 package me.vkryl.td
 
 const val MAX_USERNAME_LENGTH = 32
-const val MAX_BIO_LENGTH = 70
 const val MAX_NAME_LENGTH = 64
 const val MAX_CHANNEL_DESCRIPTION_LENGTH = 255
 const val MAX_CHAT_TITLE_LENGTH = 128
