@@ -52,6 +52,16 @@ fun tdlibVersion (): String? = stringOption("version")
 fun tdlibCommitHashFull (): String? = stringOption("commit_hash")
 fun tdlibCommitHash (): String? = tdlibCommitHashFull().limit(7)
 
+fun String?.findEntities (predicate: (TextEntity) -> Boolean): Array<TextEntity>? {
+  this?.isNotEmpty().let {
+    val result = Client.execute(GetTextEntities(this))
+    if (result is TextEntities && result.entities.isNotEmpty()) {
+      return result.entities.filter(predicate).toTypedArray()
+    }
+  }
+  return null
+}
+
 fun String?.findEntities (): Array<TextEntity>? {
   this?.isNotEmpty().let {
     val result = Client.execute(GetTextEntities(this))
