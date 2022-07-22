@@ -94,6 +94,7 @@ fun Message.copyTo (dst: Message) {
   dst.canBeSaved = this.canBeSaved
   dst.canBeDeletedOnlyForSelf = this.canBeDeletedOnlyForSelf
   dst.canBeDeletedForAllUsers = this.canBeDeletedForAllUsers
+  dst.canGetAddedReactions = this.canGetAddedReactions;
   dst.canGetStatistics = this.canGetStatistics
   dst.canGetMessageThread = this.canGetMessageThread
   dst.canGetViewers = this.canGetViewers
