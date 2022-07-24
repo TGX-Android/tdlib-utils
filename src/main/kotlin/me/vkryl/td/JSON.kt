@@ -36,7 +36,22 @@ fun parse (json: String?): JsonValue? {
   }
 }
 
+@Suppress("UNCHECKED_CAST")
+fun toValue (value: Any?): JsonValue {
+  return when (value) {
+    is JsonValue -> value
+    null -> JsonValueNull()
+    is Number -> JsonValueNumber(value.toDouble())
+    is String -> JsonValueString(value)
+    is Boolean -> JsonValueBoolean(value)
+    is Array<*> -> JsonValueArray(value.map { toValue(it) }.toTypedArray())
+    is Map<*, *> -> toObject(value as Map<String, Any?>)
+    else -> error("Unsupported type: ${value.javaClass.name}")
+  }
+}
+
 fun toObject (members: List<JsonObjectMember>): JsonValueObject = JsonValueObject(members.toTypedArray())
+fun toObject (members: Map<String, Any?>): JsonValueObject = toObject(members.map { JsonObjectMember(it.key, toValue(it.value)) })
 
 fun asString (json: JsonValue?): String? = if (json is JsonValueString) json.value else null
 fun asInt (json: JsonValue?): Int {
