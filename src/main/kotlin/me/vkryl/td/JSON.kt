@@ -45,6 +45,7 @@ fun toValue (value: Any?): JsonValue {
     is String -> JsonValueString(value)
     is Boolean -> JsonValueBoolean(value)
     is Array<*> -> JsonValueArray(value.map { toValue(it) }.toTypedArray())
+    is ArrayList<*> -> JsonValueArray(value.map { toValue(it) }.toTypedArray())
     is Map<*, *> -> toObject(value as Map<String, Any?>)
     else -> error("Unsupported type: ${value.javaClass.name}")
   }
