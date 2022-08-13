@@ -94,7 +94,7 @@ fun Message.copyTo (dst: Message) {
   dst.canBeSaved = this.canBeSaved
   dst.canBeDeletedOnlyForSelf = this.canBeDeletedOnlyForSelf
   dst.canBeDeletedForAllUsers = this.canBeDeletedForAllUsers
-  dst.canGetAddedReactions = this.canGetAddedReactions;
+  dst.canGetAddedReactions = this.canGetAddedReactions
   dst.canGetStatistics = this.canGetStatistics
   dst.canGetMessageThread = this.canGetMessageThread
   dst.canGetViewers = this.canGetViewers
@@ -105,14 +105,15 @@ fun Message.copyTo (dst: Message) {
   dst.date = this.date
   dst.editDate = this.editDate
   dst.forwardInfo = this.forwardInfo
+  dst.interactionInfo = this.interactionInfo
+  dst.unreadReactions = this.unreadReactions
+  dst.replyInChatId = this.replyInChatId
   dst.replyToMessageId = this.replyToMessageId
+  dst.messageThreadId = this.messageThreadId
   dst.ttl = this.ttl
   dst.ttlExpiresIn = this.ttlExpiresIn
   dst.viaBotUserId = this.viaBotUserId
   dst.authorSignature = this.authorSignature
-  dst.interactionInfo = this.interactionInfo
-  dst.replyInChatId = this.replyInChatId
-  dst.messageThreadId = this.messageThreadId
   dst.mediaAlbumId = this.mediaAlbumId
   dst.restrictionReason = this.restrictionReason
   dst.content = this.content
