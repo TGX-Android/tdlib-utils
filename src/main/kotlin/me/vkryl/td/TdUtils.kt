@@ -28,6 +28,7 @@ import org.drinkless.td.libcore.telegram.Client
 import org.drinkless.td.libcore.telegram.TdApi.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.math.max
+import kotlin.math.min
 
 fun LanguagePackInfo?.isLocal (): Boolean = this?.id!!.startsWith("X")
 fun LanguagePackInfo?.isBeta (): Boolean = this?.isBeta ?: false
@@ -649,8 +650,38 @@ fun WebPageInstantView.findReference(name: String?): RichText? {
 }
 
 @JvmOverloads
-fun buildOutline(contours: Array<ClosedVectorPath>?, ratio: Float, out: Path? = null): Path? {
-  if (contours.isNullOrEmpty() || ratio <= 0f) return out
+fun buildOutline(sticker: Sticker?, targetWidth: Float, targetHeight: Float = targetWidth, out: Path? = null): Path? {
+  return if (sticker != null) {
+    buildOutline(sticker.outline, sticker.width, sticker.height, targetWidth, targetHeight, out)
+  } else {
+    out
+  }
+}
+
+@JvmOverloads
+fun buildOutline(contours: Array<ClosedVectorPath>?, sourceWidth: Int, sourceHeight: Int, targetWidth: Float, targetHeight: Float, out: Path? = null): Path? {
+  if (contours.isNullOrEmpty()) return out
+  val ratio = if (targetWidth == -1.0f && targetHeight == -1.0f) {
+    1.0f
+  } else {
+    min(targetWidth / sourceWidth.toFloat(), sourceHeight.toFloat())
+  }
+  return when {
+    ratio <= 0.0f -> out
+    ratio == 1.0f -> buildOutline(contours, ratio, out = out)
+    else -> {
+      val displayWidth = sourceWidth.toFloat() * ratio
+      val displayHeight = sourceHeight.toFloat() * ratio
+      val offsetX = targetWidth / 2.0f - displayWidth / 2.0f
+      val offsetY = targetHeight / 2.0f - displayHeight / 2.0f
+      buildOutline(contours, ratio, offsetX, offsetY, out)
+    }
+  }
+}
+
+@JvmOverloads
+fun buildOutline(contours: Array<ClosedVectorPath>?, ratio: Float, offsetX: Float = 0.0f, offsetY: Float = 0.0f, out: Path? = null): Path? {
+  if (contours.isNullOrEmpty() || ratio <= 0) return out
   var path = out
   for (contour in contours) {
     if (contour.commands.isNullOrEmpty()) {
@@ -665,19 +696,28 @@ fun buildOutline(contours: Array<ClosedVectorPath>?, ratio: Float, out: Path? = 
       VectorPathCommandCubicBezierCurve.CONSTRUCTOR -> (lastCommand as VectorPathCommandCubicBezierCurve).endPoint
       else -> TODO(lastCommand.toString())
     }
-    path.moveTo((endPoint.x * ratio).toFloat(), (endPoint.y * ratio).toFloat())
+    path.moveTo(
+      (endPoint.x * ratio).toFloat() + offsetX,
+      (endPoint.y * ratio).toFloat() + offsetY
+    )
     for (command in contour.commands) {
       when (command.constructor) {
         VectorPathCommandLine.CONSTRUCTOR -> {
           val line = command as VectorPathCommandLine
-          path.lineTo((line.endPoint.x * ratio).toFloat(), (line.endPoint.y * ratio).toFloat())
+          path.lineTo(
+            (line.endPoint.x * ratio).toFloat() + offsetX,
+            (line.endPoint.y * ratio).toFloat() + offsetY
+          )
         }
         VectorPathCommandCubicBezierCurve.CONSTRUCTOR -> {
           val curve = command as VectorPathCommandCubicBezierCurve
           path.cubicTo(
-            (curve.startControlPoint.x * ratio).toFloat(), (curve.startControlPoint.y * ratio).toFloat(),
-            (curve.endControlPoint.x * ratio).toFloat(), (curve.endControlPoint.y * ratio).toFloat(),
-            (curve.endPoint.x * ratio).toFloat(), (curve.endPoint.y * ratio).toFloat()
+            (curve.startControlPoint.x * ratio).toFloat() + offsetX,
+            (curve.startControlPoint.y * ratio).toFloat() + offsetY,
+            (curve.endControlPoint.x * ratio).toFloat() + offsetX,
+            (curve.endControlPoint.y * ratio).toFloat() + offsetY,
+            (curve.endPoint.x * ratio).toFloat() + offsetX,
+            (curve.endPoint.y * ratio).toFloat() + offsetY
           )
         }
         else -> TODO(command.toString())
