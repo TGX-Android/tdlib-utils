@@ -664,7 +664,7 @@ fun buildOutline(contours: Array<ClosedVectorPath>?, sourceWidth: Int, sourceHei
   val ratio = if (targetWidth == -1.0f && targetHeight == -1.0f) {
     1.0f
   } else {
-    min(targetWidth / sourceWidth.toFloat(), sourceHeight.toFloat())
+    min(targetWidth / sourceWidth.toFloat(), targetHeight / sourceHeight.toFloat())
   }
   return when {
     ratio <= 0.0f -> out
