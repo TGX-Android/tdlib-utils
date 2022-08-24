@@ -697,10 +697,28 @@ fun Sticker?.equalsTo(b: Sticker?): Boolean {
       this.height == b.height &&
       this.type.equalsTo(b.type) &&
       this.setId == b.setId &&
+      this.isPremium == b.isPremium &&
+      this.customEmojiId == b.customEmojiId &&
+      this.format.equalsTo(b.format) &&
       this.emoji.equalsOrBothEmpty(b.emoji) &&
       this.sticker.equalsTo(b.sticker) &&
+      this.premiumAnimation.equalsTo(b.premiumAnimation) &&
+      this.maskPosition.equalsTo(b.maskPosition) &&
       this.outline.equalsTo(b.outline) &&
       this.thumbnail.equalsTo(b.thumbnail)
+    }
+  }
+}
+
+fun StickerFormat?.equalsTo(b: StickerFormat?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null || this.constructor != b.constructor -> false
+    else -> when (this.constructor) {
+      StickerFormatWebp.CONSTRUCTOR,
+      StickerFormatTgs.CONSTRUCTOR,
+      StickerFormatWebm.CONSTRUCTOR -> true
+      else -> TODO(this.toString())
     }
   }
 }
@@ -710,11 +728,9 @@ fun StickerType?.equalsTo(b: StickerType?): Boolean {
     this === b -> true
     this == null || b == null || this.constructor != b.constructor -> false
     else -> when (this.constructor) {
-      StickerTypeStatic.CONSTRUCTOR, StickerTypeAnimated.CONSTRUCTOR, StickerTypeVideo.CONSTRUCTOR -> true
-      StickerTypeMask.CONSTRUCTOR -> {
-        require(this is StickerTypeMask && b is StickerTypeMask)
-        this.maskPosition.equalsTo(b.maskPosition)
-      }
+      StickerTypeRegular.CONSTRUCTOR,
+      StickerTypeMask.CONSTRUCTOR,
+      StickerTypeCustomEmoji.CONSTRUCTOR -> true
       else -> TODO(this.toString())
     }
   }

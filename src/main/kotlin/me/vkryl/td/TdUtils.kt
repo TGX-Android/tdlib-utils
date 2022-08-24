@@ -649,6 +649,24 @@ fun WebPageInstantView.findReference(name: String?): RichText? {
   return null
 }
 
+fun StickerSet.toStickerSetInfo (): StickerSetInfo {
+  return StickerSetInfo(
+    this.id,
+    this.title,
+    this.name,
+    this.thumbnail,
+    this.thumbnailOutline,
+    this.isInstalled,
+    this.isArchived,
+    this.isOfficial,
+    this.stickerFormat,
+    this.stickerType,
+    this.isViewed,
+    this.stickers.size,
+    this.stickers
+  )
+}
+
 @JvmOverloads
 fun buildOutline(sticker: Sticker?, targetWidth: Float, targetHeight: Float = targetWidth, out: Path? = null): Path? {
   return if (sticker != null) {
@@ -735,11 +753,12 @@ fun ChatMemberStatus?.isAnonymous (): Boolean {
   }
 }
 
-fun StickerType?.isAnimated (): Boolean {
+fun StickerFormat?.isAnimated (): Boolean {
   return when (this?.constructor) {
-    StickerTypeAnimated.CONSTRUCTOR,
-    StickerTypeVideo.CONSTRUCTOR -> true
-    else -> false
+    StickerFormatTgs.CONSTRUCTOR,
+    StickerFormatWebm.CONSTRUCTOR -> true
+    StickerFormatWebp.CONSTRUCTOR -> false
+    else -> TODO(this.toString())
   }
 }
 
