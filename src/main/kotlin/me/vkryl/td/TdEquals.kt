@@ -203,6 +203,10 @@ fun TextEntityType?.equalsTo(b: TextEntityType?): Boolean {
         require(this is TextEntityTypeMediaTimestamp && b is TextEntityTypeMediaTimestamp)
         this.mediaTimestamp == b.mediaTimestamp
       }
+      TextEntityTypeCustomEmoji.CONSTRUCTOR -> {
+        require(this is TextEntityTypeCustomEmoji && b is TextEntityTypeCustomEmoji)
+        this.customEmojiId == b.customEmojiId
+      }
       TextEntityTypeBankCardNumber.CONSTRUCTOR,
       TextEntityTypeBold.CONSTRUCTOR,
       TextEntityTypeSpoiler.CONSTRUCTOR,
