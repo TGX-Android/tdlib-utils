@@ -373,7 +373,17 @@ fun Message?.getSenderId (): Long {
 fun MessageContent?.textOrCaption (): FormattedText? {
   return when (this?.constructor) {
     MessageText.CONSTRUCTOR -> (this as MessageText).text
-    MessageAnimatedEmoji.CONSTRUCTOR -> FormattedText((this as MessageAnimatedEmoji).emoji, arrayOf())
+    MessageAnimatedEmoji.CONSTRUCTOR -> {
+      require(this is MessageAnimatedEmoji)
+      val customEmojiId = this.animatedEmoji.sticker?.customEmojiId ?: 0L
+      if (customEmojiId != 0L) {
+        FormattedText(this.emoji, arrayOf(
+          TextEntity(0, this.emoji.length, TextEntityTypeCustomEmoji(customEmojiId))
+        ))
+      } else {
+        FormattedText(this.emoji, arrayOf())
+      }
+    }
     MessagePhoto.CONSTRUCTOR -> (this as MessagePhoto).caption
     MessageVideo.CONSTRUCTOR -> (this as MessageVideo).caption
     MessageDocument.CONSTRUCTOR -> (this as MessageDocument).caption
