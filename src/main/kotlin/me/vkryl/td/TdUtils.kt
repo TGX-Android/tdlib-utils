@@ -858,3 +858,7 @@ fun InlineKeyboardButtonTypeCallbackWithPassword.isBotOwnershipTransfer (): Bool
 } catch (e: IllegalArgumentException) {
   false
 }
+
+fun requiresPremiumSubscription (setting: UserPrivacySetting): Boolean {
+  return setting.constructor == UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages.CONSTRUCTOR
+}

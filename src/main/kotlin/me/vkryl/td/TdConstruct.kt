@@ -73,3 +73,18 @@ fun constructChatAction (@ChatAction.Constructors constructor: Int): ChatAction?
     else -> null
   }
 }
+
+fun constructUserPrivacySetting (@UserPrivacySetting.Constructors constructor: Int): UserPrivacySetting {
+  return when (constructor) {
+    UserPrivacySettingAllowCalls.CONSTRUCTOR -> UserPrivacySettingAllowCalls()
+    UserPrivacySettingAllowChatInvites.CONSTRUCTOR -> UserPrivacySettingAllowChatInvites()
+    UserPrivacySettingAllowFindingByPhoneNumber.CONSTRUCTOR -> UserPrivacySettingAllowFindingByPhoneNumber()
+    UserPrivacySettingAllowPeerToPeerCalls.CONSTRUCTOR -> UserPrivacySettingAllowPeerToPeerCalls()
+    UserPrivacySettingShowLinkInForwardedMessages.CONSTRUCTOR -> UserPrivacySettingShowLinkInForwardedMessages()
+    UserPrivacySettingShowPhoneNumber.CONSTRUCTOR -> UserPrivacySettingShowPhoneNumber()
+    UserPrivacySettingShowProfilePhoto.CONSTRUCTOR -> UserPrivacySettingShowProfilePhoto()
+    UserPrivacySettingShowStatus.CONSTRUCTOR -> UserPrivacySettingShowStatus()
+    UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages.CONSTRUCTOR -> UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages()
+    else -> error(constructor.toString())
+  }
+}
