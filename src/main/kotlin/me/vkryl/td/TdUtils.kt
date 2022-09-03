@@ -184,6 +184,37 @@ fun FormattedText?.trim (): FormattedText? {
   }
 }
 
+@JvmOverloads fun FormattedText.ellipsize(maxCodePointCount: Int, ellipsis: String = "…"): FormattedText {
+  var end = 0
+  var codePointCount = 0
+  while (end < this.text.length) {
+    val codePoint = this.text.codePointAt(end)
+    end += Character.charCount(codePoint)
+    codePointCount++
+    if (codePointCount == maxCodePointCount) {
+      // Reached the limit.
+      if (!this.entities.isNullOrEmpty()) {
+        for (entity in this.entities) {
+          if (entity.offset >= end)
+            break
+          if (entity.offset + entity.length < end)
+            continue
+          if (entity.offset < end && entity.offset + entity.length > end &&
+              entity.type.constructor == TextEntityTypeCustomEmoji.CONSTRUCTOR) {
+            // Make sure TextEntityTypeCustomEmoji doesn't get ellipsized in the middle
+            end = entity.offset
+            break
+          }
+        }
+      }
+      val result = this.substring(0, end)
+      result.text += ellipsis
+      return result
+    }
+  }
+  return this
+}
+
 @JvmOverloads fun FormattedText.substring(start: Int, end: Int = this.text.length): FormattedText {
   val entities = if (!this.entities.isNullOrEmpty()) {
     var list : MutableList<TextEntity>? = null
