@@ -217,6 +217,7 @@ fun FormattedText?.trim (): FormattedText? {
 
 @JvmOverloads fun FormattedText.substring(start: Int, end: Int = this.text.length): FormattedText {
   val entities = if (!this.entities.isNullOrEmpty()) {
+    val resultLength = end - start
     var list : MutableList<TextEntity>? = null
     for (entity in entities) {
       if (entity.offset + entity.length <= start || entity.offset >= end) {
@@ -231,8 +232,8 @@ fun FormattedText?.trim (): FormattedText? {
         length += offset
         offset = 0
       }
-      if (offset + length > this.text.length) {
-        length -= (offset + length) - this.text.length
+      if (offset + length > resultLength) {
+        length -= (offset + length) - resultLength
       }
       list.add(TextEntity(offset, length, entity.type))
     }
