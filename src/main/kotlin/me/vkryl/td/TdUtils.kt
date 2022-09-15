@@ -169,18 +169,7 @@ fun FormattedText?.trim (): FormattedText? {
   return if (startIndex == 0 && endIndex == this.text.length) {
     this
   } else {
-    FormattedText(this.text.substring(startIndex, endIndex), if (this.entities.isNullOrEmpty()) {
-      this.entities
-    } else {
-      Array(this.entities.size) { index ->
-        val entity = this.entities[index]
-        if (startIndex == 0 && entity.offset + entity.length <= endIndex) {
-          entity
-        } else {
-          TextEntity(entity.offset - startIndex, entity.length - max(0, entity.offset + entity.length - endIndex), entity.type)
-        }
-      }
-    })
+    this.substring(startIndex, endIndex)
   }
 }
 
