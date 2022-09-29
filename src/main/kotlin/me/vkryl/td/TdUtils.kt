@@ -883,3 +883,103 @@ fun InlineKeyboardButtonTypeCallbackWithPassword.isBotOwnershipTransfer (): Bool
 fun requiresPremiumSubscription (setting: UserPrivacySetting): Boolean {
   return setting.constructor == UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages.CONSTRUCTOR
 }
+
+fun PushMessageContent.getText (): String? {
+  return when (this.constructor) {
+    PushMessageContentText.CONSTRUCTOR ->
+      (this as PushMessageContentText).text
+    PushMessageContentAnimation.CONSTRUCTOR ->
+      (this as PushMessageContentAnimation).caption
+    PushMessageContentPhoto.CONSTRUCTOR ->
+      (this as PushMessageContentPhoto).caption
+    PushMessageContentVideo.CONSTRUCTOR ->
+      (this as PushMessageContentVideo).caption
+    // server doesn't send caption for these types, even though they have it
+    PushMessageContentVoiceNote.CONSTRUCTOR,
+    PushMessageContentAudio.CONSTRUCTOR,
+    PushMessageContentDocument.CONSTRUCTOR ->
+      null
+    // types below do not have text or caption
+    PushMessageContentHidden.CONSTRUCTOR,
+    PushMessageContentContact.CONSTRUCTOR,
+    PushMessageContentContactRegistered.CONSTRUCTOR,
+    PushMessageContentGame.CONSTRUCTOR,
+    PushMessageContentGameScore.CONSTRUCTOR,
+    PushMessageContentInvoice.CONSTRUCTOR,
+    PushMessageContentLocation.CONSTRUCTOR,
+    PushMessageContentPoll.CONSTRUCTOR,
+    PushMessageContentScreenshotTaken.CONSTRUCTOR,
+    PushMessageContentSticker.CONSTRUCTOR,
+    PushMessageContentVideoNote.CONSTRUCTOR,
+    PushMessageContentBasicGroupChatCreate.CONSTRUCTOR,
+    PushMessageContentChatAddMembers.CONSTRUCTOR,
+    PushMessageContentChatChangePhoto.CONSTRUCTOR,
+    PushMessageContentChatChangeTitle.CONSTRUCTOR,
+    PushMessageContentChatSetTheme.CONSTRUCTOR,
+    PushMessageContentChatDeleteMember.CONSTRUCTOR,
+    PushMessageContentChatJoinByLink.CONSTRUCTOR,
+    PushMessageContentChatJoinByRequest.CONSTRUCTOR,
+    PushMessageContentRecurringPayment.CONSTRUCTOR,
+    PushMessageContentMessageForwards.CONSTRUCTOR,
+    PushMessageContentMediaAlbum.CONSTRUCTOR ->
+      null
+    // unsupported
+    else ->
+      error(this.toString())
+  }
+}
+
+fun PushMessageContent.isPinned (): Boolean {
+  return when (this.constructor) {
+    PushMessageContentHidden.CONSTRUCTOR ->
+      (this as PushMessageContentHidden).isPinned
+    PushMessageContentAnimation.CONSTRUCTOR ->
+      (this as PushMessageContentAnimation).isPinned
+    PushMessageContentAudio.CONSTRUCTOR ->
+      (this as PushMessageContentAudio).isPinned
+    PushMessageContentContact.CONSTRUCTOR ->
+      (this as PushMessageContentContact).isPinned
+    PushMessageContentDocument.CONSTRUCTOR ->
+      (this as PushMessageContentDocument).isPinned
+    PushMessageContentGame.CONSTRUCTOR ->
+      (this as PushMessageContentGame).isPinned
+    PushMessageContentGameScore.CONSTRUCTOR ->
+      (this as PushMessageContentGameScore).isPinned
+    PushMessageContentInvoice.CONSTRUCTOR ->
+      (this as PushMessageContentInvoice).isPinned
+    PushMessageContentLocation.CONSTRUCTOR ->
+      (this as PushMessageContentLocation).isPinned
+    PushMessageContentPhoto.CONSTRUCTOR ->
+      (this as PushMessageContentPhoto).isPinned
+    PushMessageContentPoll.CONSTRUCTOR ->
+      (this as PushMessageContentPoll).isPinned
+    PushMessageContentSticker.CONSTRUCTOR ->
+      (this as PushMessageContentSticker).isPinned
+    PushMessageContentText.CONSTRUCTOR ->
+      (this as PushMessageContentText).isPinned
+    PushMessageContentVideo.CONSTRUCTOR ->
+      (this as PushMessageContentVideo).isPinned
+    PushMessageContentVideoNote.CONSTRUCTOR ->
+      (this as PushMessageContentVideoNote).isPinned
+    PushMessageContentVoiceNote.CONSTRUCTOR ->
+      (this as PushMessageContentVoiceNote).isPinned
+    // do not have `isPinned` field:
+    PushMessageContentContactRegistered.CONSTRUCTOR,
+    PushMessageContentScreenshotTaken.CONSTRUCTOR,
+    PushMessageContentBasicGroupChatCreate.CONSTRUCTOR,
+    PushMessageContentChatAddMembers.CONSTRUCTOR,
+    PushMessageContentChatChangePhoto.CONSTRUCTOR,
+    PushMessageContentChatChangeTitle.CONSTRUCTOR,
+    PushMessageContentChatSetTheme.CONSTRUCTOR,
+    PushMessageContentChatDeleteMember.CONSTRUCTOR,
+    PushMessageContentChatJoinByLink.CONSTRUCTOR,
+    PushMessageContentChatJoinByRequest.CONSTRUCTOR,
+    PushMessageContentRecurringPayment.CONSTRUCTOR,
+    PushMessageContentMessageForwards.CONSTRUCTOR,
+    PushMessageContentMediaAlbum.CONSTRUCTOR ->
+      false
+    // unsupported
+    else ->
+      error(this.toString())
+  }
+}
