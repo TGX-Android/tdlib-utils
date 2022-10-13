@@ -429,6 +429,10 @@ fun InlineKeyboardButtonType.equalsTo(b: InlineKeyboardButtonType): Boolean {
         require(this is InlineKeyboardButtonTypeSwitchInline && b is InlineKeyboardButtonTypeSwitchInline)
         this.inCurrentChat == b.inCurrentChat && this.query == b.query
       }
+      InlineKeyboardButtonTypeUser.CONSTRUCTOR -> {
+        require(this is InlineKeyboardButtonTypeUser && b is InlineKeyboardButtonTypeUser)
+        this.userId == b.userId
+      }
       InlineKeyboardButtonTypeCallbackGame.CONSTRUCTOR,
       InlineKeyboardButtonTypeBuy.CONSTRUCTOR -> true
       else -> error(this.toString())
