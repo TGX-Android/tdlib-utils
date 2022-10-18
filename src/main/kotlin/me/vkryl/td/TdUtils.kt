@@ -173,7 +173,8 @@ fun FormattedText?.trim (): FormattedText? {
   }
 }
 
-@JvmOverloads fun FormattedText.ellipsize(maxCodePointCount: Int, ellipsis: String = "…"): FormattedText {
+@JvmOverloads
+fun FormattedText.ellipsize(maxCodePointCount: Int, ellipsis: String = "…"): FormattedText {
   var end = 0
   var codePointCount = 0
   while (end < this.text.length) {
@@ -204,7 +205,8 @@ fun FormattedText?.trim (): FormattedText? {
   return this
 }
 
-@JvmOverloads fun FormattedText.substring(start: Int, end: Int = this.text.length): FormattedText {
+@JvmOverloads
+fun FormattedText.substring(start: Int, end: Int = this.text.length): FormattedText {
   val entities = if (!this.entities.isNullOrEmpty()) {
     val resultLength = end - start
     var list : MutableList<TextEntity>? = null
@@ -983,3 +985,85 @@ fun PushMessageContent.isPinned (): Boolean {
       error(this.toString())
   }
 }
+
+fun AvailableReactions.isAvailable (reactionType: ReactionType): Boolean {
+  if (isEmpty())
+    return false
+  for (availableReactionType in topReactions) {
+    if (reactionType.equalsTo(availableReactionType.type))
+      return true
+  }
+  for (availableReactionType in recentReactions) {
+    if (reactionType.equalsTo(availableReactionType.type))
+      return true
+  }
+  for (availableReactionType in popularReactions) {
+    if (reactionType.equalsTo(availableReactionType.type))
+      return true
+  }
+  return false
+}
+
+@JvmOverloads
+fun newSendOptions (disableNotification: Boolean = false,
+                    fromBackground: Boolean = false,
+                    protectContent: Boolean = false,
+                    updateOrderOfInstalledStickerSets: Boolean = false,
+                    schedulingState: MessageSchedulingState? = null): MessageSendOptions {
+  return MessageSendOptions(
+    disableNotification,
+    fromBackground,
+    protectContent,
+    updateOrderOfInstalledStickerSets,
+    schedulingState
+  )
+}
+
+@JvmOverloads
+fun newSendOptions (options: MessageSendOptions?,
+                    forceDisableNotifications: Boolean = false,
+                    forceUpdateOrderOfInstalledStickerSets: Boolean = false,
+                    updatedSchedulingState: MessageSchedulingState? = null): MessageSendOptions {
+  return if (options != null) {
+    newSendOptions(
+      forceDisableNotifications || options.disableNotification,
+      options.fromBackground,
+      options.protectContent,
+      forceUpdateOrderOfInstalledStickerSets || options.updateOrderOfInstalledStickerSets,
+      updatedSchedulingState ?: options.schedulingState
+    );
+  } else {
+    newSendOptions(
+      forceDisableNotifications,
+      fromBackground = false,
+      protectContent = false,
+      forceUpdateOrderOfInstalledStickerSets,
+      schedulingState = null
+    )
+  }
+}
+
+fun newSendOptions (options: MessageSendOptions?,
+                    updatedSchedulingState: MessageSchedulingState?): MessageSendOptions =
+  newSendOptions(
+    options,
+    forceDisableNotifications = false,
+    forceUpdateOrderOfInstalledStickerSets = false,
+    updatedSchedulingState
+  )
+
+fun newSendOptions (forceDisableNotification: Boolean, schedulingState: MessageSchedulingState?): MessageSendOptions =
+  newSendOptions(
+    options = null,
+    forceDisableNotifications = forceDisableNotification,
+    forceUpdateOrderOfInstalledStickerSets = false,
+    updatedSchedulingState = schedulingState
+  )
+
+fun newSendOptions (schedulingState: MessageSchedulingState): MessageSendOptions =
+  newSendOptions(
+    options = null,
+    forceDisableNotifications = false,
+    forceUpdateOrderOfInstalledStickerSets = false,
+    updatedSchedulingState = schedulingState
+  )

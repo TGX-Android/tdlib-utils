@@ -947,3 +947,23 @@ fun BackgroundFill?.equalsTo(b: BackgroundFill?): Boolean {
     }
   }
 }
+
+fun ReactionType?.equalsTo(b: ReactionType?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null || this.constructor != b.constructor -> false
+    else -> {
+      when (this.constructor) {
+        ReactionTypeEmoji.CONSTRUCTOR -> {
+          require(this is ReactionTypeEmoji && b is ReactionTypeEmoji)
+          this.emoji == b.emoji
+        }
+        ReactionTypeCustomEmoji.CONSTRUCTOR -> {
+          require(this is ReactionTypeCustomEmoji && b is ReactionTypeCustomEmoji)
+          this.customEmojiId == b.customEmojiId
+        }
+        else -> error(this.toString())
+      }
+    }
+  }
+}

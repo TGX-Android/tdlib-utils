@@ -99,6 +99,7 @@ fun Message.copyTo (dst: Message) {
   dst.canGetMessageThread = this.canGetMessageThread
   dst.canGetViewers = this.canGetViewers
   dst.canGetMediaTimestampLinks = this.canGetMediaTimestampLinks
+  dst.canReportReactions = this.canReportReactions;
   dst.hasTimestampedMedia = this.hasTimestampedMedia
   dst.isChannelPost = this.isChannelPost
   dst.containsUnreadMention = this.containsUnreadMention
@@ -178,6 +179,7 @@ fun Message?.copyOf (): Message? {
       this.canGetMessageThread,
       this.canGetViewers,
       this.canGetMediaTimestampLinks,
+      this.canReportReactions,
       this.hasTimestampedMedia,
       this.isChannelPost,
       this.containsUnreadMention,

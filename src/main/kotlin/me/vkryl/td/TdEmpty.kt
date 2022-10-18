@@ -82,3 +82,7 @@ fun StatisticalValue?.isEmpty (): Boolean {
   }
   return (this == null) || (this.value == this.previousValue && this.value == 0.0)
 }
+
+fun AvailableReactions?.isEmpty (): Boolean {
+  return this == null || (this.topReactions.isEmpty() && this.popularReactions.isEmpty() && this.recentReactions.isEmpty())
+}
