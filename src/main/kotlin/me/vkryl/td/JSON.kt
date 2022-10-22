@@ -81,3 +81,4 @@ fun stringify (obj: JsonValue): String? {
   }
 }
 fun stringify (members: List<JsonObjectMember>): String? = stringify(toObject(members))
+fun stringify (map: Map<String, Any?>): String? = stringify(toObject(map))

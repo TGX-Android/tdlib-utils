@@ -967,3 +967,55 @@ fun ReactionType?.equalsTo(b: ReactionType?): Boolean {
     }
   }
 }
+
+fun DeviceToken?.equalsTo(b: DeviceToken?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null || this.constructor != b.constructor -> false
+    else -> {
+      when (this.constructor) {
+        DeviceTokenFirebaseCloudMessaging.CONSTRUCTOR -> {
+          require(this is DeviceTokenFirebaseCloudMessaging && b is DeviceTokenFirebaseCloudMessaging)
+          this.token == b.token && this.encrypt == b.encrypt
+        }
+        DeviceTokenApplePush.CONSTRUCTOR -> {
+          require(this is DeviceTokenApplePush && b is DeviceTokenApplePush)
+          this.deviceToken == b.deviceToken && this.isAppSandbox == b.isAppSandbox
+        }
+        DeviceTokenApplePushVoIP.CONSTRUCTOR -> {
+          require(this is DeviceTokenApplePushVoIP && b is DeviceTokenApplePushVoIP)
+          this.deviceToken == b.deviceToken && this.isAppSandbox == b.isAppSandbox && this.encrypt == b.encrypt
+        }
+        DeviceTokenWindowsPush.CONSTRUCTOR -> {
+          require(this is DeviceTokenWindowsPush && b is DeviceTokenWindowsPush)
+          this.accessToken == b.accessToken
+        }
+        DeviceTokenMicrosoftPushVoIP.CONSTRUCTOR -> {
+          require(this is DeviceTokenMicrosoftPushVoIP && b is DeviceTokenMicrosoftPushVoIP)
+          this.channelUri == b.channelUri
+        }
+        DeviceTokenWebPush.CONSTRUCTOR -> {
+          require(this is DeviceTokenWebPush && b is DeviceTokenWebPush)
+          this.endpoint == b.endpoint && this.authBase64url == b.authBase64url && this.p256dhBase64url == b.p256dhBase64url
+        }
+        DeviceTokenSimplePush.CONSTRUCTOR -> {
+          require(this is DeviceTokenSimplePush && b is DeviceTokenSimplePush)
+          this.endpoint == b.endpoint
+        }
+        DeviceTokenUbuntuPush.CONSTRUCTOR -> {
+          require(this is DeviceTokenUbuntuPush && b is DeviceTokenUbuntuPush)
+          this.token == b.token
+        }
+        DeviceTokenBlackBerryPush.CONSTRUCTOR -> {
+          require(this is DeviceTokenBlackBerryPush && b is DeviceTokenBlackBerryPush)
+          this.token == b.token
+        }
+        DeviceTokenTizenPush.CONSTRUCTOR -> {
+          require(this is DeviceTokenTizenPush && b is DeviceTokenTizenPush)
+          this.regId == b.regId
+        }
+        else -> error(this.toString())
+      }
+    }
+  }
+}
