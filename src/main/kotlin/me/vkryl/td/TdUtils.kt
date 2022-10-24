@@ -1026,19 +1026,19 @@ fun newSendOptions (options: MessageSendOptions?,
                     updatedSchedulingState: MessageSchedulingState? = null): MessageSendOptions {
   return if (options != null) {
     newSendOptions(
-      forceDisableNotifications || options.disableNotification,
-      options.fromBackground,
-      options.protectContent,
-      forceUpdateOrderOfInstalledStickerSets || options.updateOrderOfInstalledStickerSets,
-      updatedSchedulingState ?: options.schedulingState
+      disableNotification = forceDisableNotifications || options.disableNotification,
+      fromBackground = options.fromBackground,
+      protectContent = options.protectContent,
+      updateOrderOfInstalledStickerSets = forceUpdateOrderOfInstalledStickerSets || options.updateOrderOfInstalledStickerSets,
+      schedulingState = updatedSchedulingState ?: options.schedulingState
     );
   } else {
     newSendOptions(
-      forceDisableNotifications,
+      disableNotification = forceDisableNotifications,
       fromBackground = false,
       protectContent = false,
-      forceUpdateOrderOfInstalledStickerSets,
-      schedulingState = null
+      updateOrderOfInstalledStickerSets = forceUpdateOrderOfInstalledStickerSets,
+      schedulingState = updatedSchedulingState
     )
   }
 }
@@ -1046,10 +1046,10 @@ fun newSendOptions (options: MessageSendOptions?,
 fun newSendOptions (options: MessageSendOptions?,
                     updatedSchedulingState: MessageSchedulingState?): MessageSendOptions =
   newSendOptions(
-    options,
+    options = options,
     forceDisableNotifications = false,
     forceUpdateOrderOfInstalledStickerSets = false,
-    updatedSchedulingState
+    updatedSchedulingState = updatedSchedulingState
   )
 
 fun newSendOptions (forceDisableNotification: Boolean, schedulingState: MessageSchedulingState?): MessageSendOptions =
