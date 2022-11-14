@@ -69,7 +69,7 @@ class MessageId @JvmOverloads constructor (val chatId: Long, val messageId: Long
 
   companion object {
     const val MAX_VALID_ID = (Int.MAX_VALUE shl 20).toLong()
-    const val MIN_VALID_ID = 9L
+    const val MIN_VALID_ID = 1L
 
     @JvmStatic fun fromServerMessageId (serverMessageId: Long): Long = serverMessageId shl 20
     @JvmStatic fun toServerMessageId (tdlibMessageId: Long): Long = if (tdlibMessageId % (1 shl 20) == 0L) tdlibMessageId shr 20 else 0
