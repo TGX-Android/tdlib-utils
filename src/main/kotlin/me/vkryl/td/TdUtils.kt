@@ -796,10 +796,7 @@ fun StickerFormat?.isAnimated (): Boolean {
 }
 
 fun MessageReplyInfo?.hasUnread (): Boolean {
-  if (this == null)
-    return false
-  val messageId = max(this.lastReadInboxMessageId, this.lastReadOutboxMessageId)
-  return messageId != 0L && this.lastMessageId > messageId
+  return this != null && this.lastMessageId > this.lastReadInboxMessageId
 }
 
 fun String.substring(entity: TextEntity?): String? {
