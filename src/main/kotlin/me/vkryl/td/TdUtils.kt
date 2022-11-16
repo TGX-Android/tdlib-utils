@@ -795,8 +795,8 @@ fun StickerFormat?.isAnimated (): Boolean {
   }
 }
 
-fun MessageReplyInfo?.hasUnread (): Boolean {
-  return this != null && this.lastMessageId > this.lastReadInboxMessageId
+fun MessageReplyInfo?.hasUnread (lastGlobalReadInboxMessageId: Long = 0): Boolean {
+  return this != null && this.lastMessageId > max(lastGlobalReadInboxMessageId, this.lastReadInboxMessageId)
 }
 
 fun String.substring(entity: TextEntity?): String? {
