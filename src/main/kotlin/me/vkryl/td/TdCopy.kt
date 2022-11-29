@@ -23,17 +23,41 @@ package me.vkryl.td
 import org.drinkless.td.libcore.telegram.TdApi.*
 
 fun ChatPermissions.copyTo (dst: ChatPermissions) {
+  if (false) {
+    // Cause compilation error when any field in TdApi changes
+    ChatPermissions(
+      this.canSendMessages,
+      this.canSendMediaMessages,
+      this.canSendPolls,
+      this.canSendOtherMessages,
+      this.canAddWebPagePreviews,
+      this.canChangeInfo,
+      this.canInviteUsers,
+      this.canPinMessages,
+      this.canManageTopics
+    )
+  }
   dst.canSendMessages = this.canSendMessages
   dst.canSendMediaMessages = this.canSendMediaMessages
+  dst.canSendPolls = this.canSendPolls
   dst.canSendOtherMessages = this.canSendOtherMessages
   dst.canAddWebPagePreviews = this.canAddWebPagePreviews
-  dst.canSendPolls = this.canSendPolls
+  dst.canChangeInfo = this.canChangeInfo
   dst.canInviteUsers = this.canInviteUsers
   dst.canPinMessages = this.canPinMessages
-  dst.canChangeInfo = this.canChangeInfo
+  dst.canManageTopics = this.canManageTopics
 }
 
 fun ChatPosition.copyTo (dst: ChatPosition) {
+  if (false) {
+    // Cause compilation error when any field in TdApi changes
+    ChatPosition(
+      this.list,
+      this.order,
+      this.isPinned,
+      this.source
+    )
+  }
   dst.list = this.list
   dst.order = this.order
   dst.isPinned = this.isPinned
@@ -43,45 +67,152 @@ fun ChatPosition.copyTo (dst: ChatPosition) {
 fun File.copyTo (dst: File): Boolean {
   val hasChanges = !this.equalsTo(dst, false)
 
-  dst.local.downloadedSize = this.local.downloadedSize
-  dst.local.downloadOffset = this.local.downloadOffset
-  dst.local.downloadedPrefixSize = this.local.downloadedPrefixSize
+  if (false) {
+    // Cause compilation error when any field in TdApi changes
+    LocalFile(
+      this.local.path,
+      this.local.canBeDownloaded,
+      this.local.canBeDeleted,
+      this.local.isDownloadingActive,
+      this.local.isDownloadingCompleted,
+      this.local.downloadOffset,
+      this.local.downloadedPrefixSize,
+      this.local.downloadedSize
+    )
+  }
+  dst.local.path = this.local.path
+  dst.local.canBeDownloaded = this.local.canBeDownloaded
+  dst.local.canBeDeleted = this.local.canBeDeleted
   dst.local.isDownloadingActive = this.local.isDownloadingActive
   dst.local.isDownloadingCompleted = this.local.isDownloadingCompleted
-  dst.local.canBeDeleted = this.local.canBeDeleted
-  dst.local.canBeDownloaded = this.local.canBeDownloaded
-  dst.local.path = this.local.path
+  dst.local.downloadOffset = this.local.downloadOffset
+  dst.local.downloadedPrefixSize = this.local.downloadedPrefixSize
+  dst.local.downloadedSize = this.local.downloadedSize
 
-  dst.remote.uploadedSize = this.remote.uploadedSize
+  if (false) {
+    // Cause compilation error when any field in TdApi changes
+    RemoteFile(
+      this.remote.id,
+      this.remote.uniqueId,
+      this.remote.isUploadingActive,
+      this.remote.isUploadingCompleted,
+      this.remote.uploadedSize
+    )
+  }
+  dst.remote.id = this.remote.id
+  dst.remote.uniqueId = this.remote.uniqueId
   dst.remote.isUploadingActive = this.remote.isUploadingActive
   dst.remote.isUploadingCompleted = this.remote.isUploadingCompleted
-  dst.remote.uniqueId = this.remote.uniqueId
-  dst.remote.id = this.remote.id
+  dst.remote.uploadedSize = this.remote.uploadedSize
 
-  dst.expectedSize = this.expectedSize
+  if (false) {
+    // Cause compilation error when any field in TdApi changes
+    File(
+      this.id,
+      this.size,
+      this.expectedSize,
+      this.local,
+      this.remote
+    )
+  }
+  // dst.id = this.id
   dst.size = this.size
+  dst.expectedSize = this.expectedSize
 
   return hasChanges
 }
 
 fun User.copyTo (dst: User) {
+  if (false) {
+    // Cause compilation error when any field in TdApi changes
+    User(
+      this.id,
+      this.firstName,
+      this.lastName,
+      this.usernames,
+      this.phoneNumber,
+      this.status,
+      this.profilePhoto,
+      this.emojiStatus,
+      this.isContact,
+      this.isMutualContact,
+      this.isVerified,
+      this.isPremium,
+      this.isSupport,
+      this.restrictionReason,
+      this.isScam,
+      this.isFake,
+      this.haveAccess,
+      this.type,
+      this.languageCode,
+      this.addedToAttachmentMenu
+    )
+  }
   dst.firstName = this.firstName
   dst.lastName = this.lastName
-  dst.username = this.username
+  dst.usernames = this.usernames
   dst.phoneNumber = this.phoneNumber
+  dst.status = this.status
   dst.profilePhoto = this.profilePhoto
+  dst.emojiStatus = this.emojiStatus
   dst.isContact = this.isContact
   dst.isMutualContact = this.isMutualContact
   dst.isVerified = this.isVerified
+  dst.isPremium = this.isPremium
+  dst.isSupport = this.isSupport
   dst.restrictionReason = this.restrictionReason
+  dst.isScam = this.isScam
+  dst.isFake = this.isFake
   dst.haveAccess = this.haveAccess
   dst.type = this.type
   dst.languageCode = this.languageCode
-  dst.isPremium = this.isPremium
   dst.addedToAttachmentMenu = this.addedToAttachmentMenu
 }
 
 fun Message.copyTo (dst: Message) {
+  if (false) {
+    // Cause compilation error when any field in TdApi changes
+    Message(
+      this.id,
+      this.senderId,
+      this.chatId,
+      this.sendingState,
+      this.schedulingState,
+      this.isOutgoing,
+      this.isPinned,
+      this.canBeEdited,
+      this.canBeForwarded,
+      this.canBeSaved,
+      this.canBeDeletedOnlyForSelf,
+      this.canBeDeletedForAllUsers,
+      this.canGetAddedReactions,
+      this.canGetStatistics,
+      this.canGetMessageThread,
+      this.canGetViewers,
+      this.canGetMediaTimestampLinks,
+      this.canReportReactions,
+      this.hasTimestampedMedia,
+      this.isChannelPost,
+      this.isTopicMessage,
+      this.containsUnreadMention,
+      this.date,
+      this.editDate,
+      this.forwardInfo,
+      this.interactionInfo,
+      this.unreadReactions,
+      this.replyInChatId,
+      this.replyToMessageId,
+      this.messageThreadId,
+      this.ttl,
+      this.ttlExpiresIn,
+      this.viaBotUserId,
+      this.authorSignature,
+      this.mediaAlbumId,
+      this.restrictionReason,
+      this.content,
+      this.replyMarkup
+    )
+  }
   dst.id = this.id
   dst.senderId = this.senderId
   dst.chatId = this.chatId
@@ -102,6 +233,7 @@ fun Message.copyTo (dst: Message) {
   dst.canReportReactions = this.canReportReactions;
   dst.hasTimestampedMedia = this.hasTimestampedMedia
   dst.isChannelPost = this.isChannelPost
+  dst.isTopicMessage = this.isTopicMessage
   dst.containsUnreadMention = this.containsUnreadMention
   dst.date = this.date
   dst.editDate = this.editDate
@@ -182,6 +314,7 @@ fun Message?.copyOf (): Message? {
       this.canReportReactions,
       this.hasTimestampedMedia,
       this.isChannelPost,
+      this.isTopicMessage,
       this.containsUnreadMention,
       this.date,
       this.editDate,
@@ -251,7 +384,8 @@ fun ChatPermissions?.copyOf (): ChatPermissions? {
       this.canAddWebPagePreviews,
       this.canChangeInfo,
       this.canInviteUsers,
-      this.canPinMessages
+      this.canPinMessages,
+      this.canManageTopics
     )
   }
 }
@@ -307,6 +441,7 @@ fun ChatAdministratorRights?.copyOf (): ChatAdministratorRights? {
       this.canInviteUsers,
       this.canRestrictMembers,
       this.canPinMessages,
+      this.canManageTopics,
       this.canPromoteMembers,
       this.canManageVideoChats,
       this.isAnonymous

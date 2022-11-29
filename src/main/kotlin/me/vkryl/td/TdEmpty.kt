@@ -60,7 +60,7 @@ fun RichText?.isEmpty (): Boolean {
       }
       return true
     }
-    else -> error(this.toString())
+    else -> TODO(this.toString())
   }
 }
 

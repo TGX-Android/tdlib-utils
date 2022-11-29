@@ -32,7 +32,7 @@ fun ChatList?.equalsTo(b: ChatList?): Boolean {
     else -> when (this.constructor) {
       ChatListMain.CONSTRUCTOR, ChatListArchive.CONSTRUCTOR -> true
       ChatListFilter.CONSTRUCTOR -> (this as ChatListFilter).chatFilterId == (b as ChatListFilter).chatFilterId
-      else -> error(this.toString())
+      else -> TODO(this.toString())
     }
   }
 }
@@ -42,6 +42,23 @@ fun ChatAdministratorRights?.equalsTo(b: ChatAdministratorRights?): Boolean {
     this === b -> true
     this === null || b === null -> false
     else -> {
+      if (false) {
+        // Cause compilation error when any field in TdApi changes
+        ChatAdministratorRights(
+          this.canManageChat,
+          this.canChangeInfo,
+          this.canPostMessages,
+          this.canEditMessages,
+          this.canDeleteMessages,
+          this.canInviteUsers,
+          this.canRestrictMembers,
+          this.canPinMessages,
+          this.canManageTopics,
+          this.canPromoteMembers,
+          this.canManageVideoChats,
+          this.isAnonymous
+        )
+      }
       this.canManageChat == b.canManageChat &&
       this.canChangeInfo == b.canChangeInfo &&
       this.canPostMessages == b.canPostMessages &&
@@ -50,6 +67,7 @@ fun ChatAdministratorRights?.equalsTo(b: ChatAdministratorRights?): Boolean {
       this.canInviteUsers == b.canInviteUsers &&
       this.canRestrictMembers == b.canRestrictMembers &&
       this.canPinMessages == b.canPinMessages &&
+      this.canManageTopics == b.canManageTopics &&
       this.canPromoteMembers == b.canPromoteMembers &&
       this.canManageVideoChats == b.canManageVideoChats &&
       this.isAnonymous == b.isAnonymous
@@ -67,55 +85,116 @@ fun ChatMemberStatus.equalsTo(b: ChatMemberStatus): Boolean {
 
       ChatMemberStatusCreator.CONSTRUCTOR -> {
         require(this is ChatMemberStatusCreator && b is ChatMemberStatusCreator)
-        this.isMember == b.isMember && this.customTitle.equalsOrBothEmpty(b.customTitle)
+        if (false) {
+          // Cause compilation error when any field in TdApi changes
+          ChatMemberStatusCreator(
+            this.customTitle,
+            this.isAnonymous,
+            this.isMember
+          )
+        }
+        this.isMember == b.isMember &&
+        this.isAnonymous == b.isAnonymous &&
+        this.customTitle.equalsOrBothEmpty(b.customTitle)
       }
 
       ChatMemberStatusBanned.CONSTRUCTOR -> {
         require(this is ChatMemberStatusBanned && b is ChatMemberStatusBanned)
+        if (false) {
+          // Cause compilation error when any field in TdApi changes
+          ChatMemberStatusBanned(this.bannedUntilDate)
+        }
         this.bannedUntilDate == b.bannedUntilDate
       }
 
       ChatMemberStatusAdministrator.CONSTRUCTOR -> {
         require(this is ChatMemberStatusAdministrator && b is ChatMemberStatusAdministrator)
-        this.rights.equalsTo(b.rights) && this.customTitle.equalsOrBothEmpty(b.customTitle)
+        if (false) {
+          // Cause compilation error when any field in TdApi changes
+          ChatMemberStatusAdministrator(
+            this.customTitle,
+            this.canBeEdited,
+            this.rights
+          )
+        }
+        this.rights.equalsTo(b.rights) &&
+        this.customTitle.equalsOrBothEmpty(b.customTitle)
         // ignored: this.canBeEdited == b.canBeEdited
       }
 
       ChatMemberStatusRestricted.CONSTRUCTOR -> {
         require(this is ChatMemberStatusRestricted && b is ChatMemberStatusRestricted)
+        if (false) {
+          // Cause compilation error when any field in TdApi changes
+          ChatMemberStatusRestricted(
+            this.isMember,
+            this.restrictedUntilDate,
+            this.permissions
+          )
+        }
         this.isMember == b.isMember &&
         this.restrictedUntilDate == b.restrictedUntilDate &&
         this.permissions.equalsTo(b.permissions)
       }
 
-      else -> error(this.toString())
+      else -> TODO(this.toString())
     }
   }
 }
 
 fun ChatPermissions.equalsTo(b: ChatPermissions): Boolean {
+  if (false) {
+    // Cause compilation error when any field in TdApi changes
+    ChatPermissions(
+      this.canSendMessages,
+      this.canSendMediaMessages,
+      this.canSendPolls,
+      this.canSendOtherMessages,
+      this.canAddWebPagePreviews,
+      this.canChangeInfo,
+      this.canInviteUsers,
+      this.canPinMessages,
+      this.canManageTopics
+    )
+  }
   return (this === b) || (
     this.canSendMessages == b.canSendMessages &&
     this.canSendMediaMessages == b.canSendMediaMessages &&
+    this.canSendPolls == b.canSendPolls &&
     this.canSendOtherMessages == b.canSendOtherMessages &&
     this.canAddWebPagePreviews == b.canAddWebPagePreviews &&
-    this.canSendPolls == b.canSendPolls &&
+    this.canChangeInfo == b.canChangeInfo &&
     this.canInviteUsers == b.canInviteUsers &&
     this.canPinMessages == b.canPinMessages &&
-    this.canChangeInfo == b.canChangeInfo
+    this.canManageTopics == b.canManageTopics
   )
 }
 
 fun ChatPermissions.equalsTo(old: ChatPermissions, defaultPermissions: ChatPermissions): Boolean {
+  if (false) {
+    // Cause compilation error when any field in TdApi changes
+    ChatPermissions(
+      this.canSendMessages,
+      this.canSendMediaMessages,
+      this.canSendPolls,
+      this.canSendOtherMessages,
+      this.canAddWebPagePreviews,
+      this.canChangeInfo,
+      this.canInviteUsers,
+      this.canPinMessages,
+      this.canManageTopics
+    )
+  }
   return (this === old) || (
     (this.canSendMessages == old.canSendMessages || !this.canSendMessages && !defaultPermissions.canSendMessages) &&
     (this.canSendMediaMessages == old.canSendMediaMessages || !this.canSendMediaMessages && !defaultPermissions.canSendMediaMessages) &&
+    (this.canSendPolls == old.canSendPolls || !this.canSendPolls && !defaultPermissions.canSendPolls) &&
     (this.canSendOtherMessages == old.canSendOtherMessages || !this.canSendOtherMessages && !defaultPermissions.canSendOtherMessages) &&
     (this.canAddWebPagePreviews == old.canAddWebPagePreviews || !this.canAddWebPagePreviews && !defaultPermissions.canAddWebPagePreviews) &&
-    (this.canSendPolls == old.canSendPolls || !this.canSendPolls && !defaultPermissions.canSendPolls) &&
+    (this.canChangeInfo == old.canChangeInfo || !this.canChangeInfo && !defaultPermissions.canChangeInfo) &&
     (this.canInviteUsers == old.canInviteUsers || !this.canInviteUsers && !defaultPermissions.canInviteUsers) &&
     (this.canPinMessages == old.canPinMessages || !this.canPinMessages && !defaultPermissions.canPinMessages) &&
-    (this.canChangeInfo == old.canChangeInfo || !this.canChangeInfo && !defaultPermissions.canChangeInfo)
+    (this.canManageTopics == old.canManageTopics || !this.canManageTopics && !defaultPermissions.canManageTopics)
   )
 }
 
@@ -132,10 +211,16 @@ fun ChatActionBar?.equalsTo(b: ChatActionBar?): Boolean {
         require(this is ChatActionBarReportAddBlock && b is ChatActionBarReportAddBlock)
         this.canUnarchive == b.canUnarchive && this.distance == b.distance
       }
+      ChatActionBarJoinRequest.CONSTRUCTOR -> {
+        require(this is ChatActionBarJoinRequest && b is ChatActionBarJoinRequest)
+        this.title == b.title &&
+        this.isChannel == b.isChannel &&
+        this.requestDate == b.requestDate
+      }
       ChatActionBarReportUnrelatedLocation.CONSTRUCTOR,
       ChatActionBarAddContact.CONSTRUCTOR,
       ChatActionBarSharePhoneNumber.CONSTRUCTOR -> true
-      else -> error(this.toString())
+      else -> TODO(this.toString())
     }
   }
 }
@@ -280,7 +365,7 @@ fun ChatSource?.equalsTo(b: ChatSource?): Boolean {
         require(this is ChatSourcePublicServiceAnnouncement && b is ChatSourcePublicServiceAnnouncement)
         this.type.equalsOrBothEmpty(b.type) && this.text.equalsOrBothEmpty(b.text)
       }
-      else -> error(this.toString())
+      else -> TODO(this.toString())
     }
   }
 }
@@ -302,7 +387,7 @@ fun UserStatus?.equalsTo(b: UserStatus?): Boolean {
         require(this is UserStatusOffline && b is UserStatusOffline)
         this.wasOnline == b.wasOnline
       }
-      else -> error(this.toString())
+      else -> TODO(this.toString())
     }
   }
 }
@@ -323,6 +408,20 @@ fun UserStatus?.equalsTo(b: UserStatus?): Boolean {
 }
 
 fun LocalFile?.equalsTo(b: LocalFile?): Boolean {
+  if (false) {
+    // Cause compilation error when any field in TdApi changes
+    requireNotNull(this)
+    LocalFile(
+      this.path,
+      this.canBeDownloaded,
+      this.canBeDeleted,
+      this.isDownloadingActive,
+      this.isDownloadingCompleted,
+      this.downloadOffset,
+      this.downloadedPrefixSize,
+      this.downloadedSize
+    )
+  }
   return when {
     this === b -> true
     this === null || b === null -> false
@@ -340,6 +439,17 @@ fun LocalFile?.equalsTo(b: LocalFile?): Boolean {
 }
 
 fun RemoteFile?.equalsTo(b: RemoteFile?): Boolean {
+  if (false) {
+    // Cause compilation error when any field in TdApi changes
+    requireNotNull(this)
+    RemoteFile(
+      this.id,
+      this.uniqueId,
+      this.isUploadingActive,
+      this.isUploadingCompleted,
+      this.uploadedSize
+    )
+  }
   return when {
     this === b -> true
     this === null || b === null -> false
@@ -354,6 +464,25 @@ fun RemoteFile?.equalsTo(b: RemoteFile?): Boolean {
 }
 
 fun ChatEventLogFilters?.equalsTo(b: ChatEventLogFilters?): Boolean {
+  if (false) {
+    // Cause compilation error when any field in TdApi changes
+    requireNotNull(this)
+    ChatEventLogFilters(
+      this.messageEdits,
+      this.messageDeletions,
+      this.messagePins,
+      this.memberJoins,
+      this.memberLeaves,
+      this.memberInvites,
+      this.memberPromotions,
+      this.memberRestrictions,
+      this.infoChanges,
+      this.settingChanges,
+      this.inviteLinkChanges,
+      this.videoChatChanges,
+      this.forumChanges
+    )
+  }
   return (
     (this?.messageEdits ?: false) == (b?.messageEdits ?: false) &&
     (this?.messageDeletions ?: false) == (b?.messageDeletions ?: false) &&
@@ -366,7 +495,8 @@ fun ChatEventLogFilters?.equalsTo(b: ChatEventLogFilters?): Boolean {
     (this?.infoChanges ?: false) == (b?.infoChanges ?: false) &&
     (this?.settingChanges ?: false) == (b?.settingChanges ?: false) &&
     (this?.inviteLinkChanges ?: false) == (b?.inviteLinkChanges ?: false) &&
-    (this?.videoChatChanges ?: false) == (b?.videoChatChanges ?: false)
+    (this?.videoChatChanges ?: false) == (b?.videoChatChanges ?: false) &&
+    (this?.forumChanges ?: false) == (b?.forumChanges ?: false)
   )
 }
 
@@ -395,7 +525,7 @@ fun UserPrivacySettingRule.equalsTo(b: UserPrivacySettingRule): Boolean {
       UserPrivacySettingRuleAllowContacts.CONSTRUCTOR,
       UserPrivacySettingRuleRestrictAll.CONSTRUCTOR,
       UserPrivacySettingRuleRestrictContacts.CONSTRUCTOR -> true
-      else -> error(this.toString())
+      else -> TODO(this.toString())
     }
   }
 }
@@ -439,7 +569,7 @@ fun InlineKeyboardButtonType.equalsTo(b: InlineKeyboardButtonType): Boolean {
       }
       InlineKeyboardButtonTypeCallbackGame.CONSTRUCTOR,
       InlineKeyboardButtonTypeBuy.CONSTRUCTOR -> true
-      else -> error(this.toString())
+      else -> TODO(this.toString())
     }
   }
 }
@@ -460,7 +590,7 @@ fun KeyboardButtonType.equalsTo(b: KeyboardButtonType): Boolean {
       KeyboardButtonTypeText.CONSTRUCTOR,
       KeyboardButtonTypeRequestPhoneNumber.CONSTRUCTOR,
       KeyboardButtonTypeRequestLocation.CONSTRUCTOR -> true
-      else -> error(this.toString())
+      else -> TODO(this.toString())
     }
   }
 }
@@ -524,7 +654,7 @@ fun ReplyMarkup?.equalsTo(b: ReplyMarkup?): Boolean {
         }
         true
       }
-      else -> error(this.toString())
+      else -> TODO(this.toString())
     }
   }
 }
@@ -563,6 +693,18 @@ fun Thumbnail?.equalsTo(b: Thumbnail?): Boolean {
       this.height == b.height &&
       this.file.equalsTo(b.file) &&
       this.format.equalsTo(b.format)
+    }
+  }
+}
+
+fun Usernames?.equalsTo(b: Usernames?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null -> false
+    else -> {
+      this.editableUsername == b.editableUsername &&
+      Arrays.equals(this.activeUsernames, b.activeUsernames) &&
+      Arrays.equals(this.disabledUsernames, b.disabledUsernames)
     }
   }
 }
@@ -824,7 +966,7 @@ fun MaskPoint?.equalsTo(b: MaskPoint?): Boolean {
       MaskPointEyes.CONSTRUCTOR,
       MaskPointMouth.CONSTRUCTOR,
       MaskPointChin.CONSTRUCTOR -> true
-      else -> error(this.toString())
+      else -> TODO(this.toString())
     }
   }
 }
@@ -894,7 +1036,7 @@ fun MessageSender?.equalsTo(b: MessageSender?): Boolean {
       when (this.constructor) {
         MessageSenderChat.CONSTRUCTOR -> (this as MessageSenderChat).chatId == (b as MessageSenderChat).chatId
         MessageSenderUser.CONSTRUCTOR -> (this as MessageSenderUser).userId == (b as MessageSenderUser).userId
-        else -> error(this.toString())
+        else -> TODO(this.toString())
       }
     }
   }
@@ -918,7 +1060,7 @@ fun BackgroundType?.equalsTo(b: BackgroundType?, ignoreSettings: Boolean = true)
           require(this is BackgroundTypePattern && b is BackgroundTypePattern)
           this.fill.equalsTo(b.fill) && (ignoreSettings || (this.intensity == b.intensity && this.isMoving == b.isMoving))
         }
-        else -> error(this.toString())
+        else -> TODO(this.toString())
       }
     }
   }
@@ -940,9 +1082,9 @@ fun BackgroundFill?.equalsTo(b: BackgroundFill?): Boolean {
         }
         BackgroundFillFreeformGradient.CONSTRUCTOR -> {
           require(this is BackgroundFillFreeformGradient && b is BackgroundFillFreeformGradient)
-          this.colors.contentEquals(b.colors)
+          Arrays.equals(this.colors, b.colors)
         }
-        else -> error(this.toString())
+        else -> TODO(this.toString())
       }
     }
   }
@@ -962,7 +1104,7 @@ fun ReactionType?.equalsTo(b: ReactionType?): Boolean {
           require(this is ReactionTypeCustomEmoji && b is ReactionTypeCustomEmoji)
           this.customEmojiId == b.customEmojiId
         }
-        else -> error(this.toString())
+        else -> TODO(this.toString())
       }
     }
   }
@@ -1014,7 +1156,7 @@ fun DeviceToken?.equalsTo(b: DeviceToken?): Boolean {
           require(this is DeviceTokenTizenPush && b is DeviceTokenTizenPush)
           this.regId == b.regId
         }
-        else -> error(this.toString())
+        else -> TODO(this.toString())
       }
     }
   }

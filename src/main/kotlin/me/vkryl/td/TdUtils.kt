@@ -700,6 +700,50 @@ fun StickerSet.toStickerSetInfo (): StickerSetInfo {
   )
 }
 
+fun Usernames?.primaryUsername (): String? {
+  return if (this != null) {
+    if (this.activeUsernames.isNotEmpty() && this.activeUsernames[0].isNotEmpty()) {
+      this.activeUsernames[0]
+    } else if (this.editableUsername != null && this.editableUsername.isNotEmpty()) {
+      this.editableUsername
+    } else {
+      null
+    }
+  } else {
+    null
+  }
+}
+
+fun Supergroup?.primaryUsername (): String? = this?.usernames.primaryUsername()
+fun User?.primaryUsername (): String? = this?.usernames.primaryUsername()
+
+fun Supergroup?.hasUsername (): Boolean = !this?.usernames.primaryUsername().isNullOrEmpty()
+fun User?.hasUsername (): Boolean = !this?.usernames.primaryUsername().isNullOrEmpty()
+
+@JvmOverloads fun Usernames?.hasUsername (username: String, allowDisabled: Boolean = false): Boolean {
+  if (username.isNotEmpty() && this != null) {
+    for (activeUsername in this.activeUsernames) {
+      if (activeUsername.equals(username, ignoreCase = true)) {
+        return true
+      }
+    }
+    if (this.editableUsername.isNotEmpty() && this.editableUsername.equals(username, ignoreCase = true)) {
+      return true
+    }
+    if (allowDisabled) {
+      for (disabledUsername in this.disabledUsernames) {
+        if (disabledUsername.equals(username, ignoreCase = true)) {
+          return true
+        }
+      }
+    }
+  }
+  return false
+}
+
+@JvmOverloads fun Supergroup?.findUsername (username: String, allowDisabled: Boolean = false): Boolean = this?.usernames.hasUsername(username, allowDisabled)
+@JvmOverloads fun User?.findUsername (username: String, allowDisabled: Boolean = false): Boolean = this?.usernames.hasUsername(username, allowDisabled)
+
 @JvmOverloads
 fun buildOutline(sticker: Sticker?, targetWidth: Float, targetHeight: Float = targetWidth, out: Path? = null): Path? {
   return if (sticker != null) {
@@ -924,7 +968,7 @@ fun PushMessageContent.getText (): String? {
       null
     // unsupported
     else ->
-      error(this.toString())
+      TODO(this.toString())
   }
 }
 
@@ -979,7 +1023,7 @@ fun PushMessageContent.isPinned (): Boolean {
       false
     // unsupported
     else ->
-      error(this.toString())
+      TODO(this.toString())
   }
 }
 
