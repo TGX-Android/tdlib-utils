@@ -714,13 +714,15 @@ fun Usernames?.primaryUsername (): String? {
   }
 }
 
+@JvmOverloads fun Usernames?.hasUsername (checkDisabled: Boolean = false): Boolean = this.isEmpty(checkDisabled)
+
 fun Supergroup?.primaryUsername (): String? = this?.usernames.primaryUsername()
 fun User?.primaryUsername (): String? = this?.usernames.primaryUsername()
 
-fun Supergroup?.hasUsername (): Boolean = !this?.usernames.primaryUsername().isNullOrEmpty()
-fun User?.hasUsername (): Boolean = !this?.usernames.primaryUsername().isNullOrEmpty()
+fun Supergroup?.hasUsername (): Boolean = !this?.usernames.hasUsername()
+fun User?.hasUsername (): Boolean = !this?.usernames.hasUsername()
 
-@JvmOverloads fun Usernames?.hasUsername (username: String, allowDisabled: Boolean = false): Boolean {
+@JvmOverloads fun Usernames?.findUsername (username: String, allowDisabled: Boolean = false): Boolean {
   if (username.isNotEmpty() && this != null) {
     for (activeUsername in this.activeUsernames) {
       if (activeUsername.equals(username, ignoreCase = true)) {
@@ -741,8 +743,32 @@ fun User?.hasUsername (): Boolean = !this?.usernames.primaryUsername().isNullOrE
   return false
 }
 
-@JvmOverloads fun Supergroup?.findUsername (username: String, allowDisabled: Boolean = false): Boolean = this?.usernames.hasUsername(username, allowDisabled)
-@JvmOverloads fun User?.findUsername (username: String, allowDisabled: Boolean = false): Boolean = this?.usernames.hasUsername(username, allowDisabled)
+@JvmOverloads fun Supergroup?.findUsername (username: String, allowDisabled: Boolean = false): Boolean = this?.usernames.findUsername(username, allowDisabled)
+@JvmOverloads fun User?.findUsername (username: String, allowDisabled: Boolean = false): Boolean = this?.usernames.findUsername(username, allowDisabled)
+
+@JvmOverloads fun Usernames?.findUsernameByPrefix (usernamePrefix: String, allowDisabled: Boolean = false): Boolean {
+  if (usernamePrefix.isNotEmpty() && this != null) {
+    for (activeUsername in this.activeUsernames) {
+      if (activeUsername.startsWith(usernamePrefix, ignoreCase = true)) {
+        return true
+      }
+    }
+    if (this.editableUsername.isNotEmpty() && this.editableUsername.startsWith(usernamePrefix, ignoreCase = true)) {
+      return true
+    }
+    if (allowDisabled) {
+      for (disabledUsername in this.disabledUsernames) {
+        if (disabledUsername.startsWith(usernamePrefix, ignoreCase = true)) {
+          return true
+        }
+      }
+    }
+  }
+  return false
+}
+
+@JvmOverloads fun User?.findUsernameByPrefix (usernamePrefix: String, allowDisabled: Boolean = false): Boolean = this?.usernames.findUsernameByPrefix(usernamePrefix, allowDisabled)
+@JvmOverloads fun Supergroup?.findUsernameByPrefix (usernamePrefix: String, allowDisabled: Boolean = false): Boolean = this?.usernames.findUsernameByPrefix(usernamePrefix, allowDisabled)
 
 @JvmOverloads
 fun buildOutline(sticker: Sticker?, targetWidth: Float, targetHeight: Float = targetWidth, out: Path? = null): Path? {

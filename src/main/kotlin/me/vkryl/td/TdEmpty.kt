@@ -86,3 +86,9 @@ fun StatisticalValue?.isEmpty (): Boolean {
 fun AvailableReactions?.isEmpty (): Boolean {
   return this == null || (this.topReactions.isEmpty() && this.popularReactions.isEmpty() && this.recentReactions.isEmpty())
 }
+
+@JvmOverloads
+fun Usernames?.isEmpty (checkDisabled: Boolean = false): Boolean {
+  // ignored: this.editableUsername.isNullOrEmpty()
+  return this == null || (this.activeUsernames.isNullOrEmpty() && (!checkDisabled || this.disabledUsernames.isNullOrEmpty()))
+}
