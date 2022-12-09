@@ -139,6 +139,7 @@ fun User.copyTo (dst: User) {
       this.isVerified,
       this.isPremium,
       this.isSupport,
+      this.hasAnonymousPhoneNumber,
       this.restrictionReason,
       this.isScam,
       this.isFake,
@@ -160,6 +161,7 @@ fun User.copyTo (dst: User) {
   dst.isVerified = this.isVerified
   dst.isPremium = this.isPremium
   dst.isSupport = this.isSupport
+  dst.hasAnonymousPhoneNumber = this.hasAnonymousPhoneNumber
   dst.restrictionReason = this.restrictionReason
   dst.isScam = this.isScam
   dst.isFake = this.isFake
