@@ -714,13 +714,13 @@ fun Usernames?.primaryUsername (): String? {
   }
 }
 
-@JvmOverloads fun Usernames?.hasUsername (checkDisabled: Boolean = false): Boolean = this.isEmpty(checkDisabled)
+@JvmOverloads fun Usernames?.hasUsername (checkDisabled: Boolean = false): Boolean = !this.isEmpty(checkDisabled)
 
 fun Supergroup?.primaryUsername (): String? = this?.usernames.primaryUsername()
 fun User?.primaryUsername (): String? = this?.usernames.primaryUsername()
 
-fun Supergroup?.hasUsername (): Boolean = !this?.usernames.hasUsername()
-fun User?.hasUsername (): Boolean = !this?.usernames.hasUsername()
+fun Supergroup?.hasUsername (): Boolean = this?.usernames.hasUsername()
+fun User?.hasUsername (): Boolean = this?.usernames.hasUsername()
 
 @JvmOverloads fun Usernames?.findUsername (username: String, allowDisabled: Boolean = false): Boolean {
   if (username.isNotEmpty() && this != null) {
