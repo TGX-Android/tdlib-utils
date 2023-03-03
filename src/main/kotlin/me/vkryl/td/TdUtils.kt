@@ -393,12 +393,20 @@ fun Message?.getSenderId (): Long {
   return this?.senderId.getSenderId()
 }
 
+fun Sticker?.customEmojiId (): Long {
+  return if (this != null && this.fullType.constructor == StickerFullTypeCustomEmoji.CONSTRUCTOR) {
+    (this.fullType as StickerFullTypeCustomEmoji).customEmojiId
+  } else {
+    0
+  }
+}
+
 fun MessageContent?.textOrCaption (): FormattedText? {
   return when (this?.constructor) {
     MessageText.CONSTRUCTOR -> (this as MessageText).text
     MessageAnimatedEmoji.CONSTRUCTOR -> {
       require(this is MessageAnimatedEmoji)
-      val customEmojiId = this.animatedEmoji.sticker?.customEmojiId ?: 0L
+      val customEmojiId = this.animatedEmoji.sticker.customEmojiId()
       if (customEmojiId != 0L) {
         FormattedText(this.emoji, arrayOf(
           TextEntity(0, this.emoji.length, TextEntityTypeCustomEmoji(customEmojiId))
@@ -931,7 +939,12 @@ fun ChatType.matchesScope(scope: NotificationSettingsScope): Boolean {
 fun ChatPermissions.count (): Int {
   var count = 0
   if (this.canSendMessages) count++
-  if (this.canSendMediaMessages) count++
+  if (this.canSendAudios) count++
+  if (this.canSendDocuments) count++
+  if (this.canSendPhotos) count++
+  if (this.canSendVideos) count++
+  if (this.canSendVideoNotes) count++
+  if (this.canSendVoiceNotes) count++
   if (this.canSendPolls) count++
   if (this.canSendOtherMessages) count++
   if (this.canAddWebPagePreviews) count++

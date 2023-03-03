@@ -27,7 +27,12 @@ fun ChatPermissions.copyTo (dst: ChatPermissions) {
     // Cause compilation error when any field in TdApi changes
     ChatPermissions(
       this.canSendMessages,
-      this.canSendMediaMessages,
+      this.canSendAudios,
+      this.canSendDocuments,
+      this.canSendPhotos,
+      this.canSendVideos,
+      this.canSendVideoNotes,
+      this.canSendVoiceNotes,
       this.canSendPolls,
       this.canSendOtherMessages,
       this.canAddWebPagePreviews,
@@ -38,7 +43,12 @@ fun ChatPermissions.copyTo (dst: ChatPermissions) {
     )
   }
   dst.canSendMessages = this.canSendMessages
-  dst.canSendMediaMessages = this.canSendMediaMessages
+  dst.canSendAudios = this.canSendAudios
+  dst.canSendDocuments = this.canSendDocuments
+  dst.canSendPhotos = this.canSendPhotos
+  dst.canSendVideos = this.canSendVideos
+  dst.canSendVideoNotes = this.canSendVideoNotes
+  dst.canSendVoiceNotes = this.canSendVoiceNotes
   dst.canSendPolls = this.canSendPolls
   dst.canSendOtherMessages = this.canSendOtherMessages
   dst.canAddWebPagePreviews = this.canAddWebPagePreviews
@@ -139,7 +149,6 @@ fun User.copyTo (dst: User) {
       this.isVerified,
       this.isPremium,
       this.isSupport,
-      this.hasAnonymousPhoneNumber,
       this.restrictionReason,
       this.isScam,
       this.isFake,
@@ -161,7 +170,6 @@ fun User.copyTo (dst: User) {
   dst.isVerified = this.isVerified
   dst.isPremium = this.isPremium
   dst.isSupport = this.isSupport
-  dst.hasAnonymousPhoneNumber = this.hasAnonymousPhoneNumber
   dst.restrictionReason = this.restrictionReason
   dst.isScam = this.isScam
   dst.isFake = this.isFake
@@ -205,8 +213,9 @@ fun Message.copyTo (dst: Message) {
       this.replyInChatId,
       this.replyToMessageId,
       this.messageThreadId,
-      this.ttl,
-      this.ttlExpiresIn,
+      this.selfDestructTime,
+      this.selfDestructIn,
+      this.autoDeleteIn,
       this.viaBotUserId,
       this.authorSignature,
       this.mediaAlbumId,
@@ -245,8 +254,9 @@ fun Message.copyTo (dst: Message) {
   dst.replyInChatId = this.replyInChatId
   dst.replyToMessageId = this.replyToMessageId
   dst.messageThreadId = this.messageThreadId
-  dst.ttl = this.ttl
-  dst.ttlExpiresIn = this.ttlExpiresIn
+  dst.selfDestructTime = this.selfDestructTime
+  dst.selfDestructIn = this.selfDestructIn
+  dst.autoDeleteIn = this.autoDeleteIn
   dst.viaBotUserId = this.viaBotUserId
   dst.authorSignature = this.authorSignature
   dst.mediaAlbumId = this.mediaAlbumId
@@ -326,8 +336,9 @@ fun Message?.copyOf (): Message? {
       this.replyInChatId,
       this.replyToMessageId,
       this.messageThreadId,
-      this.ttl,
-      this.ttlExpiresIn,
+      this.selfDestructTime,
+      this.selfDestructIn,
+      this.autoDeleteIn,
       this.viaBotUserId,
       this.authorSignature,
       this.mediaAlbumId,
@@ -350,6 +361,7 @@ fun Chat?.copyOf (): Chat? {
       if (this.positions != null) this.positions.copyOf() else null,
       this.messageSenderId,
       this.hasProtectedContent,
+      this.isTranslatable,
       this.isMarkedAsUnread,
       this.isBlocked,
       this.hasScheduledMessages,
@@ -364,7 +376,7 @@ fun Chat?.copyOf (): Chat? {
       this.unreadReactionCount,
       this.notificationSettings,
       this.availableReactions,
-      this.messageTtl,
+      this.messageAutoDeleteTime,
       this.themeName,
       this.actionBar,
       this.videoChat,
@@ -380,7 +392,12 @@ fun ChatPermissions?.copyOf (): ChatPermissions? {
   return this?.let {
     ChatPermissions(
       this.canSendMessages,
-      this.canSendMediaMessages,
+      this.canSendAudios,
+      this.canSendDocuments,
+      this.canSendPhotos,
+      this.canSendVideos,
+      this.canSendVideoNotes,
+      this.canSendVoiceNotes,
       this.canSendPolls,
       this.canSendOtherMessages,
       this.canAddWebPagePreviews,

@@ -147,7 +147,12 @@ fun ChatPermissions.equalsTo(b: ChatPermissions): Boolean {
     // Cause compilation error when any field in TdApi changes
     ChatPermissions(
       this.canSendMessages,
-      this.canSendMediaMessages,
+      this.canSendAudios,
+      this.canSendDocuments,
+      this.canSendPhotos,
+      this.canSendVideos,
+      this.canSendVideoNotes,
+      this.canSendVoiceNotes,
       this.canSendPolls,
       this.canSendOtherMessages,
       this.canAddWebPagePreviews,
@@ -159,7 +164,12 @@ fun ChatPermissions.equalsTo(b: ChatPermissions): Boolean {
   }
   return (this === b) || (
     this.canSendMessages == b.canSendMessages &&
-    this.canSendMediaMessages == b.canSendMediaMessages &&
+    this.canSendAudios == b.canSendAudios &&
+    this.canSendDocuments == b.canSendDocuments &&
+    this.canSendPhotos == b.canSendPhotos &&
+    this.canSendVideos == b.canSendVideos &&
+    this.canSendVideoNotes == b.canSendVideoNotes &&
+    this.canSendVoiceNotes == b.canSendVoiceNotes &&
     this.canSendPolls == b.canSendPolls &&
     this.canSendOtherMessages == b.canSendOtherMessages &&
     this.canAddWebPagePreviews == b.canAddWebPagePreviews &&
@@ -175,7 +185,12 @@ fun ChatPermissions.equalsTo(old: ChatPermissions, defaultPermissions: ChatPermi
     // Cause compilation error when any field in TdApi changes
     ChatPermissions(
       this.canSendMessages,
-      this.canSendMediaMessages,
+      this.canSendAudios,
+      this.canSendDocuments,
+      this.canSendPhotos,
+      this.canSendVideos,
+      this.canSendVideoNotes,
+      this.canSendVoiceNotes,
       this.canSendPolls,
       this.canSendOtherMessages,
       this.canAddWebPagePreviews,
@@ -187,7 +202,12 @@ fun ChatPermissions.equalsTo(old: ChatPermissions, defaultPermissions: ChatPermi
   }
   return (this === old) || (
     (this.canSendMessages == old.canSendMessages || !this.canSendMessages && !defaultPermissions.canSendMessages) &&
-    (this.canSendMediaMessages == old.canSendMediaMessages || !this.canSendMediaMessages && !defaultPermissions.canSendMediaMessages) &&
+    (this.canSendAudios == old.canSendAudios || !this.canSendAudios && !defaultPermissions.canSendAudios) &&
+    (this.canSendDocuments == old.canSendDocuments || !this.canSendDocuments && !defaultPermissions.canSendDocuments) &&
+    (this.canSendPhotos == old.canSendPhotos || !this.canSendPhotos && !defaultPermissions.canSendPhotos) &&
+    (this.canSendVideos == old.canSendVideos || !this.canSendVideos && !defaultPermissions.canSendVideos) &&
+    (this.canSendVideoNotes == old.canSendVideoNotes || !this.canSendVideoNotes && !defaultPermissions.canSendVideoNotes) &&
+    (this.canSendVoiceNotes == old.canSendVoiceNotes || !this.canSendVoiceNotes && !defaultPermissions.canSendVoiceNotes) &&
     (this.canSendPolls == old.canSendPolls || !this.canSendPolls && !defaultPermissions.canSendPolls) &&
     (this.canSendOtherMessages == old.canSendOtherMessages || !this.canSendOtherMessages && !defaultPermissions.canSendOtherMessages) &&
     (this.canAddWebPagePreviews == old.canAddWebPagePreviews || !this.canAddWebPagePreviews && !defaultPermissions.canAddWebPagePreviews) &&
@@ -847,19 +867,39 @@ fun Sticker?.equalsTo(b: Sticker?): Boolean {
     this === b -> true
     this == null || b == null -> false
     else -> {
-      this.width == b.width &&
-      this.height == b.height &&
-      this.type.equalsTo(b.type) &&
-      this.setId == b.setId &&
-      this.isPremium == b.isPremium &&
-      this.customEmojiId == b.customEmojiId &&
-      this.format.equalsTo(b.format) &&
+      this.id == id &&
+      this.setId == setId &&
+      this.width == width &&
+      this.height == height &&
       this.emoji.equalsOrBothEmpty(b.emoji) &&
-      this.sticker.equalsTo(b.sticker) &&
-      this.premiumAnimation.equalsTo(b.premiumAnimation) &&
-      this.maskPosition.equalsTo(b.maskPosition) &&
-      this.outline.equalsTo(b.outline) &&
-      this.thumbnail.equalsTo(b.thumbnail)
+      this.format.equalsTo(b.format) &&
+      this.fullType.equalsTo(b.fullType) &&
+      this.outline.equalsTo(outline) &&
+      this.thumbnail.equalsTo(b.thumbnail) &&
+      this.sticker.equalsTo(b.sticker)
+    }
+  }
+}
+
+fun StickerFullType?.equalsTo(b: StickerFullType?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null || this.constructor != b.constructor -> false
+    else -> when (this.constructor) {
+      StickerFullTypeRegular.CONSTRUCTOR -> {
+        require(this is StickerFullTypeRegular && b is StickerFullTypeRegular)
+        this.premiumAnimation.equalsTo(b.premiumAnimation)
+      }
+      StickerFullTypeMask.CONSTRUCTOR -> {
+        require(this is StickerFullTypeMask && b is StickerFullTypeMask)
+        this.maskPosition.equalsTo(b.maskPosition)
+      }
+      StickerFullTypeCustomEmoji.CONSTRUCTOR -> {
+        require(this is StickerFullTypeCustomEmoji && b is StickerFullTypeCustomEmoji)
+        this.customEmojiId == b.customEmojiId &&
+        this.needsRepainting == b.needsRepainting
+      }
+      else -> TODO(this.toString())
     }
   }
 }
