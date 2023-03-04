@@ -401,6 +401,28 @@ fun Sticker?.customEmojiId (): Long {
   }
 }
 
+fun AuthenticationCodeType.codeLength (fallbackCodeLength: Int): Int {
+  return when (this.constructor) {
+    AuthenticationCodeTypeTelegramMessage.CONSTRUCTOR ->
+      (this as AuthenticationCodeTypeTelegramMessage).length
+    AuthenticationCodeTypeSms.CONSTRUCTOR ->
+      (this as AuthenticationCodeTypeSms).length
+    AuthenticationCodeTypeFragment.CONSTRUCTOR ->
+      (this as AuthenticationCodeTypeFragment).length
+    AuthenticationCodeTypeFirebaseAndroid.CONSTRUCTOR ->
+      (this as AuthenticationCodeTypeFirebaseAndroid).length
+    AuthenticationCodeTypeFirebaseIos.CONSTRUCTOR ->
+      (this as AuthenticationCodeTypeFirebaseIos).length
+    AuthenticationCodeTypeCall.CONSTRUCTOR ->
+      (this as AuthenticationCodeTypeCall).length
+    AuthenticationCodeTypeMissedCall.CONSTRUCTOR ->
+      (this as AuthenticationCodeTypeMissedCall).length
+    AuthenticationCodeTypeFlashCall.CONSTRUCTOR ->
+      fallbackCodeLength
+    else ->
+      TODO(this.toString())
+  }
+}
 fun MessageContent?.textOrCaption (): FormattedText? {
   return when (this?.constructor) {
     MessageText.CONSTRUCTOR -> (this as MessageText).text
@@ -935,6 +957,21 @@ fun ChatType.matchesScope(scope: NotificationSettingsScope): Boolean {
     else -> TODO(scope.toString())
   }
 }
+
+fun StickerFullType.toType (): StickerType {
+  return when (this.constructor) {
+    StickerFullTypeRegular.CONSTRUCTOR -> StickerTypeRegular()
+    StickerFullTypeMask.CONSTRUCTOR -> StickerTypeMask()
+    StickerFullTypeCustomEmoji.CONSTRUCTOR -> StickerTypeCustomEmoji()
+    else -> TODO(this.toString())
+  }
+}
+
+fun StickerFullType?.isPremium (): Boolean {
+  return this != null && this.constructor == StickerFullTypeRegular.CONSTRUCTOR && (this as StickerFullTypeRegular).premiumAnimation != null
+}
+
+fun Sticker?.isPremium (): Boolean = this?.fullType.isPremium()
 
 fun ChatPermissions.count (): Int {
   var count = 0
