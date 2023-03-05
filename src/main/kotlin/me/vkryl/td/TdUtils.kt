@@ -975,7 +975,7 @@ fun Sticker?.isPremium (): Boolean = this?.fullType.isPremium()
 
 fun ChatPermissions.count (): Int {
   var count = 0
-  if (this.canSendMessages) count++
+  if (this.canSendBasicMessages) count++
   if (this.canSendAudios) count++
   if (this.canSendDocuments) count++
   if (this.canSendPhotos) count++
@@ -1132,7 +1132,8 @@ fun newSendOptions (disableNotification: Boolean = false,
     fromBackground,
     protectContent,
     updateOrderOfInstalledStickerSets,
-    schedulingState
+    schedulingState,
+    0
   )
 }
 
@@ -1148,7 +1149,7 @@ fun newSendOptions (options: MessageSendOptions?,
       protectContent = options.protectContent,
       updateOrderOfInstalledStickerSets = forceUpdateOrderOfInstalledStickerSets || options.updateOrderOfInstalledStickerSets,
       schedulingState = updatedSchedulingState ?: options.schedulingState
-    );
+    )
   } else {
     newSendOptions(
       disableNotification = forceDisableNotifications,

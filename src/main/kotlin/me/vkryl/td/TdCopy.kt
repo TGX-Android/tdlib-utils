@@ -26,7 +26,7 @@ fun ChatPermissions.copyTo (dst: ChatPermissions) {
   if (false) {
     // Cause compilation error when any field in TdApi changes
     ChatPermissions(
-      this.canSendMessages,
+      this.canSendBasicMessages,
       this.canSendAudios,
       this.canSendDocuments,
       this.canSendPhotos,
@@ -42,7 +42,7 @@ fun ChatPermissions.copyTo (dst: ChatPermissions) {
       this.canManageTopics
     )
   }
-  dst.canSendMessages = this.canSendMessages
+  dst.canSendBasicMessages = this.canSendBasicMessages
   dst.canSendAudios = this.canSendAudios
   dst.canSendDocuments = this.canSendDocuments
   dst.canSendPhotos = this.canSendPhotos
@@ -391,7 +391,7 @@ fun Chat?.copyOf (): Chat? {
 fun ChatPermissions?.copyOf (): ChatPermissions? {
   return this?.let {
     ChatPermissions(
-      this.canSendMessages,
+      this.canSendBasicMessages,
       this.canSendAudios,
       this.canSendDocuments,
       this.canSendPhotos,

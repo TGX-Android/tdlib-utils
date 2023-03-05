@@ -146,7 +146,7 @@ fun ChatPermissions.equalsTo(b: ChatPermissions): Boolean {
   if (false) {
     // Cause compilation error when any field in TdApi changes
     ChatPermissions(
-      this.canSendMessages,
+      this.canSendBasicMessages,
       this.canSendAudios,
       this.canSendDocuments,
       this.canSendPhotos,
@@ -163,7 +163,7 @@ fun ChatPermissions.equalsTo(b: ChatPermissions): Boolean {
     )
   }
   return (this === b) || (
-    this.canSendMessages == b.canSendMessages &&
+    this.canSendBasicMessages == b.canSendBasicMessages &&
     this.canSendAudios == b.canSendAudios &&
     this.canSendDocuments == b.canSendDocuments &&
     this.canSendPhotos == b.canSendPhotos &&
@@ -184,7 +184,7 @@ fun ChatPermissions.equalsTo(old: ChatPermissions, defaultPermissions: ChatPermi
   if (false) {
     // Cause compilation error when any field in TdApi changes
     ChatPermissions(
-      this.canSendMessages,
+      this.canSendBasicMessages,
       this.canSendAudios,
       this.canSendDocuments,
       this.canSendPhotos,
@@ -201,7 +201,7 @@ fun ChatPermissions.equalsTo(old: ChatPermissions, defaultPermissions: ChatPermi
     )
   }
   return (this === old) || (
-    (this.canSendMessages == old.canSendMessages || !this.canSendMessages && !defaultPermissions.canSendMessages) &&
+    (this.canSendBasicMessages == old.canSendBasicMessages || !this.canSendBasicMessages && !defaultPermissions.canSendBasicMessages) &&
     (this.canSendAudios == old.canSendAudios || !this.canSendAudios && !defaultPermissions.canSendAudios) &&
     (this.canSendDocuments == old.canSendDocuments || !this.canSendDocuments && !defaultPermissions.canSendDocuments) &&
     (this.canSendPhotos == old.canSendPhotos || !this.canSendPhotos && !defaultPermissions.canSendPhotos) &&
