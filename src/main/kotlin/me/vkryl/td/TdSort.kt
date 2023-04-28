@@ -26,7 +26,7 @@ private fun ChatList.toSortKey (): Int {
   return when (this.constructor) {
     ChatListMain.CONSTRUCTOR -> 0
     ChatListArchive.CONSTRUCTOR -> 1
-    ChatListFilter.CONSTRUCTOR -> 2 + (this as ChatListFilter).chatFilterId
+    ChatListFolder.CONSTRUCTOR -> 2 + (this as ChatListFolder).chatFolderId
     else -> error(this.toString())
   }
 }

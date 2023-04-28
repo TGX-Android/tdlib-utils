@@ -31,7 +31,7 @@ fun ChatList?.equalsTo(b: ChatList?): Boolean {
     this === null || b === null || this.constructor != b.constructor -> false
     else -> when (this.constructor) {
       ChatListMain.CONSTRUCTOR, ChatListArchive.CONSTRUCTOR -> true
-      ChatListFilter.CONSTRUCTOR -> (this as ChatListFilter).chatFilterId == (b as ChatListFilter).chatFilterId
+      ChatListFolder.CONSTRUCTOR -> (this as ChatListFolder).chatFolderId == (b as ChatListFolder).chatFolderId
       else -> TODO(this.toString())
     }
   }
@@ -550,6 +550,203 @@ fun UserPrivacySettingRule.equalsTo(b: UserPrivacySettingRule): Boolean {
   }
 }
 
+fun ProxyType.equalsTo(b: ProxyType): Boolean {
+  return when {
+    this === b -> true
+    this.constructor != b.constructor -> false
+    else -> when (this.constructor) {
+      ProxyTypeSocks5.CONSTRUCTOR -> {
+        require(this is ProxyTypeSocks5 && b is ProxyTypeSocks5)
+        this.username == b.username &&
+        this.password == b.password
+      }
+      ProxyTypeHttp.CONSTRUCTOR -> {
+        require(this is ProxyTypeHttp && b is ProxyTypeHttp)
+        this.username == b.username &&
+        this.password == b.password &&
+        this.httpOnly == b.httpOnly
+      }
+      ProxyTypeMtproto.CONSTRUCTOR -> {
+        require(this is ProxyTypeMtproto && b is ProxyTypeMtproto)
+        this.secret == b.secret
+      }
+      else -> TODO(this.toString())
+    }
+  }
+}
+
+@OptIn(ExperimentalContracts::class)
+fun InternalLinkType.equalsTo(b: InternalLinkType): Boolean {
+  return when {
+    this === b -> true
+    this.constructor != b.constructor -> false
+    else -> when (this.constructor) {
+      InternalLinkTypeActiveSessions.CONSTRUCTOR,
+      InternalLinkTypeChangePhoneNumber.CONSTRUCTOR,
+      InternalLinkTypeDefaultMessageAutoDeleteTimerSettings.CONSTRUCTOR,
+      InternalLinkTypeEditProfileSettings.CONSTRUCTOR,
+      InternalLinkTypeLanguageSettings.CONSTRUCTOR,
+      InternalLinkTypeSettings.CONSTRUCTOR,
+      InternalLinkTypeRestorePurchases.CONSTRUCTOR,
+      InternalLinkTypeThemeSettings.CONSTRUCTOR,
+      InternalLinkTypeUnsupportedProxy.CONSTRUCTOR,
+      InternalLinkTypeQrCodeAuthentication.CONSTRUCTOR,
+      InternalLinkTypePrivacyAndSecuritySettings.CONSTRUCTOR,
+      InternalLinkTypeChatFolderSettings.CONSTRUCTOR ->
+        true
+      InternalLinkTypeAuthenticationCode.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeAuthenticationCode && b is InternalLinkTypeAuthenticationCode)
+        this.code == b.code
+      }
+      InternalLinkTypeBotStart.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeBotStart && b is InternalLinkTypeBotStart)
+        this.botUsername == b.botUsername &&
+        this.startParameter == b.startParameter &&
+        this.autostart == b.autostart
+      }
+      InternalLinkTypeBotStartInGroup.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeBotStartInGroup && b is InternalLinkTypeBotStartInGroup)
+        this.botUsername == b.botUsername &&
+        this.startParameter == b.startParameter &&
+        this.administratorRights.equalsTo(b.administratorRights)
+      }
+      InternalLinkTypeBotAddToChannel.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeBotAddToChannel && b is InternalLinkTypeBotAddToChannel)
+        this.botUsername == b.botUsername &&
+        this.administratorRights.equalsTo(b.administratorRights)
+      }
+      InternalLinkTypeAttachmentMenuBot.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeAttachmentMenuBot && b is InternalLinkTypeAttachmentMenuBot)
+        this.botUsername == b.botUsername &&
+        this.url == b.url &&
+        this.targetChat.equalsTo(b.targetChat)
+      }
+      InternalLinkTypeBackground.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeBackground && b is InternalLinkTypeBackground)
+        this.backgroundName == b.backgroundName
+      }
+      InternalLinkTypeChatFolderInvite.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeChatFolderInvite && b is InternalLinkTypeChatFolderInvite)
+        this.inviteLink == b.inviteLink
+      }
+      InternalLinkTypeChatInvite.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeChatInvite && b is InternalLinkTypeChatInvite)
+        this.inviteLink == b.inviteLink
+      }
+      InternalLinkTypeGame.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeGame && b is InternalLinkTypeGame)
+        this.botUsername == b.botUsername &&
+        this.gameShortName == b.gameShortName
+      }
+      InternalLinkTypeInstantView.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeInstantView && b is InternalLinkTypeInstantView)
+        this.url == b.url &&
+        this.fallbackUrl == b.fallbackUrl
+      }
+      InternalLinkTypeInvoice.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeInvoice && b is InternalLinkTypeInvoice)
+        this.invoiceName == b.invoiceName
+      }
+      InternalLinkTypeLanguagePack.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeLanguagePack && b is InternalLinkTypeLanguagePack)
+        this.languagePackId == b.languagePackId
+      }
+      InternalLinkTypeMessage.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeMessage && b is InternalLinkTypeMessage)
+        this.url == b.url
+      }
+      InternalLinkTypeMessageDraft.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeMessageDraft && b is InternalLinkTypeMessageDraft)
+        this.containsLink == b.containsLink &&
+        this.text.equalsTo(b.text)
+      }
+      InternalLinkTypePremiumFeatures.CONSTRUCTOR -> {
+        require(this is InternalLinkTypePremiumFeatures && b is InternalLinkTypePremiumFeatures)
+        this.referrer == b.referrer
+      }
+      InternalLinkTypeUserToken.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeUserToken && b is InternalLinkTypeUserToken)
+        this.token == b.token
+      }
+      InternalLinkTypeStickerSet.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeStickerSet && b is InternalLinkTypeStickerSet)
+        this.stickerSetName == b.stickerSetName &&
+        this.expectCustomEmoji == b.expectCustomEmoji
+      }
+      InternalLinkTypePassportDataRequest.CONSTRUCTOR -> {
+        require(this is InternalLinkTypePassportDataRequest && b is InternalLinkTypePassportDataRequest)
+        this.botUserId == b.botUserId &&
+        this.scope == b.scope &&
+        this.publicKey == b.publicKey &&
+        this.nonce == b.nonce &&
+        this.callbackUrl == b.callbackUrl
+      }
+      InternalLinkTypePhoneNumberConfirmation.CONSTRUCTOR -> {
+        require(this is InternalLinkTypePhoneNumberConfirmation && b is InternalLinkTypePhoneNumberConfirmation)
+        this.hash == b.hash &&
+        this.phoneNumber == b.phoneNumber
+      }
+      InternalLinkTypeProxy.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeProxy && b is InternalLinkTypeProxy)
+        this.server == b.server &&
+        this.port == b.port &&
+        this.type.equalsTo(b.type)
+      }
+      InternalLinkTypePublicChat.CONSTRUCTOR -> {
+        require(this is InternalLinkTypePublicChat && b is InternalLinkTypePublicChat)
+        this.chatUsername == b.chatUsername
+      }
+      InternalLinkTypeTheme.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeTheme && b is InternalLinkTypeTheme)
+        this.themeName == b.themeName
+      }
+      InternalLinkTypeUnknownDeepLink.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeUnknownDeepLink && b is InternalLinkTypeUnknownDeepLink)
+        this.link == b.link
+      }
+      InternalLinkTypeUserPhoneNumber.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeUserPhoneNumber && b is InternalLinkTypeUserPhoneNumber)
+        this.phoneNumber == b.phoneNumber
+      }
+      InternalLinkTypeVideoChat.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeVideoChat && b is InternalLinkTypeVideoChat)
+        this.chatUsername == b.chatUsername &&
+        this.isLiveStream == b.isLiveStream &&
+        this.inviteHash == b.inviteHash
+      }
+      InternalLinkTypeWebApp.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeWebApp && b is InternalLinkTypeWebApp)
+        this.botUsername == b.botUsername &&
+        this.startParameter == b.startParameter &&
+        this.webAppShortName == b.webAppShortName
+      }
+      else -> TODO(this.toString())
+    }
+  }
+}
+
+fun TargetChat.equalsTo(b: TargetChat): Boolean {
+  return when {
+    this === b -> true
+    this.constructor != b.constructor -> false
+    else -> when (this.constructor) {
+      TargetChatCurrent.CONSTRUCTOR -> true
+      TargetChatChosen.CONSTRUCTOR -> {
+        require(this is TargetChatChosen && b is TargetChatChosen)
+        this.allowUserChats == b.allowUserChats &&
+        this.allowBotChats == b.allowBotChats &&
+        this.allowGroupChats == b.allowGroupChats &&
+        this.allowChannelChats == b.allowChannelChats
+      }
+      TargetChatInternalLink.CONSTRUCTOR -> {
+        require(this is TargetChatInternalLink && b is TargetChatInternalLink)
+        this.link.equalsTo(b.link)
+      }
+      else -> TODO(this.toString())
+    }
+  }
+}
+
 fun InlineKeyboardButton.equalsTo(b: InlineKeyboardButton): Boolean {
   return (this === b) || (this.text == b.text && this.type.equalsTo(b.type));
 }
@@ -577,7 +774,7 @@ fun InlineKeyboardButtonType.equalsTo(b: InlineKeyboardButtonType): Boolean {
       }
       InlineKeyboardButtonTypeSwitchInline.CONSTRUCTOR -> {
         require(this is InlineKeyboardButtonTypeSwitchInline && b is InlineKeyboardButtonTypeSwitchInline)
-        this.inCurrentChat == b.inCurrentChat && this.query == b.query
+        this.query == b.query && this.targetChat.equalsTo(b.targetChat)
       }
       InlineKeyboardButtonTypeUser.CONSTRUCTOR -> {
         require(this is InlineKeyboardButtonTypeUser && b is InlineKeyboardButtonTypeUser)

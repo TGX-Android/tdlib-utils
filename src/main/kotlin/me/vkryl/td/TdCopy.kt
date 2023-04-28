@@ -377,6 +377,7 @@ fun Chat?.copyOf (): Chat? {
       this.notificationSettings,
       this.availableReactions,
       this.messageAutoDeleteTime,
+      this.background,
       this.themeName,
       this.actionBar,
       this.videoChat,
