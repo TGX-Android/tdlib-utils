@@ -20,7 +20,7 @@
 
 package me.vkryl.td
 
-import org.drinkless.td.libcore.telegram.TdApi.*
+import org.drinkless.tdlib.TdApi.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 

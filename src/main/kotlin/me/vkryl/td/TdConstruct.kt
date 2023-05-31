@@ -20,7 +20,7 @@
 
 package me.vkryl.td
 
-import org.drinkless.td.libcore.telegram.TdApi.*
+import org.drinkless.tdlib.TdApi.*
 
 fun constructSearchMessagesFilter (@SearchMessagesFilter.Constructors constructor: Int): SearchMessagesFilter {
   return when (constructor) {

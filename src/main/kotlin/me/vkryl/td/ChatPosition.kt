@@ -19,7 +19,7 @@
 
 package me.vkryl.td
 
-import org.drinkless.td.libcore.telegram.TdApi.*
+import org.drinkless.tdlib.TdApi.*
 
 @JvmField val CHAT_LIST_MAIN = ChatListMain()
 @JvmField val CHAT_LIST_ARCHIVE = ChatListArchive()

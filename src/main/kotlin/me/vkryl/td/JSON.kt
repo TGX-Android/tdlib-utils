@@ -21,8 +21,8 @@ package me.vkryl.td
 
 import me.vkryl.core.isEmpty
 import me.vkryl.core.parseInt
-import org.drinkless.td.libcore.telegram.Client
-import org.drinkless.td.libcore.telegram.TdApi.*
+import org.drinkless.tdlib.Client
+import org.drinkless.tdlib.TdApi.*
 
 fun parse (json: String?): JsonValue? {
   if (isEmpty(json)) {

@@ -19,7 +19,7 @@
 
 package me.vkryl.td
 
-import org.drinkless.td.libcore.telegram.TdApi.*
+import org.drinkless.tdlib.TdApi.*
 
 // the last (1 << 31) - 1 identifiers will be used for secret chat dialog identifiers
 const val MAX_CHANNEL_ID = 1000000000000L - (1L shl 31)
