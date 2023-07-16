@@ -1347,6 +1347,14 @@ fun ReactionType?.equalsTo(b: ReactionType?): Boolean {
   }
 }
 
+fun ChatFolderIcon?.equalsTo(b: ChatFolderIcon?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null -> false
+    else -> this.name.equalsOrBothEmpty(b.name)
+  }
+}
+
 fun DeviceToken?.equalsTo(b: DeviceToken?): Boolean {
   return when {
     this === b -> true
