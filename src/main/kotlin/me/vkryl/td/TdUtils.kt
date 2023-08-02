@@ -1185,3 +1185,35 @@ fun newSendOptions (schedulingState: MessageSchedulingState): MessageSendOptions
     forceUpdateOrderOfInstalledStickerSets = false,
     updatedSchedulingState = schedulingState
   )
+
+@JvmOverloads
+fun OptionValue.longValue (defaultValue: Long? = null): Long = when (this.constructor) {
+  OptionValueInteger.CONSTRUCTOR -> (this as OptionValueInteger).value
+  OptionValueEmpty.CONSTRUCTOR -> defaultValue ?: 0
+  else -> defaultValue ?: error(this.toString())
+}
+
+@JvmOverloads
+fun OptionValue.intValue (defaultValue: Int? = null): Int = when (this.constructor) {
+  OptionValueInteger.CONSTRUCTOR -> {
+    require(this is OptionValueInteger)
+    require(this.value <= Int.MAX_VALUE && this.value >= Int.MIN_VALUE)
+    this.value.toInt()
+  }
+  OptionValueEmpty.CONSTRUCTOR -> defaultValue ?: 0
+  else -> defaultValue ?: error(this.toString())
+}
+
+@JvmOverloads
+fun OptionValue.boolValue (defaultValue: Boolean? = null): Boolean = when (this.constructor) {
+  OptionValueBoolean.CONSTRUCTOR -> (this as OptionValueBoolean).value
+  OptionValueEmpty.CONSTRUCTOR -> defaultValue ?: false
+  else -> defaultValue ?: error(this.toString())
+}
+
+@JvmOverloads
+fun OptionValue.stringValue (defaultValue: String? = null): String = when (this.constructor) {
+  OptionValueString.CONSTRUCTOR -> (this as OptionValueString).value
+  OptionValueEmpty.CONSTRUCTOR -> defaultValue ?: ""
+  else -> defaultValue ?: error(this.toString())
+}
