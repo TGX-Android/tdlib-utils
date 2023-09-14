@@ -146,12 +146,15 @@ fun User.copyTo (dst: User) {
       this.emojiStatus,
       this.isContact,
       this.isMutualContact,
+      this.isCloseFriend,
       this.isVerified,
       this.isPremium,
       this.isSupport,
       this.restrictionReason,
       this.isScam,
       this.isFake,
+      this.hasActiveStories,
+      this.hasUnreadActiveStories,
       this.haveAccess,
       this.type,
       this.languageCode,
@@ -167,12 +170,15 @@ fun User.copyTo (dst: User) {
   dst.emojiStatus = this.emojiStatus
   dst.isContact = this.isContact
   dst.isMutualContact = this.isMutualContact
+  dst.isCloseFriend = this.isCloseFriend
   dst.isVerified = this.isVerified
   dst.isPremium = this.isPremium
   dst.isSupport = this.isSupport
   dst.restrictionReason = this.restrictionReason
   dst.isScam = this.isScam
   dst.isFake = this.isFake
+  dst.hasActiveStories = this.hasActiveStories
+  dst.hasUnreadActiveStories = this.hasUnreadActiveStories
   dst.haveAccess = this.haveAccess
   dst.type = this.type
   dst.languageCode = this.languageCode
@@ -210,10 +216,9 @@ fun Message.copyTo (dst: Message) {
       this.forwardInfo,
       this.interactionInfo,
       this.unreadReactions,
-      this.replyInChatId,
-      this.replyToMessageId,
+      this.replyTo,
       this.messageThreadId,
-      this.selfDestructTime,
+      this.selfDestructType,
       this.selfDestructIn,
       this.autoDeleteIn,
       this.viaBotUserId,
@@ -251,10 +256,9 @@ fun Message.copyTo (dst: Message) {
   dst.forwardInfo = this.forwardInfo
   dst.interactionInfo = this.interactionInfo
   dst.unreadReactions = this.unreadReactions
-  dst.replyInChatId = this.replyInChatId
-  dst.replyToMessageId = this.replyToMessageId
+  dst.replyTo = this.replyTo
   dst.messageThreadId = this.messageThreadId
-  dst.selfDestructTime = this.selfDestructTime
+  dst.selfDestructType = this.selfDestructType
   dst.selfDestructIn = this.selfDestructIn
   dst.autoDeleteIn = this.autoDeleteIn
   dst.viaBotUserId = this.viaBotUserId
@@ -333,10 +337,9 @@ fun Message?.copyOf (): Message? {
       this.forwardInfo,
       this.interactionInfo,
       this.unreadReactions,
-      this.replyInChatId,
-      this.replyToMessageId,
+      this.replyTo,
       this.messageThreadId,
-      this.selfDestructTime,
+      this.selfDestructType,
       this.selfDestructIn,
       this.autoDeleteIn,
       this.viaBotUserId,
@@ -360,10 +363,10 @@ fun Chat?.copyOf (): Chat? {
       this.lastMessage,
       if (this.positions != null) this.positions.copyOf() else null,
       this.messageSenderId,
+      this.blockList,
       this.hasProtectedContent,
       this.isTranslatable,
       this.isMarkedAsUnread,
-      this.isBlocked,
       this.hasScheduledMessages,
       this.canBeDeletedOnlyForSelf,
       this.canBeDeletedForAllUsers,
