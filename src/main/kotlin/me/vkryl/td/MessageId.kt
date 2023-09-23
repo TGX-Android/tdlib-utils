@@ -21,9 +21,13 @@ package me.vkryl.td
 
 import me.vkryl.core.addElement
 import me.vkryl.core.removeElement
+import org.drinkless.tdlib.TdApi.MessageReplyTo
+import org.drinkless.tdlib.TdApi.MessageReplyToMessage
 import kotlin.math.min
 
 class MessageId @JvmOverloads constructor (val chatId: Long, val messageId: Long, val otherMessageIds: LongArray? = null) {
+  constructor(replyTo: MessageReplyToMessage) : this(replyTo.chatId, replyTo.messageId)
+
   fun toServerMessageId () = toServerMessageId(messageId)
 
   fun isHistoryStart () = messageId == MIN_VALID_ID
@@ -73,5 +77,11 @@ class MessageId @JvmOverloads constructor (val chatId: Long, val messageId: Long
 
     @JvmStatic fun fromServerMessageId (serverMessageId: Long): Long = serverMessageId shl 20
     @JvmStatic fun toServerMessageId (tdlibMessageId: Long): Long = if (tdlibMessageId % (1 shl 20) == 0L) tdlibMessageId shr 20 else 0
+
+    @JvmStatic fun valueOf (replyTo: MessageReplyTo?): MessageId? = if (replyTo?.constructor == MessageReplyToMessage.CONSTRUCTOR) {
+      MessageId(replyTo as MessageReplyToMessage)
+    } else {
+      null
+    }
   }
 }

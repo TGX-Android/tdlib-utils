@@ -1406,3 +1406,53 @@ fun DeviceToken?.equalsTo(b: DeviceToken?): Boolean {
     }
   }
 }
+
+fun StoryList?.equalsTo(b: StoryList?): Boolean {
+  return this === b || (this != null && b != null && this.constructor == b.constructor);
+}
+
+fun MessageSelfDestructType?.equalsTo(b: MessageSelfDestructType?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null || this.constructor != b.constructor -> false
+    else -> {
+      when (this.constructor) {
+        MessageSelfDestructTypeImmediately.CONSTRUCTOR -> true
+        MessageSelfDestructTypeTimer.CONSTRUCTOR -> {
+          require(this is MessageSelfDestructTypeTimer && b is MessageSelfDestructTypeTimer)
+          this.selfDestructTime == b.selfDestructTime
+        }
+        else -> TODO(this.toString())
+      }
+    }
+  }
+}
+
+fun MessageReplyTo?.equalsTo(b: MessageReplyTo?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null || this.constructor != b.constructor -> false
+    else -> {
+      when (this.constructor) {
+        MessageReplyToMessage.CONSTRUCTOR -> {
+          require(this is MessageReplyToMessage && b is MessageReplyToMessage)
+          this.chatId == b.chatId && this.messageId == b.messageId
+        }
+        MessageReplyToStory.CONSTRUCTOR -> {
+          require(this is MessageReplyToStory && b is MessageReplyToStory)
+          this.storySenderChatId == b.storySenderChatId && this.storyId == b.storyId
+        }
+        else -> TODO(this.toString())
+      }
+    }
+  }
+}
+
+fun MessageReplyTo?.equalsTo(chatId: Long, messageId: Long): Boolean {
+  return if (this != null && this.constructor == MessageReplyToMessage.CONSTRUCTOR) {
+    require(this is MessageReplyToMessage)
+    this.chatId == chatId && this.messageId == messageId
+  } else {
+    false
+  }
+}

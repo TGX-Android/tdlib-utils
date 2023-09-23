@@ -331,6 +331,35 @@ fun MessageContent.isSecret (): Boolean {
   }
 }
 
+fun MessageSelfDestructType?.isSecret (): Boolean {
+  return if (this != null) {
+    when (this.constructor) {
+      MessageSelfDestructTypeImmediately.CONSTRUCTOR -> true
+      MessageSelfDestructTypeTimer.CONSTRUCTOR -> (this as MessageSelfDestructTypeTimer).selfDestructTime <= 60
+      else -> TODO(this.toString())
+    }
+  } else {
+    false
+  }
+}
+
+fun InputMessageContent.isSecret (): Boolean {
+  return when (this.constructor) {
+    InputMessagePhoto.CONSTRUCTOR -> (this as InputMessagePhoto).selfDestructType.isSecret()
+    InputMessageVideo.CONSTRUCTOR -> (this as InputMessageVideo).selfDestructType.isSecret()
+    else -> false
+  }
+}
+
+fun MessageReplyTo?.toMessageId (): MessageId? {
+  return if (this != null && this.constructor == MessageReplyToMessage.CONSTRUCTOR) {
+    require(this is MessageReplyToMessage)
+    MessageId(this.chatId, this.messageId)
+  } else {
+    null
+  }
+}
+
 fun MessageSender?.getSenderUserId (): Long {
   return if (this?.constructor == MessageSenderUser.CONSTRUCTOR) {
     (this as MessageSenderUser).userId
