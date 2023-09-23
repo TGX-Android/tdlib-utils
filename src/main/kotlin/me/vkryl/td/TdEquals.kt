@@ -56,6 +56,9 @@ fun ChatAdministratorRights?.equalsTo(b: ChatAdministratorRights?): Boolean {
           this.canManageTopics,
           this.canPromoteMembers,
           this.canManageVideoChats,
+          this.canPostStories,
+          this.canEditStories,
+          this.canDeleteStories,
           this.isAnonymous
         )
       }
@@ -70,6 +73,9 @@ fun ChatAdministratorRights?.equalsTo(b: ChatAdministratorRights?): Boolean {
       this.canManageTopics == b.canManageTopics &&
       this.canPromoteMembers == b.canPromoteMembers &&
       this.canManageVideoChats == b.canManageVideoChats &&
+      this.canPostStories == b.canPostStories &&
+      this.canEditStories == b.canEditStories &&
+      this.canDeleteStories == b.canDeleteStories &&
       this.isAnonymous == b.isAnonymous
     }
   }

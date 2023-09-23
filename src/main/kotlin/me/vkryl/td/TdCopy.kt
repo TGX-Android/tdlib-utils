@@ -467,6 +467,9 @@ fun ChatAdministratorRights?.copyOf (): ChatAdministratorRights? {
       this.canManageTopics,
       this.canPromoteMembers,
       this.canManageVideoChats,
+      this.canPostStories,
+      this.canEditStories,
+      this.canDeleteStories,
       this.isAnonymous
     )
   }
