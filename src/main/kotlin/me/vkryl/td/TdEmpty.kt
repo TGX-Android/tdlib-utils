@@ -60,7 +60,10 @@ fun RichText?.isEmpty (): Boolean {
       }
       return true
     }
-    else -> TODO(this.toString())
+    else -> {
+      assertRichText_58eb3f54()
+      throw unsupported(this)
+    }
   }
 }
 

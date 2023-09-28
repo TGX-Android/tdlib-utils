@@ -50,3 +50,5 @@ const val MAX_MESSAGE_CUSTOM_EMOJI_COUNT = 100
 @JvmField val FRAGMENT_HOST = "fragment.com"
 @JvmField val TELEGRAM_HOSTS = arrayOf("telegram.org", "contest.com", "fragment.com")
 @JvmField val TELEGRAPH_HOSTS = arrayOf("telegra.ph", "graph.org", "te.legra.ph")
+
+internal const val COMPILE_CHECK = false

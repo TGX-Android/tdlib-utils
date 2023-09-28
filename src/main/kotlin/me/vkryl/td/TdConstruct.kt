@@ -39,7 +39,12 @@ fun constructSearchMessagesFilter (@SearchMessagesFilter.Constructors constructo
     SearchMessagesFilterMention.CONSTRUCTOR -> SearchMessagesFilterMention()
     SearchMessagesFilterUnreadMention.CONSTRUCTOR -> SearchMessagesFilterUnreadMention()
     SearchMessagesFilterFailedToSend.CONSTRUCTOR -> SearchMessagesFilterFailedToSend()
-    else -> error(constructor.toString())
+    SearchMessagesFilterUnreadReaction.CONSTRUCTOR -> SearchMessagesFilterUnreadReaction()
+    SearchMessagesFilterPinned.CONSTRUCTOR -> SearchMessagesFilterPinned()
+    else -> {
+      assertSearchMessagesFilter_f22b2582()
+      error(constructor.toString())
+    }
   }
 }
 
@@ -48,7 +53,10 @@ fun constructNotificationSettingsScope (@NotificationSettingsScope.Constructors 
     NotificationSettingsScopePrivateChats.CONSTRUCTOR -> NotificationSettingsScopePrivateChats()
     NotificationSettingsScopeGroupChats.CONSTRUCTOR -> NotificationSettingsScopeGroupChats()
     NotificationSettingsScopeChannelChats.CONSTRUCTOR -> NotificationSettingsScopeChannelChats()
-    else -> error(constructor.toString())
+    else -> {
+      assertNotificationSettingsScope_edff9c28()
+      error(constructor.toString())
+    }
   }
 }
 
@@ -63,14 +71,17 @@ fun constructChatAction (@ChatAction.Constructors constructor: Int): ChatAction?
     ChatActionChoosingLocation.CONSTRUCTOR -> ChatActionChoosingLocation()
     ChatActionChoosingSticker.CONSTRUCTOR -> ChatActionChoosingSticker()
     ChatActionStartPlayingGame.CONSTRUCTOR -> ChatActionStartPlayingGame()
-
+    ChatActionWatchingAnimations.CONSTRUCTOR, // Can't be constructed without emoji field
     ChatActionUploadingDocument.CONSTRUCTOR,
     ChatActionUploadingPhoto.CONSTRUCTOR,
     ChatActionUploadingVideo.CONSTRUCTOR,
     ChatActionUploadingVideoNote.CONSTRUCTOR,
     ChatActionUploadingVoiceNote.CONSTRUCTOR -> null
 
-    else -> null
+    else ->  {
+      assertChatAction_e6a90de7()
+      error(constructor.toString())
+    }
   }
 }
 
@@ -82,9 +93,13 @@ fun constructUserPrivacySetting (@UserPrivacySetting.Constructors constructor: I
     UserPrivacySettingAllowPeerToPeerCalls.CONSTRUCTOR -> UserPrivacySettingAllowPeerToPeerCalls()
     UserPrivacySettingShowLinkInForwardedMessages.CONSTRUCTOR -> UserPrivacySettingShowLinkInForwardedMessages()
     UserPrivacySettingShowPhoneNumber.CONSTRUCTOR -> UserPrivacySettingShowPhoneNumber()
+    UserPrivacySettingShowBio.CONSTRUCTOR -> UserPrivacySettingShowBio()
     UserPrivacySettingShowProfilePhoto.CONSTRUCTOR -> UserPrivacySettingShowProfilePhoto()
     UserPrivacySettingShowStatus.CONSTRUCTOR -> UserPrivacySettingShowStatus()
     UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages.CONSTRUCTOR -> UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages()
-    else -> error(constructor.toString())
+    else -> {
+      assertUserPrivacySetting_21d3f4()
+      error(constructor.toString())
+    }
   }
 }

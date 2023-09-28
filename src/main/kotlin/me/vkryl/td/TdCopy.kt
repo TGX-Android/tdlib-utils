@@ -23,7 +23,7 @@ package me.vkryl.td
 import org.drinkless.tdlib.TdApi.*
 
 fun ChatPermissions.copyTo (dst: ChatPermissions) {
-  if (false) {
+  if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
     ChatPermissions(
       this.canSendBasicMessages,
@@ -59,7 +59,7 @@ fun ChatPermissions.copyTo (dst: ChatPermissions) {
 }
 
 fun ChatPosition.copyTo (dst: ChatPosition) {
-  if (false) {
+  if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
     ChatPosition(
       this.list,
@@ -77,7 +77,7 @@ fun ChatPosition.copyTo (dst: ChatPosition) {
 fun File.copyTo (dst: File): Boolean {
   val hasChanges = !this.equalsTo(dst, false)
 
-  if (false) {
+  if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
     LocalFile(
       this.local.path,
@@ -99,7 +99,7 @@ fun File.copyTo (dst: File): Boolean {
   dst.local.downloadedPrefixSize = this.local.downloadedPrefixSize
   dst.local.downloadedSize = this.local.downloadedSize
 
-  if (false) {
+  if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
     RemoteFile(
       this.remote.id,
@@ -115,7 +115,7 @@ fun File.copyTo (dst: File): Boolean {
   dst.remote.isUploadingCompleted = this.remote.isUploadingCompleted
   dst.remote.uploadedSize = this.remote.uploadedSize
 
-  if (false) {
+  if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
     File(
       this.id,
@@ -133,7 +133,7 @@ fun File.copyTo (dst: File): Boolean {
 }
 
 fun User.copyTo (dst: User) {
-  if (false) {
+  if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
     User(
       this.id,
@@ -186,7 +186,7 @@ fun User.copyTo (dst: User) {
 }
 
 fun Message.copyTo (dst: Message) {
-  if (false) {
+  if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
     Message(
       this.id,
@@ -496,7 +496,10 @@ fun ChatMemberStatus?.copyOf (): ChatMemberStatus? {
         this.restrictedUntilDate,
         this.permissions.copyOf()
       )
-      else -> TODO(this.toString())
+      else -> {
+        assertChatMemberStatus_33fc5755()
+        throw unsupported(this)
+      }
     }
   }
 }

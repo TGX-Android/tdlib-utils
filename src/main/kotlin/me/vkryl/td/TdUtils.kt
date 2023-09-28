@@ -336,7 +336,10 @@ fun MessageSelfDestructType?.isSecret (): Boolean {
     when (this.constructor) {
       MessageSelfDestructTypeImmediately.CONSTRUCTOR -> true
       MessageSelfDestructTypeTimer.CONSTRUCTOR -> (this as MessageSelfDestructTypeTimer).selfDestructTime <= 60
-      else -> TODO(this.toString())
+      else -> {
+        assertMessageSelfDestructType_58882d8c()
+        throw unsupported(this)
+      }
     }
   } else {
     false
@@ -394,7 +397,8 @@ fun Message?.getMessageAuthorId(allowForward: Boolean = true): Long {
           0
         }
         else -> {
-          TODO(forwardInfo.origin.toString())
+          assertMessageForwardOrigin_fab75f04()
+          throw unsupported(forwardInfo.origin)
         }
       }
     }
@@ -402,7 +406,10 @@ fun Message?.getMessageAuthorId(allowForward: Boolean = true): Long {
   return when (this.senderId.constructor) {
     MessageSenderUser.CONSTRUCTOR -> fromUserId((this.senderId as MessageSenderUser).userId)
     MessageSenderChat.CONSTRUCTOR -> (this.senderId as MessageSenderChat).chatId
-    else -> TODO(this.senderId.toString())
+    else -> {
+      assertMessageSender_439d4c9c()
+      throw unsupported(this.senderId)
+    }
   }
 }
 
@@ -411,7 +418,10 @@ fun MessageSender?.getSenderId (): Long {
     when (this.constructor) {
       MessageSenderUser.CONSTRUCTOR -> fromUserId((this as MessageSenderUser).userId)
       MessageSenderChat.CONSTRUCTOR -> (this as MessageSenderChat).chatId
-      else -> TODO(this.toString())
+      else -> {
+        assertMessageSender_439d4c9c()
+        throw unsupported(this)
+      }
     }
   } else {
     0
@@ -448,8 +458,10 @@ fun AuthenticationCodeType.codeLength (fallbackCodeLength: Int): Int {
       (this as AuthenticationCodeTypeMissedCall).length
     AuthenticationCodeTypeFlashCall.CONSTRUCTOR ->
       fallbackCodeLength
-    else ->
-      TODO(this.toString())
+    else -> {
+      assertAuthenticationCodeType_bb3a4b1a()
+      throw unsupported(this)
+    }
   }
 }
 fun MessageContent?.textOrCaption (): FormattedText? {
@@ -526,6 +538,9 @@ fun MessageContent?.getTargetFileId (): Int {
     else -> 0
   }
 }
+fun SearchMessagesFilter.isDocumentFilter (): Boolean = this.constructor == SearchMessagesFilterDocument.CONSTRUCTOR
+fun SearchMessagesFilter.isPinnedFilter (): Boolean = this.constructor == SearchMessagesFilterPinned.CONSTRUCTOR
+fun SearchMessagesFilter.isEmptyFilter (): Boolean = this.constructor == SearchMessagesFilterEmpty.CONSTRUCTOR
 
 fun Message?.matchesFilter(filter: SearchMessagesFilter?): Boolean {
   if (this == null || filter == null) {
@@ -554,9 +569,15 @@ fun Message?.matchesFilter(filter: SearchMessagesFilter?): Boolean {
     SearchMessagesFilterUrl.CONSTRUCTOR -> {
       (this.content.constructor == MessageText.CONSTRUCTOR && (this.content as MessageText).webPage != null) || this.content.textOrCaption().hasLinks()
     }
+    SearchMessagesFilterUnreadReaction.CONSTRUCTOR -> {
+      !this.unreadReactions.isNullOrEmpty()
+    }
     SearchMessagesFilterEmpty.CONSTRUCTOR -> true
     SearchMessagesFilterMention.CONSTRUCTOR -> false // TODO
-    else -> TODO(filter.toString())
+    else -> {
+      assertSearchMessagesFilter_f22b2582()
+      throw unsupported(filter)
+    }
   }
 }
 
@@ -590,7 +611,8 @@ fun RichText.findReference(name: String): RichText? {
     RichTextPhoneNumber.CONSTRUCTOR -> (this as RichTextPhoneNumber).text.findReference(name)
     RichTextReference.CONSTRUCTOR -> (this as RichTextReference).text.findReference(name)
     else -> {
-      TODO(this.toString())
+      assertRichText_58eb3f54()
+      throw unsupported(this)
     }
   }
 }
@@ -726,7 +748,10 @@ fun PageBlock.findReference(name: String): RichText? {
       }
       table.caption.findReference(name)
     }
-    else -> TODO(this.toString())
+    else -> {
+      assertPageBlock_b923b80b()
+      throw unsupported(this)
+    }
   }
 }
 
@@ -874,7 +899,10 @@ fun buildOutline(contours: Array<ClosedVectorPath>?, ratio: Float, offsetX: Floa
     val endPoint = when (lastCommand.constructor) {
       VectorPathCommandLine.CONSTRUCTOR -> (lastCommand as VectorPathCommandLine).endPoint
       VectorPathCommandCubicBezierCurve.CONSTRUCTOR -> (lastCommand as VectorPathCommandCubicBezierCurve).endPoint
-      else -> TODO(lastCommand.toString())
+      else -> {
+        assertVectorPathCommand_4e60caf3()
+        throw unsupported(lastCommand)
+      }
     }
     path.moveTo(
       (endPoint.x * ratio).toFloat() + offsetX,
@@ -900,7 +928,10 @@ fun buildOutline(contours: Array<ClosedVectorPath>?, ratio: Float, offsetX: Floa
             (curve.endPoint.y * ratio).toFloat() + offsetY
           )
         }
-        else -> TODO(command.toString())
+        else -> {
+          assertVectorPathCommand_4e60caf3()
+          throw unsupported(command)
+        }
       }
     }
   }
@@ -915,12 +946,15 @@ fun ChatMemberStatus?.isAnonymous (): Boolean {
   }
 }
 
-fun StickerFormat?.isAnimated (): Boolean {
-  return when (this?.constructor) {
+fun StickerFormat.isAnimated (): Boolean {
+  return when (this.constructor) {
     StickerFormatTgs.CONSTRUCTOR,
     StickerFormatWebm.CONSTRUCTOR -> true
     StickerFormatWebp.CONSTRUCTOR -> false
-    else -> TODO(this.toString())
+    else -> {
+      assertStickerFormat_4fea4648()
+      throw unsupported(this)
+    }
   }
 }
 
@@ -983,7 +1017,10 @@ fun ChatType.matchesScope(scope: NotificationSettingsScope): Boolean {
     NotificationSettingsScopePrivateChats.CONSTRUCTOR -> this.constructor == ChatTypePrivate.CONSTRUCTOR || this.constructor == ChatTypeSecret.CONSTRUCTOR
     NotificationSettingsScopeGroupChats.CONSTRUCTOR -> this.constructor == ChatTypeBasicGroup.CONSTRUCTOR || (this.constructor == ChatTypeSupergroup.CONSTRUCTOR && !(this as ChatTypeSupergroup).isChannel)
     NotificationSettingsScopeChannelChats.CONSTRUCTOR -> this.constructor == ChatTypeSupergroup.CONSTRUCTOR && (this as ChatTypeSupergroup).isChannel
-    else -> TODO(scope.toString())
+    else -> {
+      assertNotificationSettingsScope_edff9c28()
+      throw unsupported(scope)
+    }
   }
 }
 
@@ -992,7 +1029,10 @@ fun StickerFullType.toType (): StickerType {
     StickerFullTypeRegular.CONSTRUCTOR -> StickerTypeRegular()
     StickerFullTypeMask.CONSTRUCTOR -> StickerTypeMask()
     StickerFullTypeCustomEmoji.CONSTRUCTOR -> StickerTypeCustomEmoji()
-    else -> TODO(this.toString())
+    else -> {
+      assertStickerFullType_466eed9d()
+      throw unsupported(this)
+    }
   }
 }
 
@@ -1071,14 +1111,18 @@ fun PushMessageContent.getText (): String? {
     PushMessageContentChatJoinByRequest.CONSTRUCTOR,
     PushMessageContentRecurringPayment.CONSTRUCTOR,
     PushMessageContentMessageForwards.CONSTRUCTOR,
-    PushMessageContentMediaAlbum.CONSTRUCTOR ->
+    PushMessageContentMediaAlbum.CONSTRUCTOR,
+    PushMessageContentStory.CONSTRUCTOR ->
       null
     // unsupported
-    else ->
-      TODO(this.toString())
+    else -> {
+      assertPushMessageContent_e86d33d2()
+      throw unsupported(this)
+    }
   }
 }
 
+fun PushMessageContent.isSticker(): Boolean = this.constructor == PushMessageContentSticker.CONSTRUCTOR
 fun PushMessageContent.isPinned (): Boolean {
   return when (this.constructor) {
     PushMessageContentHidden.CONSTRUCTOR ->
@@ -1113,6 +1157,8 @@ fun PushMessageContent.isPinned (): Boolean {
       (this as PushMessageContentVideoNote).isPinned
     PushMessageContentVoiceNote.CONSTRUCTOR ->
       (this as PushMessageContentVoiceNote).isPinned
+    PushMessageContentStory.CONSTRUCTOR ->
+      (this as PushMessageContentStory).isPinned
     // do not have `isPinned` field:
     PushMessageContentContactRegistered.CONSTRUCTOR,
     PushMessageContentScreenshotTaken.CONSTRUCTOR,
@@ -1131,8 +1177,10 @@ fun PushMessageContent.isPinned (): Boolean {
     PushMessageContentMediaAlbum.CONSTRUCTOR ->
       false
     // unsupported
-    else ->
-      TODO(this.toString())
+    else -> {
+      assertPushMessageContent_e86d33d2()
+      throw unsupported(this)
+    }
   }
 }
 
@@ -1249,4 +1297,84 @@ fun OptionValue.stringValue (defaultValue: String? = null): String = when (this.
   OptionValueString.CONSTRUCTOR -> (this as OptionValueString).value
   OptionValueEmpty.CONSTRUCTOR -> defaultValue ?: ""
   else -> defaultValue ?: error(this.toString())
+}
+
+fun TextEntityType.isUrl (): Boolean = this.constructor == TextEntityTypeUrl.CONSTRUCTOR
+fun TextEntityType.isTextUrl (): Boolean = this.constructor == TextEntityTypeTextUrl.CONSTRUCTOR
+fun TextEntityType.isEmailAddress (): Boolean = this.constructor == TextEntityTypeEmailAddress.CONSTRUCTOR
+fun TextEntityType.isBankCardNumber (): Boolean = this.constructor == TextEntityTypeBankCardNumber.CONSTRUCTOR
+fun TextEntityType.isBotCommand (): Boolean = this.constructor == TextEntityTypeBotCommand.CONSTRUCTOR
+fun TextEntityType.isHashtag (): Boolean = this.constructor == TextEntityTypeHashtag.CONSTRUCTOR
+fun TextEntityType.isMention (): Boolean = this.constructor == TextEntityTypeMention.CONSTRUCTOR
+fun TextEntityType.isMentionName (): Boolean = this.constructor == TextEntityTypeMentionName.CONSTRUCTOR
+fun TextEntityType.isUnderline (): Boolean = this.constructor == TextEntityTypeUnderline.CONSTRUCTOR
+fun TextEntityType.isStrikethrough (): Boolean = this.constructor == TextEntityTypeStrikethrough.CONSTRUCTOR
+fun TextEntityType.isSpoiler (): Boolean = this.constructor == TextEntityTypeSpoiler.CONSTRUCTOR
+fun TextEntityType.isBold (): Boolean = this.constructor == TextEntityTypeBold.CONSTRUCTOR
+fun TextEntityType.isItalic (): Boolean = this.constructor == TextEntityTypeItalic.CONSTRUCTOR
+fun TextEntityType.isCode (): Boolean = this.constructor == TextEntityTypeCode.CONSTRUCTOR
+fun TextEntityType.isPreCode (): Boolean = this.constructor == TextEntityTypePreCode.CONSTRUCTOR
+fun TextEntityType.isPre (): Boolean = this.constructor == TextEntityTypePre.CONSTRUCTOR
+fun TextEntityType.isCustomEmoji (): Boolean = this.constructor == TextEntityTypeCustomEmoji.CONSTRUCTOR
+
+fun TextEntityType.canBeNested (): Boolean = when (this.constructor) {
+  // Can't be nested
+  TextEntityTypePre.CONSTRUCTOR,
+  TextEntityTypePreCode.CONSTRUCTOR,
+  TextEntityTypeCode.CONSTRUCTOR -> false
+  // Can be nested
+  TextEntityTypeBold.CONSTRUCTOR,
+  TextEntityTypeItalic.CONSTRUCTOR,
+  TextEntityTypeUnderline.CONSTRUCTOR,
+  TextEntityTypeStrikethrough.CONSTRUCTOR,
+  TextEntityTypeSpoiler.CONSTRUCTOR,
+  TextEntityTypeTextUrl.CONSTRUCTOR,
+  TextEntityTypeMentionName.CONSTRUCTOR,
+  TextEntityTypeCustomEmoji.CONSTRUCTOR,
+  // Automatically detected, also OK
+  TextEntityTypeMention.CONSTRUCTOR,
+  TextEntityTypeHashtag.CONSTRUCTOR,
+  TextEntityTypeCashtag.CONSTRUCTOR,
+  TextEntityTypeBotCommand.CONSTRUCTOR,
+  TextEntityTypeUrl.CONSTRUCTOR,
+  TextEntityTypeEmailAddress.CONSTRUCTOR,
+  TextEntityTypePhoneNumber.CONSTRUCTOR,
+  TextEntityTypeBankCardNumber.CONSTRUCTOR,
+  TextEntityTypeMediaTimestamp.CONSTRUCTOR -> true
+  // Unsupported
+  else -> {
+    assertTextEntityType_542d164b()
+    throw unsupported(this)
+  }
+}
+
+fun MessageContent.isAudio (): Boolean = this.constructor == MessageAudio.CONSTRUCTOR
+fun MessageContent.isVoiceNote (): Boolean = this.constructor == MessageVoiceNote.CONSTRUCTOR
+fun MessageContent.isVideoNote (): Boolean = this.constructor == MessageVideoNote.CONSTRUCTOR
+fun InputMessageContent.isVoiceNote (): Boolean = this.constructor == InputMessageVoiceNote.CONSTRUCTOR
+fun InputMessageContent.isVideoNote (): Boolean = this.constructor == InputMessageVideoNote.CONSTRUCTOR
+fun MessageContent.isText (): Boolean = this.constructor == MessageText.CONSTRUCTOR
+fun MessageContent.isDocument (): Boolean = this.constructor == MessageDocument.CONSTRUCTOR
+fun MessageContent.isAnimatedEmoji (): Boolean = this.constructor == MessageAnimatedEmoji.CONSTRUCTOR
+fun MessageContent.isDice (): Boolean = this.constructor == MessageDice.CONSTRUCTOR
+fun MessageContent.isPoll (): Boolean = this.constructor == MessagePoll.CONSTRUCTOR
+fun MessageContent.isInvoice (): Boolean = this.constructor == MessageInvoice.CONSTRUCTOR
+fun MessageContent.isGame (): Boolean = this.constructor == MessageGame.CONSTRUCTOR
+fun MessageContent.isAnimation (): Boolean = this.constructor == MessageAnimation.CONSTRUCTOR
+fun MessageContent.isPhoto (): Boolean = this.constructor == MessagePhoto.CONSTRUCTOR
+fun MessageContent.isLocation (): Boolean = this.constructor == MessageLocation.CONSTRUCTOR
+fun MessageContent.isProximityAlertTriggered (): Boolean = this.constructor == MessageProximityAlertTriggered.CONSTRUCTOR
+fun MessageContent.isCall (): Boolean = this.constructor == MessageCall.CONSTRUCTOR
+fun MessageContent.isPinned (): Boolean = this.constructor == MessagePinMessage.CONSTRUCTOR
+fun MessageContent.isSticker (): Boolean = this.constructor == MessageSticker.CONSTRUCTOR
+fun MessageContent.isListenedOrViewed (): Boolean = when (this.constructor) {
+  MessageVoiceNote.CONSTRUCTOR -> {
+    require(this is MessageVoiceNote)
+    this.isListened
+  }
+  MessageVideoNote.CONSTRUCTOR -> {
+    require(this is MessageVideoNote)
+    this.isViewed
+  }
+  else -> false
 }

@@ -32,7 +32,10 @@ fun ChatList?.equalsTo(b: ChatList?): Boolean {
     else -> when (this.constructor) {
       ChatListMain.CONSTRUCTOR, ChatListArchive.CONSTRUCTOR -> true
       ChatListFolder.CONSTRUCTOR -> (this as ChatListFolder).chatFolderId == (b as ChatListFolder).chatFolderId
-      else -> TODO(this.toString())
+      else -> {
+        assertChatList_db6c93ab()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -42,7 +45,7 @@ fun ChatAdministratorRights?.equalsTo(b: ChatAdministratorRights?): Boolean {
     this === b -> true
     this === null || b === null -> false
     else -> {
-      if (false) {
+      if (COMPILE_CHECK) {
         // Cause compilation error when any field in TdApi changes
         ChatAdministratorRights(
           this.canManageChat,
@@ -91,7 +94,7 @@ fun ChatMemberStatus.equalsTo(b: ChatMemberStatus): Boolean {
 
       ChatMemberStatusCreator.CONSTRUCTOR -> {
         require(this is ChatMemberStatusCreator && b is ChatMemberStatusCreator)
-        if (false) {
+        if (COMPILE_CHECK) {
           // Cause compilation error when any field in TdApi changes
           ChatMemberStatusCreator(
             this.customTitle,
@@ -106,7 +109,7 @@ fun ChatMemberStatus.equalsTo(b: ChatMemberStatus): Boolean {
 
       ChatMemberStatusBanned.CONSTRUCTOR -> {
         require(this is ChatMemberStatusBanned && b is ChatMemberStatusBanned)
-        if (false) {
+        if (COMPILE_CHECK) {
           // Cause compilation error when any field in TdApi changes
           ChatMemberStatusBanned(this.bannedUntilDate)
         }
@@ -115,7 +118,7 @@ fun ChatMemberStatus.equalsTo(b: ChatMemberStatus): Boolean {
 
       ChatMemberStatusAdministrator.CONSTRUCTOR -> {
         require(this is ChatMemberStatusAdministrator && b is ChatMemberStatusAdministrator)
-        if (false) {
+        if (COMPILE_CHECK) {
           // Cause compilation error when any field in TdApi changes
           ChatMemberStatusAdministrator(
             this.customTitle,
@@ -130,7 +133,7 @@ fun ChatMemberStatus.equalsTo(b: ChatMemberStatus): Boolean {
 
       ChatMemberStatusRestricted.CONSTRUCTOR -> {
         require(this is ChatMemberStatusRestricted && b is ChatMemberStatusRestricted)
-        if (false) {
+        if (COMPILE_CHECK) {
           // Cause compilation error when any field in TdApi changes
           ChatMemberStatusRestricted(
             this.isMember,
@@ -143,13 +146,16 @@ fun ChatMemberStatus.equalsTo(b: ChatMemberStatus): Boolean {
         this.permissions.equalsTo(b.permissions)
       }
 
-      else -> TODO(this.toString())
+      else -> {
+        assertChatMemberStatus_33fc5755()
+        throw unsupported(this)
+      }
     }
   }
 }
 
 fun ChatPermissions.equalsTo(b: ChatPermissions): Boolean {
-  if (false) {
+  if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
     ChatPermissions(
       this.canSendBasicMessages,
@@ -187,7 +193,7 @@ fun ChatPermissions.equalsTo(b: ChatPermissions): Boolean {
 }
 
 fun ChatPermissions.equalsTo(old: ChatPermissions, defaultPermissions: ChatPermissions): Boolean {
-  if (false) {
+  if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
     ChatPermissions(
       this.canSendBasicMessages,
@@ -245,8 +251,12 @@ fun ChatActionBar?.equalsTo(b: ChatActionBar?): Boolean {
       }
       ChatActionBarReportUnrelatedLocation.CONSTRUCTOR,
       ChatActionBarAddContact.CONSTRUCTOR,
-      ChatActionBarSharePhoneNumber.CONSTRUCTOR -> true
-      else -> TODO(this.toString())
+      ChatActionBarSharePhoneNumber.CONSTRUCTOR,
+      ChatActionBarInviteMembers.CONSTRUCTOR -> true
+      else -> {
+        assertChatActionBar_9b96400f()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -332,8 +342,12 @@ fun TextEntityType?.equalsTo(b: TextEntityType?): Boolean {
       TextEntityTypePre.CONSTRUCTOR,
       TextEntityTypeStrikethrough.CONSTRUCTOR,
       TextEntityTypeUnderline.CONSTRUCTOR,
-      TextEntityTypeUrl.CONSTRUCTOR -> true
-      else -> TODO(this.toString())
+      TextEntityTypeUrl.CONSTRUCTOR ->
+        true
+      else -> {
+        assertTextEntityType_542d164b()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -376,7 +390,10 @@ fun ChatAction.equalsTo(b: ChatAction): Boolean {
         require(this is ChatActionUploadingVideoNote && b is ChatActionUploadingVideoNote)
         this.progress == b.progress
       }
-      else -> TODO(this.toString())
+      else -> {
+        assertChatAction_e6a90de7()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -391,7 +408,10 @@ fun ChatSource?.equalsTo(b: ChatSource?): Boolean {
         require(this is ChatSourcePublicServiceAnnouncement && b is ChatSourcePublicServiceAnnouncement)
         this.type.equalsOrBothEmpty(b.type) && this.text.equalsOrBothEmpty(b.text)
       }
-      else -> TODO(this.toString())
+      else -> {
+        assertChatSource_12b21238()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -413,7 +433,10 @@ fun UserStatus?.equalsTo(b: UserStatus?): Boolean {
         require(this is UserStatusOffline && b is UserStatusOffline)
         this.wasOnline == b.wasOnline
       }
-      else -> TODO(this.toString())
+      else -> {
+        assertUserStatus_6492acaf()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -434,7 +457,7 @@ fun UserStatus?.equalsTo(b: UserStatus?): Boolean {
 }
 
 fun LocalFile?.equalsTo(b: LocalFile?): Boolean {
-  if (false) {
+  if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
     requireNotNull(this)
     LocalFile(
@@ -465,7 +488,7 @@ fun LocalFile?.equalsTo(b: LocalFile?): Boolean {
 }
 
 fun RemoteFile?.equalsTo(b: RemoteFile?): Boolean {
-  if (false) {
+  if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
     requireNotNull(this)
     RemoteFile(
@@ -490,7 +513,7 @@ fun RemoteFile?.equalsTo(b: RemoteFile?): Boolean {
 }
 
 fun ChatEventLogFilters?.equalsTo(b: ChatEventLogFilters?): Boolean {
-  if (false) {
+  if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
     requireNotNull(this)
     ChatEventLogFilters(
@@ -551,7 +574,10 @@ fun UserPrivacySettingRule.equalsTo(b: UserPrivacySettingRule): Boolean {
       UserPrivacySettingRuleAllowContacts.CONSTRUCTOR,
       UserPrivacySettingRuleRestrictAll.CONSTRUCTOR,
       UserPrivacySettingRuleRestrictContacts.CONSTRUCTOR -> true
-      else -> TODO(this.toString())
+      else -> {
+        assertUserPrivacySettingRule_9d021ccd()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -576,7 +602,10 @@ fun ProxyType.equalsTo(b: ProxyType): Boolean {
         require(this is ProxyTypeMtproto && b is ProxyTypeMtproto)
         this.secret == b.secret
       }
-      else -> TODO(this.toString())
+      else -> {
+        assertProxyType_bc1a1076()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -726,7 +755,23 @@ fun InternalLinkType.equalsTo(b: InternalLinkType): Boolean {
         this.startParameter == b.startParameter &&
         this.webAppShortName == b.webAppShortName
       }
-      else -> TODO(this.toString())
+      InternalLinkTypeChatBoost.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeChatBoost && b is InternalLinkTypeChatBoost)
+        this.url == b.url
+      }
+      InternalLinkTypeSideMenuBot.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeSideMenuBot && b is InternalLinkTypeSideMenuBot)
+        this.url == b.url &&
+        this.botUsername == b.botUsername
+      }
+      InternalLinkTypeStory.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeStory && b is InternalLinkTypeStory)
+        this.storySenderUsername == b.storySenderUsername && this.storyId == b.storyId
+      }
+      else -> {
+        assertInternalLinkType_1783a2fc()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -748,13 +793,16 @@ fun TargetChat.equalsTo(b: TargetChat): Boolean {
         require(this is TargetChatInternalLink && b is TargetChatInternalLink)
         this.link.equalsTo(b.link)
       }
-      else -> TODO(this.toString())
+      else -> {
+        assertTargetChat_75ff347c()
+        throw unsupported(this)
+      }
     }
   }
 }
 
 fun InlineKeyboardButton.equalsTo(b: InlineKeyboardButton): Boolean {
-  return (this === b) || (this.text == b.text && this.type.equalsTo(b.type));
+  return (this === b) || (this.text == b.text && this.type.equalsTo(b.type))
 }
 
 fun InlineKeyboardButtonType.equalsTo(b: InlineKeyboardButtonType): Boolean {
@@ -792,7 +840,10 @@ fun InlineKeyboardButtonType.equalsTo(b: InlineKeyboardButtonType): Boolean {
       }
       InlineKeyboardButtonTypeCallbackGame.CONSTRUCTOR,
       InlineKeyboardButtonTypeBuy.CONSTRUCTOR -> true
-      else -> TODO(this.toString())
+      else -> {
+        assertInlineKeyboardButtonType_4cba1cc1()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -813,7 +864,10 @@ fun KeyboardButtonType.equalsTo(b: KeyboardButtonType): Boolean {
       KeyboardButtonTypeText.CONSTRUCTOR,
       KeyboardButtonTypeRequestPhoneNumber.CONSTRUCTOR,
       KeyboardButtonTypeRequestLocation.CONSTRUCTOR -> true
-      else -> TODO(this.toString())
+      else -> {
+        assertKeyboardButtonType_149cec2d()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -877,7 +931,10 @@ fun ReplyMarkup?.equalsTo(b: ReplyMarkup?): Boolean {
         }
         true
       }
-      else -> TODO(this.toString())
+      else -> {
+        assertReplyMarkup_d6ebcdbe()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -1102,7 +1159,10 @@ fun StickerFullType?.equalsTo(b: StickerFullType?): Boolean {
         this.customEmojiId == b.customEmojiId &&
         this.needsRepainting == b.needsRepainting
       }
-      else -> TODO(this.toString())
+      else -> {
+        assertStickerFullType_466eed9d()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -1115,7 +1175,10 @@ fun StickerFormat?.equalsTo(b: StickerFormat?): Boolean {
       StickerFormatWebp.CONSTRUCTOR,
       StickerFormatTgs.CONSTRUCTOR,
       StickerFormatWebm.CONSTRUCTOR -> true
-      else -> TODO(this.toString())
+      else -> {
+        assertStickerFormat_4fea4648()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -1128,7 +1191,10 @@ fun StickerType?.equalsTo(b: StickerType?): Boolean {
       StickerTypeRegular.CONSTRUCTOR,
       StickerTypeMask.CONSTRUCTOR,
       StickerTypeCustomEmoji.CONSTRUCTOR -> true
-      else -> TODO(this.toString())
+      else -> {
+        assertStickerType_cc811bb7()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -1178,7 +1244,10 @@ fun VectorPathCommand?.equalsTo(b: VectorPathCommand?): Boolean {
           this.startControlPoint.equalsTo(b.startControlPoint) &&
           this.endControlPoint.equalsTo(b.endControlPoint)
       }
-      else -> TODO(this.toString())
+      else -> {
+        assertVectorPathCommand_4e60caf3()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -1209,7 +1278,10 @@ fun MaskPoint?.equalsTo(b: MaskPoint?): Boolean {
       MaskPointEyes.CONSTRUCTOR,
       MaskPointMouth.CONSTRUCTOR,
       MaskPointChin.CONSTRUCTOR -> true
-      else -> TODO(this.toString())
+      else -> {
+        assertMaskPoint_40914d4e()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -1279,7 +1351,10 @@ fun MessageSender?.equalsTo(b: MessageSender?): Boolean {
       when (this.constructor) {
         MessageSenderChat.CONSTRUCTOR -> (this as MessageSenderChat).chatId == (b as MessageSenderChat).chatId
         MessageSenderUser.CONSTRUCTOR -> (this as MessageSenderUser).userId == (b as MessageSenderUser).userId
-        else -> TODO(this.toString())
+        else -> {
+          assertMessageSender_439d4c9c()
+          throw unsupported(this)
+        }
       }
     }
   }
@@ -1303,7 +1378,10 @@ fun BackgroundType?.equalsTo(b: BackgroundType?, ignoreSettings: Boolean = true)
           require(this is BackgroundTypePattern && b is BackgroundTypePattern)
           this.fill.equalsTo(b.fill) && (ignoreSettings || (this.intensity == b.intensity && this.isMoving == b.isMoving))
         }
-        else -> TODO(this.toString())
+        else -> {
+          assertBackgroundType_64138c2()
+          throw unsupported(this)
+        }
       }
     }
   }
@@ -1327,7 +1405,10 @@ fun BackgroundFill?.equalsTo(b: BackgroundFill?): Boolean {
           require(this is BackgroundFillFreeformGradient && b is BackgroundFillFreeformGradient)
           Arrays.equals(this.colors, b.colors)
         }
-        else -> TODO(this.toString())
+        else -> {
+          assertBackgroundFill_6086fe10()
+          throw unsupported(this)
+        }
       }
     }
   }
@@ -1347,7 +1428,10 @@ fun ReactionType?.equalsTo(b: ReactionType?): Boolean {
           require(this is ReactionTypeCustomEmoji && b is ReactionTypeCustomEmoji)
           this.customEmojiId == b.customEmojiId
         }
-        else -> TODO(this.toString())
+        else -> {
+          assertReactionType_7dcca074()
+          throw unsupported(this)
+        }
       }
     }
   }
@@ -1407,14 +1491,17 @@ fun DeviceToken?.equalsTo(b: DeviceToken?): Boolean {
           require(this is DeviceTokenTizenPush && b is DeviceTokenTizenPush)
           this.regId == b.regId
         }
-        else -> TODO(this.toString())
+        else -> {
+          assertDeviceToken_de4a4f61()
+          throw unsupported(this)
+        }
       }
     }
   }
 }
 
 fun StoryList?.equalsTo(b: StoryList?): Boolean {
-  return this === b || (this != null && b != null && this.constructor == b.constructor);
+  return this === b || (this != null && b != null && this.constructor == b.constructor)
 }
 
 fun MessageSelfDestructType?.equalsTo(b: MessageSelfDestructType?): Boolean {
@@ -1428,7 +1515,10 @@ fun MessageSelfDestructType?.equalsTo(b: MessageSelfDestructType?): Boolean {
           require(this is MessageSelfDestructTypeTimer && b is MessageSelfDestructTypeTimer)
           this.selfDestructTime == b.selfDestructTime
         }
-        else -> TODO(this.toString())
+        else -> {
+          assertMessageSelfDestructType_58882d8c()
+          throw unsupported(this)
+        }
       }
     }
   }
@@ -1448,7 +1538,7 @@ fun MessageReplyTo?.equalsTo(b: MessageReplyTo?): Boolean {
           require(this is MessageReplyToStory && b is MessageReplyToStory)
           this.storySenderChatId == b.storySenderChatId && this.storyId == b.storyId
         }
-        else -> TODO(this.toString())
+        else -> throw unsupported(this)
       }
     }
   }
