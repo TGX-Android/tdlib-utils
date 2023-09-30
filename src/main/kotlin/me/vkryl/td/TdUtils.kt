@@ -1123,64 +1123,65 @@ fun PushMessageContent.getText (): String? {
 }
 
 fun PushMessageContent.isSticker(): Boolean = this.constructor == PushMessageContentSticker.CONSTRUCTOR
-fun PushMessageContent.isPinned (): Boolean {
-  return when (this.constructor) {
-    PushMessageContentHidden.CONSTRUCTOR ->
-      (this as PushMessageContentHidden).isPinned
-    PushMessageContentAnimation.CONSTRUCTOR ->
-      (this as PushMessageContentAnimation).isPinned
-    PushMessageContentAudio.CONSTRUCTOR ->
-      (this as PushMessageContentAudio).isPinned
-    PushMessageContentContact.CONSTRUCTOR ->
-      (this as PushMessageContentContact).isPinned
-    PushMessageContentDocument.CONSTRUCTOR ->
-      (this as PushMessageContentDocument).isPinned
-    PushMessageContentGame.CONSTRUCTOR ->
-      (this as PushMessageContentGame).isPinned
-    PushMessageContentGameScore.CONSTRUCTOR ->
-      (this as PushMessageContentGameScore).isPinned
-    PushMessageContentInvoice.CONSTRUCTOR ->
-      (this as PushMessageContentInvoice).isPinned
-    PushMessageContentLocation.CONSTRUCTOR ->
-      (this as PushMessageContentLocation).isPinned
-    PushMessageContentPhoto.CONSTRUCTOR ->
-      (this as PushMessageContentPhoto).isPinned
-    PushMessageContentPoll.CONSTRUCTOR ->
-      (this as PushMessageContentPoll).isPinned
-    PushMessageContentSticker.CONSTRUCTOR ->
-      (this as PushMessageContentSticker).isPinned
-    PushMessageContentText.CONSTRUCTOR ->
-      (this as PushMessageContentText).isPinned
-    PushMessageContentVideo.CONSTRUCTOR ->
-      (this as PushMessageContentVideo).isPinned
-    PushMessageContentVideoNote.CONSTRUCTOR ->
-      (this as PushMessageContentVideoNote).isPinned
-    PushMessageContentVoiceNote.CONSTRUCTOR ->
-      (this as PushMessageContentVoiceNote).isPinned
-    PushMessageContentStory.CONSTRUCTOR ->
-      (this as PushMessageContentStory).isPinned
-    // do not have `isPinned` field:
-    PushMessageContentContactRegistered.CONSTRUCTOR,
-    PushMessageContentScreenshotTaken.CONSTRUCTOR,
-    PushMessageContentSuggestProfilePhoto.CONSTRUCTOR,
-    PushMessageContentBasicGroupChatCreate.CONSTRUCTOR,
-    PushMessageContentChatAddMembers.CONSTRUCTOR,
-    PushMessageContentChatChangePhoto.CONSTRUCTOR,
-    PushMessageContentChatChangeTitle.CONSTRUCTOR,
-    PushMessageContentChatSetTheme.CONSTRUCTOR,
-    PushMessageContentChatSetBackground.CONSTRUCTOR,
-    PushMessageContentChatDeleteMember.CONSTRUCTOR,
-    PushMessageContentChatJoinByLink.CONSTRUCTOR,
-    PushMessageContentChatJoinByRequest.CONSTRUCTOR,
-    PushMessageContentRecurringPayment.CONSTRUCTOR,
-    PushMessageContentMessageForwards.CONSTRUCTOR,
-    PushMessageContentMediaAlbum.CONSTRUCTOR ->
-      false
-    // unsupported
-    else -> {
-      assertPushMessageContent_e86d33d2()
-      throw unsupported(this)
-    }
+fun PushMessageContent.isPinned (): Boolean = when (this.constructor) {
+  // Have `isPinned` field:
+  PushMessageContentHidden.CONSTRUCTOR ->
+    (this as PushMessageContentHidden).isPinned
+  PushMessageContentAnimation.CONSTRUCTOR ->
+    (this as PushMessageContentAnimation).isPinned
+  PushMessageContentAudio.CONSTRUCTOR ->
+    (this as PushMessageContentAudio).isPinned
+  PushMessageContentContact.CONSTRUCTOR ->
+    (this as PushMessageContentContact).isPinned
+  PushMessageContentDocument.CONSTRUCTOR ->
+    (this as PushMessageContentDocument).isPinned
+  PushMessageContentGame.CONSTRUCTOR ->
+    (this as PushMessageContentGame).isPinned
+  PushMessageContentGameScore.CONSTRUCTOR ->
+    (this as PushMessageContentGameScore).isPinned
+  PushMessageContentInvoice.CONSTRUCTOR ->
+    (this as PushMessageContentInvoice).isPinned
+  PushMessageContentLocation.CONSTRUCTOR ->
+    (this as PushMessageContentLocation).isPinned
+  PushMessageContentPhoto.CONSTRUCTOR ->
+    (this as PushMessageContentPhoto).isPinned
+  PushMessageContentPoll.CONSTRUCTOR ->
+    (this as PushMessageContentPoll).isPinned
+  PushMessageContentSticker.CONSTRUCTOR ->
+    (this as PushMessageContentSticker).isPinned
+  PushMessageContentText.CONSTRUCTOR ->
+    (this as PushMessageContentText).isPinned
+  PushMessageContentVideo.CONSTRUCTOR ->
+    (this as PushMessageContentVideo).isPinned
+  PushMessageContentVideoNote.CONSTRUCTOR ->
+    (this as PushMessageContentVideoNote).isPinned
+  PushMessageContentVoiceNote.CONSTRUCTOR ->
+    (this as PushMessageContentVoiceNote).isPinned
+  PushMessageContentStory.CONSTRUCTOR ->
+    (this as PushMessageContentStory).isPinned
+
+  // Do not have `isPinned` field:
+  PushMessageContentContactRegistered.CONSTRUCTOR,
+  PushMessageContentScreenshotTaken.CONSTRUCTOR,
+  PushMessageContentSuggestProfilePhoto.CONSTRUCTOR,
+  PushMessageContentBasicGroupChatCreate.CONSTRUCTOR,
+  PushMessageContentChatAddMembers.CONSTRUCTOR,
+  PushMessageContentChatChangePhoto.CONSTRUCTOR,
+  PushMessageContentChatChangeTitle.CONSTRUCTOR,
+  PushMessageContentChatSetTheme.CONSTRUCTOR,
+  PushMessageContentChatSetBackground.CONSTRUCTOR,
+  PushMessageContentChatDeleteMember.CONSTRUCTOR,
+  PushMessageContentChatJoinByLink.CONSTRUCTOR,
+  PushMessageContentChatJoinByRequest.CONSTRUCTOR,
+  PushMessageContentRecurringPayment.CONSTRUCTOR,
+  PushMessageContentMessageForwards.CONSTRUCTOR,
+  PushMessageContentMediaAlbum.CONSTRUCTOR ->
+    false
+
+  // unsupported
+  else -> {
+    assertPushMessageContent_e86d33d2()
+    throw unsupported(this)
   }
 }
 
