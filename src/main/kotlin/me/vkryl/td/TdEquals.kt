@@ -1552,3 +1552,12 @@ fun MessageReplyTo?.equalsTo(chatId: Long, messageId: Long): Boolean {
     false
   }
 }
+
+@JvmOverloads
+fun MessageImportInfo?.equalsTo(b: MessageImportInfo?, compareDate: Boolean = true): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null -> false
+    else -> this.senderName.equalsOrBothEmpty(b.senderName) && (!compareDate || this.date == b.date)
+  }
+}

@@ -392,12 +392,11 @@ fun Message?.getMessageAuthorId(allowForward: Boolean = true): Long {
         MessageForwardOriginChat.CONSTRUCTOR -> {
           (forwardInfo.origin as MessageForwardOriginChat).senderChatId
         }
-        MessageForwardOriginHiddenUser.CONSTRUCTOR,
-        MessageForwardOriginMessageImport.CONSTRUCTOR -> {
+        MessageForwardOriginHiddenUser.CONSTRUCTOR -> {
           0
         }
         else -> {
-          assertMessageForwardOrigin_fab75f04()
+          assertMessageForwardOrigin_715b9732()
           throw unsupported(forwardInfo.origin)
         }
       }
