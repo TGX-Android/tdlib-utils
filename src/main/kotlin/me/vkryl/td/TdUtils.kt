@@ -370,6 +370,69 @@ fun MessageReplyTo?.toMessageId (): MessageId? {
   }
 }
 
+fun ChatEventAction.findRelatedMessage (): Message? {
+  return when (this.constructor) {
+    ChatEventMessageEdited.CONSTRUCTOR -> {
+      (this as ChatEventMessageEdited).oldMessage
+    }
+    ChatEventMessageDeleted.CONSTRUCTOR -> {
+      (this as ChatEventMessageDeleted).message
+    }
+    ChatEventMessagePinned.CONSTRUCTOR -> {
+      (this as ChatEventMessagePinned).message
+    }
+    ChatEventMessageUnpinned.CONSTRUCTOR -> {
+      (this as ChatEventMessageUnpinned).message
+    }
+    ChatEventPollStopped.CONSTRUCTOR -> {
+      (this as ChatEventPollStopped).message
+    }
+    ChatEventMemberJoined.CONSTRUCTOR,
+    ChatEventMemberJoinedByInviteLink.CONSTRUCTOR,
+    ChatEventMemberJoinedByRequest.CONSTRUCTOR,
+    ChatEventMemberInvited.CONSTRUCTOR,
+    ChatEventMemberLeft.CONSTRUCTOR,
+    ChatEventMemberPromoted.CONSTRUCTOR,
+    ChatEventMemberRestricted.CONSTRUCTOR,
+    ChatEventAvailableReactionsChanged.CONSTRUCTOR,
+    ChatEventDescriptionChanged.CONSTRUCTOR,
+    ChatEventLinkedChatChanged.CONSTRUCTOR,
+    ChatEventLocationChanged.CONSTRUCTOR,
+    ChatEventMessageAutoDeleteTimeChanged.CONSTRUCTOR,
+    ChatEventPermissionsChanged.CONSTRUCTOR,
+    ChatEventPhotoChanged.CONSTRUCTOR,
+    ChatEventSlowModeDelayChanged.CONSTRUCTOR,
+    ChatEventStickerSetChanged.CONSTRUCTOR,
+    ChatEventTitleChanged.CONSTRUCTOR,
+    ChatEventUsernameChanged.CONSTRUCTOR,
+    ChatEventActiveUsernamesChanged.CONSTRUCTOR,
+    ChatEventHasProtectedContentToggled.CONSTRUCTOR,
+    ChatEventInvitesToggled.CONSTRUCTOR,
+    ChatEventIsAllHistoryAvailableToggled.CONSTRUCTOR,
+    ChatEventHasAggressiveAntiSpamEnabledToggled.CONSTRUCTOR,
+    ChatEventSignMessagesToggled.CONSTRUCTOR,
+    ChatEventInviteLinkEdited.CONSTRUCTOR,
+    ChatEventInviteLinkRevoked.CONSTRUCTOR,
+    ChatEventInviteLinkDeleted.CONSTRUCTOR,
+    ChatEventVideoChatCreated.CONSTRUCTOR,
+    ChatEventVideoChatEnded.CONSTRUCTOR,
+    ChatEventVideoChatMuteNewParticipantsToggled.CONSTRUCTOR,
+    ChatEventVideoChatParticipantIsMutedToggled.CONSTRUCTOR,
+    ChatEventVideoChatParticipantVolumeLevelChanged.CONSTRUCTOR,
+    ChatEventIsForumToggled.CONSTRUCTOR,
+    ChatEventForumTopicCreated.CONSTRUCTOR,
+    ChatEventForumTopicEdited.CONSTRUCTOR,
+    ChatEventForumTopicToggleIsClosed.CONSTRUCTOR,
+    ChatEventForumTopicToggleIsHidden.CONSTRUCTOR,
+    ChatEventForumTopicDeleted.CONSTRUCTOR,
+    ChatEventForumTopicPinned.CONSTRUCTOR -> null
+    else -> {
+      assertChatEventAction_d9a53493()
+      throw unsupported(this)
+    }
+  }
+}
+
 fun MessageSender?.getSenderUserId (): Long {
   return if (this?.constructor == MessageSenderUser.CONSTRUCTOR) {
     (this as MessageSenderUser).userId
