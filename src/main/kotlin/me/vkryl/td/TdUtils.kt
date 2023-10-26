@@ -25,6 +25,7 @@ import me.vkryl.core.UTF_8
 import me.vkryl.core.limit
 import me.vkryl.core.wrapHttps
 import org.drinkless.tdlib.Client
+import org.drinkless.tdlib.Client.ExecutionError
 import org.drinkless.tdlib.TdApi.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.math.max
@@ -41,12 +42,13 @@ fun LanguagePackInfo?.isInstalled (): Boolean {
 fun File?.getId (): Int = this?.id ?: 0
 
 private fun stringOption (optionName: String): String? {
-  val result = Client.execute(GetOption(optionName))
-  return if (result is OptionValueString) {
-    result.value
-  } else {
-    null
-  }
+  try {
+    val value = Client.execute(GetOption(optionName))
+    if (value is OptionValueString) {
+      return value.value
+    }
+  } catch (_: ExecutionError) { }
+  return null
 }
 
 fun tdlibVersion (): String? = stringOption("version")
@@ -55,20 +57,24 @@ fun tdlibCommitHash (): String? = tdlibCommitHashFull().limit(7)
 
 fun String?.findEntities (predicate: (TextEntity) -> Boolean): Array<TextEntity>? {
   this?.isNotEmpty().let {
-    val result = Client.execute(GetTextEntities(this))
-    if (result is TextEntities && result.entities.isNotEmpty()) {
-      return result.entities.filter(predicate).toTypedArray()
-    }
+    try {
+      val textEntities = Client.execute(GetTextEntities(this))
+      if (textEntities.entities.isNotEmpty()) {
+        return textEntities.entities.filter(predicate).toTypedArray()
+      }
+    } catch (_: ExecutionError) { }
   }
   return null
 }
 
 fun String?.findEntities (): Array<TextEntity>? {
   this?.isNotEmpty().let {
-    val result = Client.execute(GetTextEntities(this))
-    if (result is TextEntities && result.entities.isNotEmpty()) {
-      return result.entities
-    }
+    try {
+      val textEntities = Client.execute(GetTextEntities(this))
+      if (textEntities.entities.isNotEmpty()) {
+        return textEntities.entities
+      }
+    } catch (_: ExecutionError) { }
   }
   return null
 }
@@ -290,14 +296,15 @@ fun Array<TextEntity>?.findEssential (): Array<TextEntity>? {
 
 @ExperimentalContracts
 fun FormattedText.parseMarkdown (): Boolean {
-  val result = Client.execute(ParseMarkdown(this))
-  return if (result is FormattedText && !result.equalsTo(this, true)) {
-    this.text = result.text
-    this.entities = result.entities
-    true
-  } else {
-    false
-  }
+  try {
+    val formattedText = Client.execute(ParseMarkdown(this))
+    if (!formattedText.equalsTo(this, true)) {
+      this.text = formattedText.text
+      this.entities = formattedText.entities
+      return true
+    }
+  } catch (_: ExecutionError) { }
+  return false
 }
 
 fun FormattedText?.hasLinks (): Boolean {
