@@ -406,6 +406,8 @@ fun ChatEventAction.findRelatedMessage (): Message? {
     ChatEventTitleChanged.CONSTRUCTOR,
     ChatEventUsernameChanged.CONSTRUCTOR,
     ChatEventActiveUsernamesChanged.CONSTRUCTOR,
+    ChatEventAccentColorChanged.CONSTRUCTOR,
+    ChatEventBackgroundCustomEmojiChanged.CONSTRUCTOR,
     ChatEventHasProtectedContentToggled.CONSTRUCTOR,
     ChatEventInvitesToggled.CONSTRUCTOR,
     ChatEventIsAllHistoryAvailableToggled.CONSTRUCTOR,
@@ -427,7 +429,7 @@ fun ChatEventAction.findRelatedMessage (): Message? {
     ChatEventForumTopicDeleted.CONSTRUCTOR,
     ChatEventForumTopicPinned.CONSTRUCTOR -> null
     else -> {
-      assertChatEventAction_d9a53493()
+      assertChatEventAction_c8306b0f()
       throw unsupported(this)
     }
   }
@@ -453,20 +455,20 @@ fun Message?.getMessageAuthorId(allowForward: Boolean = true): Long {
     val forwardInfo = this.forwardInfo
     if (forwardInfo != null) {
       return when (forwardInfo.origin.constructor) {
-        MessageForwardOriginUser.CONSTRUCTOR -> {
-          fromUserId((forwardInfo.origin as MessageForwardOriginUser).senderUserId)
+        MessageOriginUser.CONSTRUCTOR -> {
+          fromUserId((forwardInfo.origin as MessageOriginUser).senderUserId)
         }
-        MessageForwardOriginChannel.CONSTRUCTOR -> {
-          (forwardInfo.origin as MessageForwardOriginChannel).chatId
+        MessageOriginChannel.CONSTRUCTOR -> {
+          (forwardInfo.origin as MessageOriginChannel).chatId
         }
-        MessageForwardOriginChat.CONSTRUCTOR -> {
-          (forwardInfo.origin as MessageForwardOriginChat).senderChatId
+        MessageOriginChat.CONSTRUCTOR -> {
+          (forwardInfo.origin as MessageOriginChat).senderChatId
         }
-        MessageForwardOriginHiddenUser.CONSTRUCTOR -> {
+        MessageOriginHiddenUser.CONSTRUCTOR -> {
           0
         }
         else -> {
-          assertMessageForwardOrigin_715b9732()
+          assertMessageOrigin_f2224a59()
           throw unsupported(forwardInfo.origin)
         }
       }
@@ -847,6 +849,7 @@ fun StickerSet.toStickerSetInfo (): StickerSetInfo {
     this.isOfficial,
     this.stickerFormat,
     this.stickerType,
+    this.needsRepainting,
     this.isViewed,
     this.stickers.size,
     this.stickers
@@ -1181,11 +1184,13 @@ fun PushMessageContent.getText (): String? {
     PushMessageContentRecurringPayment.CONSTRUCTOR,
     PushMessageContentMessageForwards.CONSTRUCTOR,
     PushMessageContentMediaAlbum.CONSTRUCTOR,
-    PushMessageContentStory.CONSTRUCTOR ->
+    PushMessageContentStory.CONSTRUCTOR,
+    PushMessageContentPremiumGiftCode.CONSTRUCTOR,
+    PushMessageContentPremiumGiveaway.CONSTRUCTOR ->
       null
     // unsupported
     else -> {
-      assertPushMessageContent_e86d33d2()
+      assertPushMessageContent_b17e0a62()
       throw unsupported(this)
     }
   }
@@ -1249,7 +1254,7 @@ fun PushMessageContent.isPinned (): Boolean = when (this.constructor) {
 
   // unsupported
   else -> {
-    assertPushMessageContent_e86d33d2()
+    assertPushMessageContent_b17e0a62()
     throw unsupported(this)
   }
 }
@@ -1277,14 +1282,17 @@ fun newSendOptions (disableNotification: Boolean = false,
                     fromBackground: Boolean = false,
                     protectContent: Boolean = false,
                     updateOrderOfInstalledStickerSets: Boolean = false,
-                    schedulingState: MessageSchedulingState? = null): MessageSendOptions {
+                    schedulingState: MessageSchedulingState? = null,
+                    sendingId: Int = 0,
+                    onlyPreview: Boolean = false): MessageSendOptions {
   return MessageSendOptions(
     disableNotification,
     fromBackground,
     protectContent,
     updateOrderOfInstalledStickerSets,
     schedulingState,
-    0
+    sendingId,
+    onlyPreview
   )
 }
 
@@ -1393,6 +1401,7 @@ fun TextEntityType.canBeNested (): Boolean = when (this.constructor) {
   TextEntityTypePreCode.CONSTRUCTOR,
   TextEntityTypeCode.CONSTRUCTOR -> false
   // Can be nested
+  TextEntityTypeBlockQuote.CONSTRUCTOR,
   TextEntityTypeBold.CONSTRUCTOR,
   TextEntityTypeItalic.CONSTRUCTOR,
   TextEntityTypeUnderline.CONSTRUCTOR,
@@ -1413,7 +1422,7 @@ fun TextEntityType.canBeNested (): Boolean = when (this.constructor) {
   TextEntityTypeMediaTimestamp.CONSTRUCTOR -> true
   // Unsupported
   else -> {
-    assertTextEntityType_542d164b()
+    assertTextEntityType_91234a79()
     throw unsupported(this)
   }
 }

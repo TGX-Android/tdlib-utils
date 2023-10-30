@@ -143,6 +143,8 @@ fun User.copyTo (dst: User) {
       this.phoneNumber,
       this.status,
       this.profilePhoto,
+      this.accentColorId,
+      this.backgroundCustomEmojiId,
       this.emojiStatus,
       this.isContact,
       this.isMutualContact,
@@ -167,6 +169,8 @@ fun User.copyTo (dst: User) {
   dst.phoneNumber = this.phoneNumber
   dst.status = this.status
   dst.profilePhoto = this.profilePhoto
+  dst.accentColorId = this.accentColorId
+  dst.backgroundCustomEmojiId = this.backgroundCustomEmojiId
   dst.emojiStatus = this.emojiStatus
   dst.isContact = this.isContact
   dst.isMutualContact = this.isMutualContact
@@ -361,6 +365,8 @@ fun Chat?.copyOf (): Chat? {
       this.type,
       this.title,
       this.photo,
+      this.accentColorId,
+      this.backgroundCustomEmojiId,
       this.permissions,
       this.lastMessage,
       if (this.positions != null) this.positions.copyOf() else null,
@@ -428,6 +434,7 @@ fun StickerSetInfo?.copyOf (): StickerSetInfo? {
       this.isOfficial,
       this.stickerFormat,
       this.stickerType,
+      this.needsRepainting,
       this.isViewed,
       this.size,
       this.covers
@@ -448,6 +455,7 @@ fun StickerSet?.copyOf (): StickerSet? {
       this.isOfficial,
       this.stickerFormat,
       this.stickerType,
+      this.needsRepainting,
       this.isViewed,
       this.stickers,
       this.emojis
