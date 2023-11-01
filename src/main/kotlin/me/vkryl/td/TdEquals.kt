@@ -1322,7 +1322,14 @@ fun InputMessageContent?.equalsTo(b: InputMessageContent?): Boolean {
 fun LinkPreviewOptions?.equalsTo(b: LinkPreviewOptions?): Boolean {
   return when {
     this === b -> true
-    this == null || b == null -> false
+    this == null || b == null -> {
+      val any = (this ?: b)!!
+      !any.isDisabled &&
+      any.url.isNullOrEmpty() &&
+      !any.forceLargeMedia &&
+      !any.forceSmallMedia &&
+      !any.showAboveText
+    }
     else -> {
       this.isDisabled == b.isDisabled &&
       this.url == b.url &&
