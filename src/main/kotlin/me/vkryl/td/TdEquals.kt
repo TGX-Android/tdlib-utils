@@ -1614,3 +1614,15 @@ fun MessageImportInfo?.equalsTo(b: MessageImportInfo?, compareDate: Boolean = tr
     else -> this.senderName.equalsOrBothEmpty(b.senderName) && (!compareDate || this.date == b.date)
   }
 }
+
+fun AccentColor?.equalsTo(b: AccentColor?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null -> false
+    else -> {
+      this.id == b.id &&
+      this.lightThemeColors.contentEquals(b.lightThemeColors) &&
+      this.darkThemeColors.contentEquals(b.darkThemeColors)
+    }
+  }
+}

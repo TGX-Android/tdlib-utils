@@ -202,6 +202,7 @@ fun Message.copyTo (dst: Message) {
       this.isPinned,
       this.canBeEdited,
       this.canBeForwarded,
+      this.canBeRepliedInAnotherChat,
       this.canBeSaved,
       this.canBeDeletedOnlyForSelf,
       this.canBeDeletedForAllUsers,
@@ -243,6 +244,7 @@ fun Message.copyTo (dst: Message) {
   dst.isPinned = this.isPinned
   dst.canBeEdited = this.canBeEdited
   dst.canBeForwarded = this.canBeForwarded
+  dst.canBeRepliedInAnotherChat = this.canBeRepliedInAnotherChat
   dst.canBeSaved = this.canBeSaved
   dst.canBeDeletedOnlyForSelf = this.canBeDeletedOnlyForSelf
   dst.canBeDeletedForAllUsers = this.canBeDeletedForAllUsers
@@ -272,6 +274,18 @@ fun Message.copyTo (dst: Message) {
   dst.restrictionReason = this.restrictionReason
   dst.content = this.content
   dst.replyMarkup = this.replyMarkup
+}
+
+fun AccentColor.copyTo (dst: AccentColor) {
+  if (COMPILE_CHECK) {
+    // Cause compilation error when any field in TdApi changes
+    AccentColor(
+      dst.id,
+      dst.builtInAccentColorId,
+      dst.lightThemeColors,
+      dst.darkThemeColors
+    )
+  }
 }
 
 fun File?.copyOf (): File? {
@@ -324,6 +338,7 @@ fun Message?.copyOf (): Message? {
       this.isPinned,
       this.canBeEdited,
       this.canBeForwarded,
+      this.canBeRepliedInAnotherChat,
       this.canBeSaved,
       this.canBeDeletedOnlyForSelf,
       this.canBeDeletedForAllUsers,

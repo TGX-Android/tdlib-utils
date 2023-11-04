@@ -535,6 +535,20 @@ fun AuthenticationCodeType.codeLength (fallbackCodeLength: Int): Int {
     }
   }
 }
+fun MessageText?.findLinkPreviewUrl (): String? {
+  return if (this != null) {
+    this.linkPreviewOptions?.url.takeIf {
+      !it.isNullOrEmpty()
+    } ?: this.webPage?.url.takeIf {
+      !it.isNullOrEmpty()
+    }
+  } else {
+    null
+  }
+}
+// The exact colors for the accent colors with identifiers 0-6 must be taken from the app theme.
+fun isBuiltInColorId (id: Int): Boolean = id in 0 .. 6
+fun AccentColor?.isBuiltInColor (): Boolean = this != null && isBuiltInColorId(this.id)
 fun MessageContent?.textOrCaption (): FormattedText? {
   return when (this?.constructor) {
     MessageText.CONSTRUCTOR -> (this as MessageText).text
