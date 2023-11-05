@@ -25,7 +25,7 @@ import me.vkryl.core.UTF_8
 import me.vkryl.core.limit
 import me.vkryl.core.wrapHttps
 import org.drinkless.tdlib.Client
-import org.drinkless.tdlib.Client.ExecutionError
+import org.drinkless.tdlib.Client.ExecutionException
 import org.drinkless.tdlib.TdApi.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.math.max
@@ -47,7 +47,7 @@ private fun stringOption (optionName: String): String? {
     if (value is OptionValueString) {
       return value.value
     }
-  } catch (_: ExecutionError) { }
+  } catch (_: ExecutionException) { }
   return null
 }
 
@@ -62,7 +62,7 @@ fun String?.findEntities (predicate: (TextEntity) -> Boolean): Array<TextEntity>
       if (textEntities.entities.isNotEmpty()) {
         return textEntities.entities.filter(predicate).toTypedArray()
       }
-    } catch (_: ExecutionError) { }
+    } catch (_: ExecutionException) { }
   }
   return null
 }
@@ -74,7 +74,7 @@ fun String?.findEntities (): Array<TextEntity>? {
       if (textEntities.entities.isNotEmpty()) {
         return textEntities.entities
       }
-    } catch (_: ExecutionError) { }
+    } catch (_: ExecutionException) { }
   }
   return null
 }
@@ -303,7 +303,7 @@ fun FormattedText.parseMarkdown (): Boolean {
       this.entities = formattedText.entities
       return true
     }
-  } catch (_: ExecutionError) { }
+  } catch (_: ExecutionException) { }
   return false
 }
 
