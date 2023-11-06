@@ -73,8 +73,7 @@ fun DraftMessage?.isEmpty (): Boolean {
     returns(false) implies (this@isEmpty != null)
   }
   return (this == null) || (
-    this.replyToMessageId == 0L &&
-    (this.inputMessageText as InputMessageText).text.isEmpty()
+    this.replyTo == null && (this.inputMessageText as InputMessageText).text.isEmpty()
   )
 }
 

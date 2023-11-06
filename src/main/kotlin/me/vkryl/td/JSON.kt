@@ -22,7 +22,7 @@ package me.vkryl.td
 import me.vkryl.core.isEmpty
 import me.vkryl.core.parseInt
 import org.drinkless.tdlib.Client
-import org.drinkless.tdlib.Client.ExecutionError
+import org.drinkless.tdlib.Client.ExecutionException
 import org.drinkless.tdlib.TdApi.*
 
 fun parse (json: String?): JsonValue? {
@@ -31,7 +31,7 @@ fun parse (json: String?): JsonValue? {
   }
   return try {
     Client.execute(GetJsonValue(json))
-  } catch (e: ExecutionError) {
+  } catch (e: ExecutionException) {
     null
   }
 }
@@ -75,7 +75,7 @@ fun asMap (json: JsonValue?): Map<String, JsonValue>? {
 fun stringify (obj: JsonValue): String? {
   return try {
     Client.execute(GetJsonString(obj)).text
-  } catch (e: ExecutionError) {
+  } catch (e: ExecutionException) {
     null
   }
 }

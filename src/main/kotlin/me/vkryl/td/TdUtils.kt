@@ -25,7 +25,7 @@ import me.vkryl.core.UTF_8
 import me.vkryl.core.limit
 import me.vkryl.core.wrapHttps
 import org.drinkless.tdlib.Client
-import org.drinkless.tdlib.Client.ExecutionError
+import org.drinkless.tdlib.Client.ExecutionException
 import org.drinkless.tdlib.TdApi.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.math.max
@@ -47,7 +47,7 @@ private fun stringOption (optionName: String): String? {
     if (value is OptionValueString) {
       return value.value
     }
-  } catch (_: ExecutionError) { }
+  } catch (_: ExecutionException) { }
   return null
 }
 
@@ -62,7 +62,7 @@ fun String?.findEntities (predicate: (TextEntity) -> Boolean): Array<TextEntity>
       if (textEntities.entities.isNotEmpty()) {
         return textEntities.entities.filter(predicate).toTypedArray()
       }
-    } catch (_: ExecutionError) { }
+    } catch (_: ExecutionException) { }
   }
   return null
 }
@@ -74,7 +74,7 @@ fun String?.findEntities (): Array<TextEntity>? {
       if (textEntities.entities.isNotEmpty()) {
         return textEntities.entities
       }
-    } catch (_: ExecutionError) { }
+    } catch (_: ExecutionException) { }
   }
   return null
 }
@@ -303,7 +303,7 @@ fun FormattedText.parseMarkdown (): Boolean {
       this.entities = formattedText.entities
       return true
     }
-  } catch (_: ExecutionError) { }
+  } catch (_: ExecutionException) { }
   return false
 }
 
@@ -406,6 +406,8 @@ fun ChatEventAction.findRelatedMessage (): Message? {
     ChatEventTitleChanged.CONSTRUCTOR,
     ChatEventUsernameChanged.CONSTRUCTOR,
     ChatEventActiveUsernamesChanged.CONSTRUCTOR,
+    ChatEventAccentColorChanged.CONSTRUCTOR,
+    ChatEventBackgroundCustomEmojiChanged.CONSTRUCTOR,
     ChatEventHasProtectedContentToggled.CONSTRUCTOR,
     ChatEventInvitesToggled.CONSTRUCTOR,
     ChatEventIsAllHistoryAvailableToggled.CONSTRUCTOR,
@@ -427,7 +429,7 @@ fun ChatEventAction.findRelatedMessage (): Message? {
     ChatEventForumTopicDeleted.CONSTRUCTOR,
     ChatEventForumTopicPinned.CONSTRUCTOR -> null
     else -> {
-      assertChatEventAction_d9a53493()
+      assertChatEventAction_c8306b0f()
       throw unsupported(this)
     }
   }
@@ -453,20 +455,20 @@ fun Message?.getMessageAuthorId(allowForward: Boolean = true): Long {
     val forwardInfo = this.forwardInfo
     if (forwardInfo != null) {
       return when (forwardInfo.origin.constructor) {
-        MessageForwardOriginUser.CONSTRUCTOR -> {
-          fromUserId((forwardInfo.origin as MessageForwardOriginUser).senderUserId)
+        MessageOriginUser.CONSTRUCTOR -> {
+          fromUserId((forwardInfo.origin as MessageOriginUser).senderUserId)
         }
-        MessageForwardOriginChannel.CONSTRUCTOR -> {
-          (forwardInfo.origin as MessageForwardOriginChannel).chatId
+        MessageOriginChannel.CONSTRUCTOR -> {
+          (forwardInfo.origin as MessageOriginChannel).chatId
         }
-        MessageForwardOriginChat.CONSTRUCTOR -> {
-          (forwardInfo.origin as MessageForwardOriginChat).senderChatId
+        MessageOriginChat.CONSTRUCTOR -> {
+          (forwardInfo.origin as MessageOriginChat).senderChatId
         }
-        MessageForwardOriginHiddenUser.CONSTRUCTOR -> {
+        MessageOriginHiddenUser.CONSTRUCTOR -> {
           0
         }
         else -> {
-          assertMessageForwardOrigin_715b9732()
+          assertMessageOrigin_f2224a59()
           throw unsupported(forwardInfo.origin)
         }
       }
@@ -533,6 +535,20 @@ fun AuthenticationCodeType.codeLength (fallbackCodeLength: Int): Int {
     }
   }
 }
+fun MessageText?.findLinkPreviewUrl (): String? {
+  return if (this != null) {
+    this.linkPreviewOptions?.url.takeIf {
+      !it.isNullOrEmpty()
+    } ?: this.webPage?.url.takeIf {
+      !it.isNullOrEmpty()
+    }
+  } else {
+    null
+  }
+}
+// The exact colors for the accent colors with identifiers 0-6 must be taken from the app theme.
+fun isBuiltInColorId (id: Int): Boolean = id in 0 .. 6
+fun AccentColor?.isBuiltInColor (): Boolean = this != null && isBuiltInColorId(this.id)
 fun MessageContent?.textOrCaption (): FormattedText? {
   return when (this?.constructor) {
     MessageText.CONSTRUCTOR -> (this as MessageText).text
@@ -847,6 +863,7 @@ fun StickerSet.toStickerSetInfo (): StickerSetInfo {
     this.isOfficial,
     this.stickerFormat,
     this.stickerType,
+    this.needsRepainting,
     this.isViewed,
     this.stickers.size,
     this.stickers
@@ -1181,11 +1198,13 @@ fun PushMessageContent.getText (): String? {
     PushMessageContentRecurringPayment.CONSTRUCTOR,
     PushMessageContentMessageForwards.CONSTRUCTOR,
     PushMessageContentMediaAlbum.CONSTRUCTOR,
-    PushMessageContentStory.CONSTRUCTOR ->
+    PushMessageContentStory.CONSTRUCTOR,
+    PushMessageContentPremiumGiftCode.CONSTRUCTOR,
+    PushMessageContentPremiumGiveaway.CONSTRUCTOR ->
       null
     // unsupported
     else -> {
-      assertPushMessageContent_e86d33d2()
+      assertPushMessageContent_b17e0a62()
       throw unsupported(this)
     }
   }
@@ -1249,7 +1268,7 @@ fun PushMessageContent.isPinned (): Boolean = when (this.constructor) {
 
   // unsupported
   else -> {
-    assertPushMessageContent_e86d33d2()
+    assertPushMessageContent_b17e0a62()
     throw unsupported(this)
   }
 }
@@ -1277,14 +1296,17 @@ fun newSendOptions (disableNotification: Boolean = false,
                     fromBackground: Boolean = false,
                     protectContent: Boolean = false,
                     updateOrderOfInstalledStickerSets: Boolean = false,
-                    schedulingState: MessageSchedulingState? = null): MessageSendOptions {
+                    schedulingState: MessageSchedulingState? = null,
+                    sendingId: Int = 0,
+                    onlyPreview: Boolean = false): MessageSendOptions {
   return MessageSendOptions(
     disableNotification,
     fromBackground,
     protectContent,
     updateOrderOfInstalledStickerSets,
     schedulingState,
-    0
+    sendingId,
+    onlyPreview
   )
 }
 
@@ -1393,6 +1415,7 @@ fun TextEntityType.canBeNested (): Boolean = when (this.constructor) {
   TextEntityTypePreCode.CONSTRUCTOR,
   TextEntityTypeCode.CONSTRUCTOR -> false
   // Can be nested
+  TextEntityTypeBlockQuote.CONSTRUCTOR,
   TextEntityTypeBold.CONSTRUCTOR,
   TextEntityTypeItalic.CONSTRUCTOR,
   TextEntityTypeUnderline.CONSTRUCTOR,
@@ -1413,7 +1436,7 @@ fun TextEntityType.canBeNested (): Boolean = when (this.constructor) {
   TextEntityTypeMediaTimestamp.CONSTRUCTOR -> true
   // Unsupported
   else -> {
-    assertTextEntityType_542d164b()
+    assertTextEntityType_91234a79()
     throw unsupported(this)
   }
 }

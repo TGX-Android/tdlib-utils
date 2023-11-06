@@ -328,6 +328,7 @@ fun TextEntityType?.equalsTo(b: TextEntityType?): Boolean {
         require(this is TextEntityTypeCustomEmoji && b is TextEntityTypeCustomEmoji)
         this.customEmojiId == b.customEmojiId
       }
+      TextEntityTypeBlockQuote.CONSTRUCTOR,
       TextEntityTypeBankCardNumber.CONSTRUCTOR,
       TextEntityTypeBold.CONSTRUCTOR,
       TextEntityTypeSpoiler.CONSTRUCTOR,
@@ -345,7 +346,7 @@ fun TextEntityType?.equalsTo(b: TextEntityType?): Boolean {
       TextEntityTypeUrl.CONSTRUCTOR ->
         true
       else -> {
-        assertTextEntityType_542d164b()
+        assertTextEntityType_91234a79()
         throw unsupported(this)
       }
     }
@@ -699,6 +700,10 @@ fun InternalLinkType.equalsTo(b: InternalLinkType): Boolean {
         require(this is InternalLinkTypePremiumFeatures && b is InternalLinkTypePremiumFeatures)
         this.referrer == b.referrer
       }
+      InternalLinkTypePremiumGiftCode.CONSTRUCTOR -> {
+        require(this is InternalLinkTypePremiumGiftCode && b is InternalLinkTypePremiumGiftCode)
+        this.code == b.code
+      }
       InternalLinkTypeUserToken.CONSTRUCTOR -> {
         require(this is InternalLinkTypeUserToken && b is InternalLinkTypeUserToken)
         this.token == b.token
@@ -769,7 +774,7 @@ fun InternalLinkType.equalsTo(b: InternalLinkType): Boolean {
         this.storySenderUsername == b.storySenderUsername && this.storyId == b.storyId
       }
       else -> {
-        assertInternalLinkType_1783a2fc()
+        assertInternalLinkType_91894cfa()
         throw unsupported(this)
       }
     }
@@ -1292,7 +1297,7 @@ fun MaskPoint?.equalsTo(b: MaskPoint?): Boolean {
     this === b -> true
     this == null || b == null -> false
     else -> {
-      (this.date == b.date || ignoreDate) && this.replyToMessageId == b.replyToMessageId && this.inputMessageText.equalsTo(b.inputMessageText)
+      (this.date == b.date || ignoreDate) && this.replyTo.equalsTo(b.replyTo) && this.inputMessageText.equalsTo(b.inputMessageText)
     }
   }
 }
@@ -1304,10 +1309,58 @@ fun InputMessageContent?.equalsTo(b: InputMessageContent?): Boolean {
     this == null || b == null || this.constructor != b.constructor -> false
     else -> when (this.constructor) {
       InputMessageText.CONSTRUCTOR -> {
-        (this as InputMessageText).text.equalsTo((b as InputMessageText).text) &&
-        this.clearDraft == b.clearDraft && this.disableWebPagePreview == b.disableWebPagePreview
+        require(this is InputMessageText && b is InputMessageText)
+        this.text.equalsTo(b.text) &&
+        this.clearDraft == b.clearDraft &&
+        this.linkPreviewOptions.equalsTo(b.linkPreviewOptions)
       }
       else -> TODO(this.toString())
+    }
+  }
+}
+
+fun LinkPreviewOptions?.equalsTo(b: LinkPreviewOptions?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null -> {
+      val any = (this ?: b)!!
+      !any.isDisabled &&
+      any.url.isNullOrEmpty() &&
+      !any.forceLargeMedia &&
+      !any.forceSmallMedia &&
+      !any.showAboveText
+    }
+    else -> {
+      this.isDisabled == b.isDisabled &&
+      this.url == b.url &&
+      this.forceLargeMedia == b.forceLargeMedia &&
+      this.forceSmallMedia == b.forceSmallMedia &&
+      this.showAboveText == b.showAboveText
+    }
+  }
+}
+
+@ExperimentalContracts
+fun InputMessageReplyTo?.equalsTo(b: InputMessageReplyTo?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null || this.constructor != b.constructor -> false
+    else -> when (this.constructor) {
+      InputMessageReplyToMessage.CONSTRUCTOR -> {
+        require(this is InputMessageReplyToMessage && b is InputMessageReplyToMessage)
+        this.chatId == b.chatId &&
+        this.messageId == b.messageId &&
+        this.quote.equalsTo(b.quote, true)
+      }
+      InputMessageReplyToStory.CONSTRUCTOR -> {
+        require(this is InputMessageReplyToStory && b is InputMessageReplyToStory)
+        this.storySenderChatId == b.storySenderChatId &&
+        this.storyId == b.storyId
+      }
+      else -> {
+        assertMessageReplyTo_699c5345()
+        throw unsupported(this)
+      }
     }
   }
 }
@@ -1559,5 +1612,17 @@ fun MessageImportInfo?.equalsTo(b: MessageImportInfo?, compareDate: Boolean = tr
     this === b -> true
     this == null || b == null -> false
     else -> this.senderName.equalsOrBothEmpty(b.senderName) && (!compareDate || this.date == b.date)
+  }
+}
+
+fun AccentColor?.equalsTo(b: AccentColor?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null -> false
+    else -> {
+      this.id == b.id &&
+      this.lightThemeColors.contentEquals(b.lightThemeColors) &&
+      this.darkThemeColors.contentEquals(b.darkThemeColors)
+    }
   }
 }

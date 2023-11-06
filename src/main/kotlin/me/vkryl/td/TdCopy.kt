@@ -143,6 +143,8 @@ fun User.copyTo (dst: User) {
       this.phoneNumber,
       this.status,
       this.profilePhoto,
+      this.accentColorId,
+      this.backgroundCustomEmojiId,
       this.emojiStatus,
       this.isContact,
       this.isMutualContact,
@@ -167,6 +169,8 @@ fun User.copyTo (dst: User) {
   dst.phoneNumber = this.phoneNumber
   dst.status = this.status
   dst.profilePhoto = this.profilePhoto
+  dst.accentColorId = this.accentColorId
+  dst.backgroundCustomEmojiId = this.backgroundCustomEmojiId
   dst.emojiStatus = this.emojiStatus
   dst.isContact = this.isContact
   dst.isMutualContact = this.isMutualContact
@@ -198,6 +202,7 @@ fun Message.copyTo (dst: Message) {
       this.isPinned,
       this.canBeEdited,
       this.canBeForwarded,
+      this.canBeRepliedInAnotherChat,
       this.canBeSaved,
       this.canBeDeletedOnlyForSelf,
       this.canBeDeletedForAllUsers,
@@ -239,6 +244,7 @@ fun Message.copyTo (dst: Message) {
   dst.isPinned = this.isPinned
   dst.canBeEdited = this.canBeEdited
   dst.canBeForwarded = this.canBeForwarded
+  dst.canBeRepliedInAnotherChat = this.canBeRepliedInAnotherChat
   dst.canBeSaved = this.canBeSaved
   dst.canBeDeletedOnlyForSelf = this.canBeDeletedOnlyForSelf
   dst.canBeDeletedForAllUsers = this.canBeDeletedForAllUsers
@@ -268,6 +274,18 @@ fun Message.copyTo (dst: Message) {
   dst.restrictionReason = this.restrictionReason
   dst.content = this.content
   dst.replyMarkup = this.replyMarkup
+}
+
+fun AccentColor.copyTo (dst: AccentColor) {
+  if (COMPILE_CHECK) {
+    // Cause compilation error when any field in TdApi changes
+    AccentColor(
+      dst.id,
+      dst.builtInAccentColorId,
+      dst.lightThemeColors,
+      dst.darkThemeColors
+    )
+  }
 }
 
 fun File?.copyOf (): File? {
@@ -320,6 +338,7 @@ fun Message?.copyOf (): Message? {
       this.isPinned,
       this.canBeEdited,
       this.canBeForwarded,
+      this.canBeRepliedInAnotherChat,
       this.canBeSaved,
       this.canBeDeletedOnlyForSelf,
       this.canBeDeletedForAllUsers,
@@ -361,6 +380,8 @@ fun Chat?.copyOf (): Chat? {
       this.type,
       this.title,
       this.photo,
+      this.accentColorId,
+      this.backgroundCustomEmojiId,
       this.permissions,
       this.lastMessage,
       if (this.positions != null) this.positions.copyOf() else null,
@@ -428,6 +449,7 @@ fun StickerSetInfo?.copyOf (): StickerSetInfo? {
       this.isOfficial,
       this.stickerFormat,
       this.stickerType,
+      this.needsRepainting,
       this.isViewed,
       this.size,
       this.covers
@@ -448,6 +470,7 @@ fun StickerSet?.copyOf (): StickerSet? {
       this.isOfficial,
       this.stickerFormat,
       this.stickerType,
+      this.needsRepainting,
       this.isViewed,
       this.stickers,
       this.emojis
