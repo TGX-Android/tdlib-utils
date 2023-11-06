@@ -315,7 +315,7 @@ fun Bundle.restoreInputMessageReplyTo (prefix: String): InputMessageReplyTo? {
       val chatId = getLong(prefix + "_chatId")
       val messageId = getLong(prefix + "_messageId")
       val quote = restoreFormattedText(prefix + "_quote")
-      if (chatId != 0L && messageId != 0L) {
+      if (messageId != 0L) {
         InputMessageReplyToMessage(chatId, messageId, quote)
       } else {
         null
