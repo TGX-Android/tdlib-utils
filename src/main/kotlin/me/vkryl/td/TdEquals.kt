@@ -279,11 +279,13 @@ fun FormattedText?.equalsTo(b: FormattedText?, ignoreDefaultEntities: Boolean = 
 @JvmOverloads
 fun Array<TextEntity>?.equalsTo(b: Array<TextEntity>?, ignoreDefaultEntities: Boolean = false): Boolean {
   if (this === b) return true
-  if ((this?.size ?: 0) != (b?.size ?: 0)) return false
   if (this != null && b != null) {
     if (ignoreDefaultEntities) {
       return this.findEssential().equalsTo(b.findEssential())
     } else {
+      if (this.size != b.size) {
+        return false
+      }
       for (i in this.indices) {
         if (!this[i].equalsTo(b[i])) {
           return false
