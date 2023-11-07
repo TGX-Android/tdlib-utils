@@ -276,6 +276,23 @@ fun Message.copyTo (dst: Message) {
   dst.replyMarkup = this.replyMarkup
 }
 
+fun LinkPreviewOptions?.copyTo (dst: LinkPreviewOptions) {
+  if (COMPILE_CHECK) {
+    LinkPreviewOptions(
+      false,
+      "",
+      false,
+      false,
+      false
+    )
+  }
+  dst.isDisabled = this?.isDisabled ?: false
+  dst.url = this?.url ?: ""
+  dst.forceSmallMedia = this?.forceSmallMedia ?: false
+  dst.forceLargeMedia = this?.forceLargeMedia ?: false
+  dst.showAboveText = this?.showAboveText ?: false
+}
+
 fun AccentColor.copyTo (dst: AccentColor) {
   if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
@@ -527,4 +544,22 @@ fun ChatMemberStatus?.copyOf (): ChatMemberStatus? {
       }
     }
   }
+}
+
+fun LinkPreviewOptions?.copyOf (): LinkPreviewOptions {
+  return this?.let {
+    LinkPreviewOptions(
+      this.isDisabled,
+      this.url,
+      this.forceSmallMedia,
+      this.forceLargeMedia,
+      this.showAboveText
+    )
+  } ?: LinkPreviewOptions(
+    false,
+    "",
+    false,
+    false,
+    false
+  )
 }

@@ -1471,3 +1471,16 @@ fun MessageContent.isListenedOrViewed (): Boolean = when (this.constructor) {
   }
   else -> false
 }
+
+fun LinkPreviewOptions?.reset () {
+  this?.let {
+    if (COMPILE_CHECK) {
+      LinkPreviewOptions(false, "", false, false, false)
+    }
+    this.isDisabled = false
+    this.url = ""
+    this.forceSmallMedia = false
+    this.forceLargeMedia = false
+    this.showAboveText = false
+  }
+}
