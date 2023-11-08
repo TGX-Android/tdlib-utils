@@ -563,3 +563,37 @@ fun LinkPreviewOptions?.copyOf (): LinkPreviewOptions {
     false
   )
 }
+
+fun WebPage?.copyOf (): WebPage? {
+  return this?.let {
+    WebPage(
+      this.url,
+      this.displayUrl,
+      this.type,
+      this.siteName,
+      this.title,
+      this.description,
+      this.photo,
+      this.embedUrl,
+      this.embedType,
+      this.embedWidth,
+      this.embedHeight,
+      this.duration,
+      this.author,
+      this.hasLargeMedia,
+      this.showLargeMedia,
+      this.skipConfirmation,
+      this.showAboveText,
+      this.animation,
+      this.audio,
+      this.document,
+      this.sticker,
+      this.video,
+      this.videoNote,
+      this.voiceNote,
+      this.storySenderChatId,
+      this.storyId,
+      this.instantViewVersion
+    )
+  }
+}
