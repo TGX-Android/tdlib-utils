@@ -1472,7 +1472,7 @@ fun MessageContent.isListenedOrViewed (): Boolean = when (this.constructor) {
   else -> false
 }
 
-fun LinkPreviewOptions?.reset () {
+@JvmOverloads fun LinkPreviewOptions?.reset (keepShowAboveText: Boolean = false) {
   this?.let {
     if (COMPILE_CHECK) {
       LinkPreviewOptions(false, "", false, false, false)
@@ -1481,7 +1481,7 @@ fun LinkPreviewOptions?.reset () {
     this.url = ""
     this.forceSmallMedia = false
     this.forceLargeMedia = false
-    this.showAboveText = false
+    this.showAboveText = keepShowAboveText && this.showAboveText
   }
 }
 
