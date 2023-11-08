@@ -1484,3 +1484,14 @@ fun LinkPreviewOptions?.reset () {
     this.showAboveText = false
   }
 }
+
+fun WebPage.applyLinkPreviewOptions (options: LinkPreviewOptions?) {
+  if (this.hasLargeMedia && options != null) {
+    if (options.forceSmallMedia) {
+      this.showLargeMedia = false
+    } else if (options.forceLargeMedia) {
+      this.showLargeMedia = true
+    }
+  }
+  this.showAboveText = options?.showAboveText ?: false
+}
