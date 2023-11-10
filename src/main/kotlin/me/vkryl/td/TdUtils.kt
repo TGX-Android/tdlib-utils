@@ -1247,6 +1247,8 @@ fun PushMessageContent.isPinned (): Boolean = when (this.constructor) {
     (this as PushMessageContentVoiceNote).isPinned
   PushMessageContentStory.CONSTRUCTOR ->
     (this as PushMessageContentStory).isPinned
+  PushMessageContentPremiumGiveaway.CONSTRUCTOR ->
+    (this as PushMessageContentPremiumGiveaway).isPinned
 
   // Do not have `isPinned` field:
   PushMessageContentContactRegistered.CONSTRUCTOR,
@@ -1263,7 +1265,8 @@ fun PushMessageContent.isPinned (): Boolean = when (this.constructor) {
   PushMessageContentChatJoinByRequest.CONSTRUCTOR,
   PushMessageContentRecurringPayment.CONSTRUCTOR,
   PushMessageContentMessageForwards.CONSTRUCTOR,
-  PushMessageContentMediaAlbum.CONSTRUCTOR ->
+  PushMessageContentMediaAlbum.CONSTRUCTOR,
+  PushMessageContentPremiumGiftCode.CONSTRUCTOR ->
     false
 
   // unsupported
