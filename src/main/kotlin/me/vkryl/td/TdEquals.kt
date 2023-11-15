@@ -1628,3 +1628,35 @@ fun AccentColor?.equalsTo(b: AccentColor?): Boolean {
     }
   }
 }
+
+fun MessageOrigin?.equalsTo(b: MessageOrigin?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null || this.constructor != b.constructor -> false
+    else -> when (this.constructor) {
+      MessageOriginUser.CONSTRUCTOR -> {
+        require(this is MessageOriginUser && b is MessageOriginUser)
+        this.senderUserId == b.senderUserId
+      }
+      MessageOriginHiddenUser.CONSTRUCTOR -> {
+        require(this is MessageOriginHiddenUser && b is MessageOriginHiddenUser)
+        this.senderName == b.senderName
+      }
+      MessageOriginChat.CONSTRUCTOR -> {
+        require(this is MessageOriginChat && b is MessageOriginChat)
+        this.senderChatId == b.senderChatId &&
+        this.authorSignature == b.authorSignature
+      }
+      MessageOriginChannel.CONSTRUCTOR -> {
+        require(this is MessageOriginChannel && b is MessageOriginChannel)
+        this.chatId == b.chatId &&
+        this.messageId == b.messageId &&
+        this.authorSignature == b.authorSignature
+      }
+      else -> {
+        assertMessageOrigin_f2224a59()
+        throw unsupported(this)
+      }
+    }
+  }
+}
