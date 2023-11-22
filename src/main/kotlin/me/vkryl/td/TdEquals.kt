@@ -1629,7 +1629,7 @@ fun AccentColor?.equalsTo(b: AccentColor?): Boolean {
   }
 }
 
-fun MessageOrigin?.equalsTo(b: MessageOrigin?): Boolean {
+@JvmOverloads fun MessageOrigin?.equalsTo(b: MessageOrigin?, checkMessageId: Boolean = true): Boolean {
   return when {
     this === b -> true
     this == null || b == null || this.constructor != b.constructor -> false
@@ -1650,7 +1650,7 @@ fun MessageOrigin?.equalsTo(b: MessageOrigin?): Boolean {
       MessageOriginChannel.CONSTRUCTOR -> {
         require(this is MessageOriginChannel && b is MessageOriginChannel)
         this.chatId == b.chatId &&
-        this.messageId == b.messageId &&
+        (!checkMessageId || this.messageId == b.messageId) &&
         this.authorSignature == b.authorSignature
       }
       else -> {
