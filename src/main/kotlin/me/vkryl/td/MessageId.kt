@@ -21,12 +21,13 @@ package me.vkryl.td
 
 import me.vkryl.core.addElement
 import me.vkryl.core.removeElement
-import org.drinkless.tdlib.TdApi.MessageReplyTo
-import org.drinkless.tdlib.TdApi.MessageReplyToMessage
+import org.drinkless.tdlib.TdApi.*
 import kotlin.math.min
 
 class MessageId @JvmOverloads constructor (val chatId: Long, val messageId: Long, val otherMessageIds: LongArray? = null) {
+  constructor(message: Message) : this(message.chatId, message.id)
   constructor(replyTo: MessageReplyToMessage) : this(replyTo.chatId, replyTo.messageId)
+  constructor(replyTo: InputMessageReplyToMessage) : this(replyTo.chatId, replyTo.messageId)
 
   fun toServerMessageId () = toServerMessageId(messageId)
 
