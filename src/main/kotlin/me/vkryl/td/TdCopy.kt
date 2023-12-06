@@ -145,6 +145,8 @@ fun User.copyTo (dst: User) {
       this.profilePhoto,
       this.accentColorId,
       this.backgroundCustomEmojiId,
+      this.profileAccentColorId,
+      this.profileBackgroundCustomEmojiId,
       this.emojiStatus,
       this.isContact,
       this.isMutualContact,
@@ -171,6 +173,8 @@ fun User.copyTo (dst: User) {
   dst.profilePhoto = this.profilePhoto
   dst.accentColorId = this.accentColorId
   dst.backgroundCustomEmojiId = this.backgroundCustomEmojiId
+  dst.profileAccentColorId = this.profileAccentColorId
+  dst.profileBackgroundCustomEmojiId = this.profileBackgroundCustomEmojiId
   dst.emojiStatus = this.emojiStatus
   dst.isContact = this.isContact
   dst.isMutualContact = this.isMutualContact
@@ -297,12 +301,16 @@ fun AccentColor.copyTo (dst: AccentColor) {
   if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
     AccentColor(
-      dst.id,
-      dst.builtInAccentColorId,
-      dst.lightThemeColors,
-      dst.darkThemeColors
+      this.id,
+      this.builtInAccentColorId,
+      this.lightThemeColors,
+      this.darkThemeColors
     )
   }
+  dst.id = this.id
+  dst.builtInAccentColorId = this.builtInAccentColorId
+  dst.lightThemeColors = this.lightThemeColors
+  dst.darkThemeColors = this.darkThemeColors
 }
 
 fun File?.copyOf (): File? {
@@ -407,6 +415,7 @@ fun Chat?.copyOf (): Chat? {
       this.hasProtectedContent,
       this.isTranslatable,
       this.isMarkedAsUnread,
+      this.viewAsTopics,
       this.hasScheduledMessages,
       this.canBeDeletedOnlyForSelf,
       this.canBeDeletedForAllUsers,

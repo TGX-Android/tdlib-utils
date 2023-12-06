@@ -78,6 +78,22 @@ fun DraftMessage?.isEmpty (): Boolean {
 }
 
 @ExperimentalContracts
+fun TextQuote?.isEmpty (): Boolean {
+  contract {
+    returns(false) implies (this@isEmpty != null)
+  }
+  return (this == null) || this.text.isEmpty()
+}
+
+@ExperimentalContracts
+fun InputTextQuote?.isEmpty (): Boolean {
+  contract {
+    returns(false) implies (this@isEmpty != null)
+  }
+  return (this == null) || this.text.isEmpty()
+}
+
+@ExperimentalContracts
 fun StatisticalValue?.isEmpty (): Boolean {
   contract {
     returns(false) implies (this@isEmpty != null)

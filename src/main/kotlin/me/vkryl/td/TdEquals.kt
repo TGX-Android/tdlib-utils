@@ -276,6 +276,20 @@ fun FormattedText?.equalsTo(b: FormattedText?, ignoreDefaultEntities: Boolean = 
   }
 }
 
+@ExperimentalContracts
+@JvmOverloads
+fun InputTextQuote?.equalsTo(b: InputTextQuote?, ignoreDefaultEntities: Boolean = false): Boolean {
+  return when {
+    this === b -> true
+    this.isEmpty() -> b.isEmpty()
+    else -> {
+      !b.isEmpty() &&
+      this.text.equalsTo(b.text, ignoreDefaultEntities) &&
+      this.position == b.position
+    }
+  }
+}
+
 @JvmOverloads
 fun Array<TextEntity>?.equalsTo(b: Array<TextEntity>?, ignoreDefaultEntities: Boolean = false): Boolean {
   if (this === b) return true
@@ -1625,6 +1639,30 @@ fun AccentColor?.equalsTo(b: AccentColor?): Boolean {
       this.id == b.id &&
       this.lightThemeColors.contentEquals(b.lightThemeColors) &&
       this.darkThemeColors.contentEquals(b.darkThemeColors)
+    }
+  }
+}
+
+fun ProfileAccentColor?.equalsTo(b: ProfileAccentColor?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null -> false
+    else -> {
+      this.id == b.id &&
+      this.lightThemeColors.equalsTo(b.lightThemeColors) &&
+      this.darkThemeColors.equalsTo(b.darkThemeColors)
+    }
+  }
+}
+
+fun ProfileAccentColors?.equalsTo(b: ProfileAccentColors?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null -> false
+    else -> {
+      this.paletteColors.contentEquals(b.paletteColors) &&
+      this.backgroundColors.contentEquals(b.backgroundColors) &&
+      this.storyColors.contentEquals(b.storyColors)
     }
   }
 }

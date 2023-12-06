@@ -233,6 +233,25 @@ fun Bundle.restoreFormattedText (prefix: String): FormattedText? {
   }
 }
 
+@ExperimentalContracts
+fun Bundle.put (prefix: String, what: InputTextQuote?) {
+  if (!what.isEmpty()) {
+    put(prefix + "_text", what.text)
+    putInt(prefix + "_position", what.position)
+  }
+}
+
+@ExperimentalContracts
+fun Bundle.restoreInputTextQuote (prefix: String): InputTextQuote? {
+  val text = restoreFormattedText(prefix + "_text")
+  return if (!text.isEmpty()) {
+    val position = getInt(prefix + "_position")
+    InputTextQuote(text, position)
+  } else {
+    null
+  }
+}
+
 fun Bundle.put (prefix: String, what: LinkPreviewOptions?) {
   if (what != null) {
     putBoolean(prefix + "_hasOptions", true)
@@ -314,7 +333,7 @@ fun Bundle.restoreInputMessageReplyTo (prefix: String): InputMessageReplyTo? {
     InputMessageReplyToMessage.CONSTRUCTOR -> {
       val chatId = getLong(prefix + "_chatId")
       val messageId = getLong(prefix + "_messageId")
-      val quote = restoreFormattedText(prefix + "_quote")
+      val quote = restoreInputTextQuote(prefix + "_quote")
       if (messageId != 0L) {
         InputMessageReplyToMessage(chatId, messageId, quote)
       } else {
