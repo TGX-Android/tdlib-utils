@@ -789,8 +789,12 @@ fun InternalLinkType.equalsTo(b: InternalLinkType): Boolean {
         require(this is InternalLinkTypeStory && b is InternalLinkTypeStory)
         this.storySenderUsername == b.storySenderUsername && this.storyId == b.storyId
       }
+      InternalLinkTypePremiumGift.CONSTRUCTOR -> {
+        require(this is InternalLinkTypePremiumGift && b is InternalLinkTypePremiumGift)
+        this.referrer == b.referrer
+      }
       else -> {
-        assertInternalLinkType_91894cfa()
+        assertInternalLinkType_18c73626()
         throw unsupported(this)
       }
     }
@@ -880,13 +884,38 @@ fun KeyboardButtonType.equalsTo(b: KeyboardButtonType): Boolean {
     else -> when (this.constructor) {
       KeyboardButtonTypeRequestPoll.CONSTRUCTOR -> {
         require(this is KeyboardButtonTypeRequestPoll && b is KeyboardButtonTypeRequestPoll)
-        this.forceQuiz == b.forceQuiz && this.forceRegular == b.forceRegular
+        this.forceQuiz == b.forceQuiz &&
+        this.forceRegular == b.forceRegular
+      }
+      KeyboardButtonTypeRequestUsers.CONSTRUCTOR -> {
+        require(this is KeyboardButtonTypeRequestUsers && b is KeyboardButtonTypeRequestUsers)
+        this.id == b.id &&
+        this.restrictUserIsBot == b.restrictUserIsBot &&
+        this.restrictUserIsPremium == b.restrictUserIsPremium &&
+        this.userIsPremium == b.userIsPremium &&
+        this.maxQuantity == b.maxQuantity
+      }
+      KeyboardButtonTypeRequestChat.CONSTRUCTOR -> {
+        require(this is KeyboardButtonTypeRequestChat && b is KeyboardButtonTypeRequestChat)
+        this.id == b.id &&
+        this.chatIsChannel == b.chatIsChannel &&
+        this.restrictChatIsForum == b.restrictChatIsForum &&
+        this.chatIsForum == b.chatIsForum &&
+        this.restrictChatHasUsername == b.restrictChatHasUsername &&
+        this.chatIsCreated == b.chatIsCreated &&
+        this.userAdministratorRights.equalsTo(b.userAdministratorRights) &&
+        this.botAdministratorRights.equalsTo(b.botAdministratorRights) &&
+        this.botIsMember == b.botIsMember
+      }
+      KeyboardButtonTypeWebApp.CONSTRUCTOR -> {
+        require(this is KeyboardButtonTypeWebApp && b is KeyboardButtonTypeWebApp)
+        this.url == b.url
       }
       KeyboardButtonTypeText.CONSTRUCTOR,
       KeyboardButtonTypeRequestPhoneNumber.CONSTRUCTOR,
       KeyboardButtonTypeRequestLocation.CONSTRUCTOR -> true
       else -> {
-        assertKeyboardButtonType_149cec2d()
+        assertKeyboardButtonType_b955a01e()
         throw unsupported(this)
       }
     }
@@ -1447,8 +1476,12 @@ fun BackgroundType?.equalsTo(b: BackgroundType?, ignoreSettings: Boolean = true)
           require(this is BackgroundTypePattern && b is BackgroundTypePattern)
           this.fill.equalsTo(b.fill) && (ignoreSettings || (this.intensity == b.intensity && this.isMoving == b.isMoving))
         }
+        BackgroundTypeChatTheme.CONSTRUCTOR -> {
+          require(this is BackgroundTypeChatTheme && b is BackgroundTypeChatTheme)
+          this.themeName == b.themeName
+        }
         else -> {
-          assertBackgroundType_64138c2()
+          assertBackgroundType_eedb1e16()
           throw unsupported(this)
         }
       }

@@ -304,13 +304,15 @@ fun AccentColor.copyTo (dst: AccentColor) {
       this.id,
       this.builtInAccentColorId,
       this.lightThemeColors,
-      this.darkThemeColors
+      this.darkThemeColors,
+      this.minChatBoostLevel
     )
   }
   dst.id = this.id
   dst.builtInAccentColorId = this.builtInAccentColorId
   dst.lightThemeColors = this.lightThemeColors
   dst.darkThemeColors = this.darkThemeColors
+  dst.minChatBoostLevel = this.minChatBoostLevel
 }
 
 fun File?.copyOf (): File? {
@@ -407,6 +409,8 @@ fun Chat?.copyOf (): Chat? {
       this.photo,
       this.accentColorId,
       this.backgroundCustomEmojiId,
+      this.profileAccentColorId,
+      this.profileBackgroundCustomEmojiId,
       this.permissions,
       this.lastMessage,
       if (this.positions != null) this.positions.copyOf() else null,
@@ -429,6 +433,7 @@ fun Chat?.copyOf (): Chat? {
       this.notificationSettings,
       this.availableReactions,
       this.messageAutoDeleteTime,
+      this.emojiStatus,
       this.background,
       this.themeName,
       this.actionBar,
@@ -476,6 +481,7 @@ fun StickerSetInfo?.copyOf (): StickerSetInfo? {
       this.stickerFormat,
       this.stickerType,
       this.needsRepainting,
+      this.isAllowedAsChatEmojiStatus,
       this.isViewed,
       this.size,
       this.covers
@@ -497,6 +503,7 @@ fun StickerSet?.copyOf (): StickerSet? {
       this.stickerFormat,
       this.stickerType,
       this.needsRepainting,
+      this.isAllowedAsChatEmojiStatus,
       this.isViewed,
       this.stickers,
       this.emojis

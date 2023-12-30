@@ -407,7 +407,9 @@ fun ChatEventAction.findRelatedMessage (): Message? {
     ChatEventUsernameChanged.CONSTRUCTOR,
     ChatEventActiveUsernamesChanged.CONSTRUCTOR,
     ChatEventAccentColorChanged.CONSTRUCTOR,
-    ChatEventBackgroundCustomEmojiChanged.CONSTRUCTOR,
+    ChatEventBackgroundChanged.CONSTRUCTOR,
+    ChatEventEmojiStatusChanged.CONSTRUCTOR,
+    ChatEventProfileAccentColorChanged.CONSTRUCTOR,
     ChatEventHasProtectedContentToggled.CONSTRUCTOR,
     ChatEventInvitesToggled.CONSTRUCTOR,
     ChatEventIsAllHistoryAvailableToggled.CONSTRUCTOR,
@@ -426,10 +428,9 @@ fun ChatEventAction.findRelatedMessage (): Message? {
     ChatEventForumTopicEdited.CONSTRUCTOR,
     ChatEventForumTopicToggleIsClosed.CONSTRUCTOR,
     ChatEventForumTopicToggleIsHidden.CONSTRUCTOR,
-    ChatEventForumTopicDeleted.CONSTRUCTOR,
-    ChatEventForumTopicPinned.CONSTRUCTOR -> null
+    ChatEventForumTopicDeleted.CONSTRUCTOR -> null
     else -> {
-      assertChatEventAction_c8306b0f()
+      assertChatEventAction_57377883()
       throw unsupported(this)
     }
   }
@@ -864,6 +865,7 @@ fun StickerSet.toStickerSetInfo (): StickerSetInfo {
     this.stickerFormat,
     this.stickerType,
     this.needsRepainting,
+    this.isAllowedAsChatEmojiStatus,
     this.isViewed,
     this.stickers.size,
     this.stickers
