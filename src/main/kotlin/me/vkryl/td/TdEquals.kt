@@ -1731,3 +1731,38 @@ fun ProfileAccentColors?.equalsTo(b: ProfileAccentColors?): Boolean {
     }
   }
 }
+
+fun SuggestedAction?.equalsTo(b: SuggestedAction?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null || this.constructor != b.constructor -> false
+    else -> when (this.constructor) {
+      SuggestedActionConvertToBroadcastGroup.CONSTRUCTOR -> {
+        require(this is SuggestedActionConvertToBroadcastGroup && b is SuggestedActionConvertToBroadcastGroup)
+        if (COMPILE_CHECK) {
+          SuggestedActionConvertToBroadcastGroup(this.supergroupId)
+        }
+        this.supergroupId == b.supergroupId
+      }
+      SuggestedActionSetPassword.CONSTRUCTOR -> {
+        require(this is SuggestedActionSetPassword && b is SuggestedActionSetPassword)
+        if (COMPILE_CHECK) {
+          SuggestedActionSetPassword(this.authorizationDelay)
+        }
+        this.authorizationDelay == b.authorizationDelay
+      }
+      SuggestedActionEnableArchiveAndMuteNewChats.CONSTRUCTOR,
+      SuggestedActionCheckPassword.CONSTRUCTOR,
+      SuggestedActionCheckPhoneNumber.CONSTRUCTOR,
+      SuggestedActionViewChecksHint.CONSTRUCTOR,
+      SuggestedActionUpgradePremium.CONSTRUCTOR,
+      SuggestedActionRestorePremium.CONSTRUCTOR,
+      SuggestedActionSubscribeToAnnualPremium.CONSTRUCTOR,
+      SuggestedActionGiftPremiumForChristmas.CONSTRUCTOR -> true
+      else -> {
+        assertSuggestedAction_45d3774f()
+        throw unsupported(this)
+      }
+    }
+  }
+}
