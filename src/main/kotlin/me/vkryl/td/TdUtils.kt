@@ -1131,6 +1131,25 @@ fun StickerFullType?.isPremium (): Boolean {
 fun Sticker?.isPremium (): Boolean = this?.fullType.isPremium()
 
 fun ChatPermissions.count (): Int {
+  if (COMPILE_CHECK) {
+    // Whenever there's change, also check TdConstants.CHAT_PERMISSIONS_COUNT
+    ChatPermissions(
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    )
+  }
   var count = 0
   if (this.canSendBasicMessages) count++
   if (this.canSendAudios) count++
@@ -1145,6 +1164,7 @@ fun ChatPermissions.count (): Int {
   if (this.canChangeInfo) count++
   if (this.canInviteUsers) count++
   if (this.canPinMessages) count++
+  if (this.canManageTopics) count++
   return count
 }
 
@@ -1499,4 +1519,84 @@ fun WebPage.applyLinkPreviewOptions (options: LinkPreviewOptions?) {
     }
   }
   this.showAboveText = options?.showAboveText ?: false
+}
+
+fun ChatAdministratorRights?.setAllAdministratorRights (value: Boolean) {
+  this?.let {
+    if (COMPILE_CHECK) {
+      ChatAdministratorRights(
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      )
+    }
+    this.canManageChat = value
+    this.canChangeInfo = value
+    this.canPostMessages = value
+    this.canEditMessages = value
+    this.canDeleteMessages = value
+    this.canInviteUsers = value
+    this.canRestrictMembers = value
+    this.canPinMessages = value
+    this.canManageTopics = value
+    this.canPromoteMembers = value
+    this.canManageVideoChats = value
+    this.canPostStories = value
+    this.canEditStories = value
+    this.canDeleteStories = value
+    this.isAnonymous = value
+  }
+}
+
+@JvmOverloads fun ChatMemberStatusAdministrator.isEmpty (rights: ChatPermissions? = null): Boolean {
+  return this.customTitle.isNullOrEmpty() && this.rights.isEmpty(rights)
+}
+
+@JvmOverloads fun ChatAdministratorRights.isEmpty (rights: ChatPermissions? = null): Boolean {
+  if (COMPILE_CHECK) {
+    ChatAdministratorRights(
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    )
+  }
+  return !this.canManageChat &&
+    this.canChangeInfo == (rights?.canChangeInfo ?: false) &&
+    !this.canPostMessages &&
+    !this.canEditMessages &&
+    !this.canDeleteMessages &&
+    !this.canRestrictMembers &&
+    this.canInviteUsers == (rights?.canInviteUsers ?: false) &&
+    this.canPinMessages == (rights?.canPinMessages ?: false) &&
+    !this.canManageTopics &&
+    !this.canPromoteMembers &&
+    !this.canManageVideoChats &&
+    !this.canPostStories &&
+    !this.canEditStories &&
+    !this.canDeleteStories &&
+    !this.isAnonymous
 }
