@@ -353,6 +353,8 @@ fun MessageSelfDestructType?.isSecret (): Boolean {
   }
 }
 
+fun MessageSelfDestructType?.selfDestructsImmediately (): Boolean = this?.constructor == MessageSelfDestructTypeImmediately.CONSTRUCTOR
+
 fun InputMessageContent.isSecret (): Boolean {
   return when (this.constructor) {
     InputMessagePhoto.CONSTRUCTOR -> (this as InputMessagePhoto).selfDestructType.isSecret()
@@ -1164,7 +1166,7 @@ fun ChatPermissions.count (): Int {
   if (this.canChangeInfo) count++
   if (this.canInviteUsers) count++
   if (this.canPinMessages) count++
-  if (this.canManageTopics) count++
+  if (this.canCreateTopics) count++
   return count
 }
 
@@ -1599,4 +1601,19 @@ fun ChatAdministratorRights?.setAllAdministratorRights (value: Boolean) {
     !this.canEditStories &&
     !this.canDeleteStories &&
     !this.isAnonymous
+}
+
+fun ForwardSource?.hasMessage (): Boolean = this?.let {
+  it.chatId != 0L && it.messageId != 0L
+} ?: false
+
+fun MessageForwardInfo?.hasMessageSource (): Boolean = this?.source.hasMessage()
+fun MessageReactions?.reactionTypesCount (): Int = this?.reactions?.size ?: 0
+
+fun Array<EmojiKeyword>.findUniqueEmojis (): Array<String> {
+  val emojis = linkedSetOf<String>()
+  this.forEach {
+    emojis.add(it.emoji)
+  }
+  return emojis.toTypedArray()
 }

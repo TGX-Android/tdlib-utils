@@ -110,3 +110,7 @@ fun Usernames?.isEmpty (checkDisabled: Boolean = false): Boolean {
   // ignored: this.editableUsername.isNullOrEmpty()
   return this == null || (this.activeUsernames.isNullOrEmpty() && (!checkDisabled || this.disabledUsernames.isNullOrEmpty()))
 }
+
+fun MessageReactions?.isEmpty (): Boolean {
+  return this == null || this.reactions.isNullOrEmpty()
+}

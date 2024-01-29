@@ -20,6 +20,7 @@
 
 package me.vkryl.td
 
+import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.*
 
 fun ChatPermissions.copyTo (dst: ChatPermissions) {
@@ -39,7 +40,7 @@ fun ChatPermissions.copyTo (dst: ChatPermissions) {
       this.canChangeInfo,
       this.canInviteUsers,
       this.canPinMessages,
-      this.canManageTopics
+      this.canCreateTopics
     )
   }
   dst.canSendBasicMessages = this.canSendBasicMessages
@@ -55,7 +56,7 @@ fun ChatPermissions.copyTo (dst: ChatPermissions) {
   dst.canChangeInfo = this.canChangeInfo
   dst.canInviteUsers = this.canInviteUsers
   dst.canPinMessages = this.canPinMessages
-  dst.canManageTopics = this.canManageTopics
+  dst.canCreateTopics = this.canCreateTopics
 }
 
 fun ChatPosition.copyTo (dst: ChatPosition) {
@@ -159,6 +160,7 @@ fun User.copyTo (dst: User) {
       this.isFake,
       this.hasActiveStories,
       this.hasUnreadActiveStories,
+      this.restrictsNewChats,
       this.haveAccess,
       this.type,
       this.languageCode,
@@ -187,6 +189,7 @@ fun User.copyTo (dst: User) {
   dst.isFake = this.isFake
   dst.hasActiveStories = this.hasActiveStories
   dst.hasUnreadActiveStories = this.hasUnreadActiveStories
+  dst.restrictsNewChats = this.restrictsNewChats
   dst.haveAccess = this.haveAccess
   dst.type = this.type
   dst.languageCode = this.languageCode
@@ -213,6 +216,7 @@ fun Message.copyTo (dst: Message) {
       this.canGetAddedReactions,
       this.canGetStatistics,
       this.canGetMessageThread,
+      this.canGetReadDate,
       this.canGetViewers,
       this.canGetMediaTimestampLinks,
       this.canReportReactions,
@@ -228,6 +232,7 @@ fun Message.copyTo (dst: Message) {
       this.unreadReactions,
       this.replyTo,
       this.messageThreadId,
+      this.savedMessagesTopic,
       this.selfDestructType,
       this.selfDestructIn,
       this.autoDeleteIn,
@@ -255,6 +260,7 @@ fun Message.copyTo (dst: Message) {
   dst.canGetAddedReactions = this.canGetAddedReactions
   dst.canGetStatistics = this.canGetStatistics
   dst.canGetMessageThread = this.canGetMessageThread
+  dst.canGetReadDate = this.canGetReadDate
   dst.canGetViewers = this.canGetViewers
   dst.canGetMediaTimestampLinks = this.canGetMediaTimestampLinks
   dst.canReportReactions = this.canReportReactions;
@@ -269,6 +275,7 @@ fun Message.copyTo (dst: Message) {
   dst.unreadReactions = this.unreadReactions
   dst.replyTo = this.replyTo
   dst.messageThreadId = this.messageThreadId
+  dst.savedMessagesTopic = this.savedMessagesTopic
   dst.selfDestructType = this.selfDestructType
   dst.selfDestructIn = this.selfDestructIn
   dst.autoDeleteIn = this.autoDeleteIn
@@ -372,6 +379,7 @@ fun Message?.copyOf (): Message? {
       this.canGetAddedReactions,
       this.canGetStatistics,
       this.canGetMessageThread,
+      this.canGetReadDate,
       this.canGetViewers,
       this.canGetMediaTimestampLinks,
       this.canReportReactions,
@@ -387,6 +395,7 @@ fun Message?.copyOf (): Message? {
       this.unreadReactions,
       this.replyTo,
       this.messageThreadId,
+      this.savedMessagesTopic,
       this.selfDestructType,
       this.selfDestructIn,
       this.autoDeleteIn,
@@ -462,7 +471,7 @@ fun ChatPermissions?.copyOf (): ChatPermissions? {
       this.canChangeInfo,
       this.canInviteUsers,
       this.canPinMessages,
-      this.canManageTopics
+      this.canCreateTopics
     )
   }
 }
@@ -613,3 +622,23 @@ fun WebPage?.copyOf (): WebPage? {
     )
   }
 }
+
+fun SearchChatMessages.copyOf (): SearchChatMessages = SearchChatMessages(
+  this.chatId,
+  this.query,
+  this.senderId,
+  this.fromMessageId,
+  this.offset,
+  this.limit,
+  this.filter,
+  this.messageThreadId,
+  this.savedMessagesTopic
+)
+
+fun SearchSecretMessages.copyOf (): SearchSecretMessages = SearchSecretMessages(
+  this.chatId,
+  this.query,
+  this.offset,
+  this.limit,
+  this.filter
+)

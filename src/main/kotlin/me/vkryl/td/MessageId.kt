@@ -28,6 +28,7 @@ class MessageId @JvmOverloads constructor (val chatId: Long, val messageId: Long
   constructor(message: Message) : this(message.chatId, message.id)
   constructor(replyTo: MessageReplyToMessage) : this(replyTo.chatId, replyTo.messageId)
   constructor(replyTo: InputMessageReplyToMessage) : this(replyTo.chatId, replyTo.messageId)
+  constructor(forwardSource: ForwardSource) : this(forwardSource.chatId, forwardSource.messageId)
 
   fun toServerMessageId () = toServerMessageId(messageId)
 

@@ -171,7 +171,7 @@ fun ChatPermissions.equalsTo(b: ChatPermissions): Boolean {
       this.canChangeInfo,
       this.canInviteUsers,
       this.canPinMessages,
-      this.canManageTopics
+      this.canCreateTopics
     )
   }
   return (this === b) || (
@@ -188,7 +188,7 @@ fun ChatPermissions.equalsTo(b: ChatPermissions): Boolean {
     this.canChangeInfo == b.canChangeInfo &&
     this.canInviteUsers == b.canInviteUsers &&
     this.canPinMessages == b.canPinMessages &&
-    this.canManageTopics == b.canManageTopics
+    this.canCreateTopics == b.canCreateTopics
   )
 }
 
@@ -209,7 +209,7 @@ fun ChatPermissions.equalsTo(old: ChatPermissions, defaultPermissions: ChatPermi
       this.canChangeInfo,
       this.canInviteUsers,
       this.canPinMessages,
-      this.canManageTopics
+      this.canCreateTopics
     )
   }
   return (this === old) || (
@@ -226,7 +226,7 @@ fun ChatPermissions.equalsTo(old: ChatPermissions, defaultPermissions: ChatPermi
     (this.canChangeInfo == old.canChangeInfo || !this.canChangeInfo && !defaultPermissions.canChangeInfo) &&
     (this.canInviteUsers == old.canInviteUsers || !this.canInviteUsers && !defaultPermissions.canInviteUsers) &&
     (this.canPinMessages == old.canPinMessages || !this.canPinMessages && !defaultPermissions.canPinMessages) &&
-    (this.canManageTopics == old.canManageTopics || !this.canManageTopics && !defaultPermissions.canManageTopics)
+    (this.canCreateTopics == old.canCreateTopics || !this.canCreateTopics && !defaultPermissions.canCreateTopics)
   )
 }
 
@@ -1763,6 +1763,33 @@ fun SuggestedAction?.equalsTo(b: SuggestedAction?): Boolean {
         assertSuggestedAction_45d3774f()
         throw unsupported(this)
       }
+    }
+  }
+}
+
+@JvmOverloads fun ForwardSource?.equalsTo(b: ForwardSource?, checkMetadata: Boolean = true): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null -> false
+    else -> {
+      if (COMPILE_CHECK) {
+        ForwardSource(
+          this.chatId,
+          this.messageId,
+          this.senderId,
+          this.senderName,
+          this.date,
+          this.isOutgoing
+        )
+      }
+      this.chatId == b.chatId &&
+      this.messageId == b.messageId &&
+      this.senderId.equalsTo(b.senderId) &&
+      this.senderName.equalsOrBothEmpty(b.senderName) &&
+      (!checkMetadata || (
+        this.date == b.date &&
+        this.isOutgoing == b.isOutgoing
+      ))
     }
   }
 }
