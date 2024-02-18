@@ -405,6 +405,7 @@ fun ChatEventAction.findRelatedMessage (): Message? {
     ChatEventPhotoChanged.CONSTRUCTOR,
     ChatEventSlowModeDelayChanged.CONSTRUCTOR,
     ChatEventStickerSetChanged.CONSTRUCTOR,
+    ChatEventCustomEmojiStickerSetChanged.CONSTRUCTOR,
     ChatEventTitleChanged.CONSTRUCTOR,
     ChatEventUsernameChanged.CONSTRUCTOR,
     ChatEventActiveUsernamesChanged.CONSTRUCTOR,
@@ -432,7 +433,7 @@ fun ChatEventAction.findRelatedMessage (): Message? {
     ChatEventForumTopicToggleIsHidden.CONSTRUCTOR,
     ChatEventForumTopicDeleted.CONSTRUCTOR -> null
     else -> {
-      assertChatEventAction_57377883()
+      assertChatEventAction_c4c039bc()
       throw unsupported(this)
     }
   }

@@ -20,7 +20,6 @@
 
 package me.vkryl.td
 
-import org.drinkless.tdlib.TdApi
 import org.drinkless.tdlib.TdApi.*
 
 fun ChatPermissions.copyTo (dst: ChatPermissions) {
@@ -232,11 +231,12 @@ fun Message.copyTo (dst: Message) {
       this.unreadReactions,
       this.replyTo,
       this.messageThreadId,
-      this.savedMessagesTopic,
+      this.savedMessagesTopicId,
       this.selfDestructType,
       this.selfDestructIn,
       this.autoDeleteIn,
       this.viaBotUserId,
+      this.senderBoostCount,
       this.authorSignature,
       this.mediaAlbumId,
       this.restrictionReason,
@@ -275,11 +275,12 @@ fun Message.copyTo (dst: Message) {
   dst.unreadReactions = this.unreadReactions
   dst.replyTo = this.replyTo
   dst.messageThreadId = this.messageThreadId
-  dst.savedMessagesTopic = this.savedMessagesTopic
+  dst.savedMessagesTopicId = this.savedMessagesTopicId
   dst.selfDestructType = this.selfDestructType
   dst.selfDestructIn = this.selfDestructIn
   dst.autoDeleteIn = this.autoDeleteIn
   dst.viaBotUserId = this.viaBotUserId
+  dst.senderBoostCount = this.senderBoostCount
   dst.authorSignature = this.authorSignature
   dst.mediaAlbumId = this.mediaAlbumId
   dst.restrictionReason = this.restrictionReason
@@ -312,14 +313,14 @@ fun AccentColor.copyTo (dst: AccentColor) {
       this.builtInAccentColorId,
       this.lightThemeColors,
       this.darkThemeColors,
-      this.minChatBoostLevel
+      this.minChannelChatBoostLevel
     )
   }
   dst.id = this.id
   dst.builtInAccentColorId = this.builtInAccentColorId
   dst.lightThemeColors = this.lightThemeColors
   dst.darkThemeColors = this.darkThemeColors
-  dst.minChatBoostLevel = this.minChatBoostLevel
+  dst.minChannelChatBoostLevel = this.minChannelChatBoostLevel
 }
 
 fun File?.copyOf (): File? {
@@ -395,11 +396,12 @@ fun Message?.copyOf (): Message? {
       this.unreadReactions,
       this.replyTo,
       this.messageThreadId,
-      this.savedMessagesTopic,
+      this.savedMessagesTopicId,
       this.selfDestructType,
       this.selfDestructIn,
       this.autoDeleteIn,
       this.viaBotUserId,
+      this.senderBoostCount,
       this.authorSignature,
       this.mediaAlbumId,
       this.restrictionReason,
@@ -632,7 +634,7 @@ fun SearchChatMessages.copyOf (): SearchChatMessages = SearchChatMessages(
   this.limit,
   this.filter,
   this.messageThreadId,
-  this.savedMessagesTopic
+  this.savedMessagesTopicId
 )
 
 fun SearchSecretMessages.copyOf (): SearchSecretMessages = SearchSecretMessages(
