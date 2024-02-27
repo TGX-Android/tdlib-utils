@@ -293,17 +293,16 @@ fun InputTextQuote?.equalsTo(b: InputTextQuote?, ignoreDefaultEntities: Boolean 
 @JvmOverloads
 fun Array<TextEntity>?.equalsTo(b: Array<TextEntity>?, ignoreDefaultEntities: Boolean = false): Boolean {
   if (this === b) return true
+  if (ignoreDefaultEntities) {
+    return this.findEssential().equalsTo(b.findEssential())
+  }
+  if (this.isNullOrEmpty() != b.isNullOrEmpty()) {
+    return false
+  }
   if (this != null && b != null) {
-    if (ignoreDefaultEntities) {
-      return this.findEssential().equalsTo(b.findEssential())
-    } else {
-      if (this.size != b.size) {
+    for (i in this.indices) {
+      if (!this[i].equalsTo(b[i])) {
         return false
-      }
-      for (i in this.indices) {
-        if (!this[i].equalsTo(b[i])) {
-          return false
-        }
       }
     }
   }
