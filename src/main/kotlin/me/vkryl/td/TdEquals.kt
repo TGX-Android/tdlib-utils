@@ -300,6 +300,9 @@ fun Array<TextEntity>?.equalsTo(b: Array<TextEntity>?, ignoreDefaultEntities: Bo
     return false
   }
   if (this != null && b != null) {
+    if (this.size != b.size) {
+      return false
+    }
     for (i in this.indices) {
       if (!this[i].equalsTo(b[i])) {
         return false
