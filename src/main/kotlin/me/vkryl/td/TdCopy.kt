@@ -644,3 +644,9 @@ fun SearchSecretMessages.copyOf (): SearchSecretMessages = SearchSecretMessages(
   this.limit,
   this.filter
 )
+
+fun Usernames.copyOf (): Usernames = Usernames(
+  this.activeUsernames.copyOf(),
+  this.disabledUsernames.copyOf(),
+  this.editableUsername
+)

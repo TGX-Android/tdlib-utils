@@ -875,6 +875,20 @@ fun StickerSet.toStickerSetInfo (): StickerSetInfo {
   )
 }
 
+fun Usernames?.secondaryUsernamesCount (): Int {
+  return if (this != null) {
+    if (this.editableUsername.isNullOrEmpty()) {
+      this.activeUsernames.size + this.disabledUsernames.size
+    } else {
+      val activeUsernamesCount = this.activeUsernames.count { it != this.editableUsername }
+      val disabledUsernamesCount = this.disabledUsernames.count { it != this.editableUsername }
+      activeUsernamesCount + disabledUsernamesCount
+    }
+  } else {
+    0
+  }
+}
+
 fun Usernames?.primaryUsername (): String? {
   return if (this != null) {
     if (this.activeUsernames.isNotEmpty() && this.activeUsernames[0].isNotEmpty()) {
