@@ -94,11 +94,12 @@ fun constructUserPrivacySetting (@UserPrivacySetting.Constructors constructor: I
     UserPrivacySettingShowLinkInForwardedMessages.CONSTRUCTOR -> UserPrivacySettingShowLinkInForwardedMessages()
     UserPrivacySettingShowPhoneNumber.CONSTRUCTOR -> UserPrivacySettingShowPhoneNumber()
     UserPrivacySettingShowBio.CONSTRUCTOR -> UserPrivacySettingShowBio()
+    UserPrivacySettingShowBirthdate.CONSTRUCTOR -> UserPrivacySettingShowBirthdate()
     UserPrivacySettingShowProfilePhoto.CONSTRUCTOR -> UserPrivacySettingShowProfilePhoto()
     UserPrivacySettingShowStatus.CONSTRUCTOR -> UserPrivacySettingShowStatus()
     UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages.CONSTRUCTOR -> UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages()
     else -> {
-      assertUserPrivacySetting_21d3f4()
+      assertUserPrivacySetting_39dfff4d()
       error(constructor.toString())
     }
   }

@@ -590,11 +590,12 @@ fun UserPrivacySettingRule.equalsTo(b: UserPrivacySettingRule): Boolean {
         Arrays.equals(this.userIds, b.userIds)
       }
       UserPrivacySettingRuleAllowAll.CONSTRUCTOR,
+      UserPrivacySettingRuleAllowPremiumUsers.CONSTRUCTOR,
       UserPrivacySettingRuleAllowContacts.CONSTRUCTOR,
       UserPrivacySettingRuleRestrictAll.CONSTRUCTOR,
       UserPrivacySettingRuleRestrictContacts.CONSTRUCTOR -> true
       else -> {
-        assertUserPrivacySettingRule_9d021ccd()
+        assertUserPrivacySettingRule_c58ead3c()
         throw unsupported(this)
       }
     }
@@ -1760,9 +1761,10 @@ fun SuggestedAction?.equalsTo(b: SuggestedAction?): Boolean {
       SuggestedActionUpgradePremium.CONSTRUCTOR,
       SuggestedActionRestorePremium.CONSTRUCTOR,
       SuggestedActionSubscribeToAnnualPremium.CONSTRUCTOR,
-      SuggestedActionGiftPremiumForChristmas.CONSTRUCTOR -> true
+      SuggestedActionGiftPremiumForChristmas.CONSTRUCTOR,
+      SuggestedActionSetBirthdate.CONSTRUCTOR -> true
       else -> {
-        assertSuggestedAction_45d3774f()
+        assertSuggestedAction_b50c1148()
         throw unsupported(this)
       }
     }
