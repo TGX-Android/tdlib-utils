@@ -796,8 +796,12 @@ fun InternalLinkType.equalsTo(b: InternalLinkType): Boolean {
         require(this is InternalLinkTypePremiumGift && b is InternalLinkTypePremiumGift)
         this.referrer == b.referrer
       }
+      InternalLinkTypeBusinessChat.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeBusinessChat && b is InternalLinkTypeBusinessChat)
+        this.linkName == b.linkName
+      }
       else -> {
-        assertInternalLinkType_18c73626()
+        assertInternalLinkType_b56aa77b()
         throw unsupported(this)
       }
     }

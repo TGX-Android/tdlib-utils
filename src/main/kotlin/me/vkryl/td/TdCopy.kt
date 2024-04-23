@@ -453,6 +453,7 @@ fun Chat?.copyOf (): Chat? {
       this.background,
       this.themeName,
       this.actionBar,
+      this.businessBotManageBar,
       this.videoChat,
       this.pendingJoinRequests,
       this.replyMarkupMessageId,
