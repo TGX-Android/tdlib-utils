@@ -1333,6 +1333,25 @@ fun AvailableReactions.isAvailable (reactionType: ReactionType): Boolean {
   return false
 }
 
+fun AvailableReactions.hasNonPremiumReactions (): Boolean {
+  return if (isEmpty()) {
+    false
+  } else {
+    this.popularReactions.hasNonPremiumReactions() ||
+    this.topReactions.hasNonPremiumReactions() ||
+    this.recentReactions.hasNonPremiumReactions()
+  }
+}
+
+fun Array<AvailableReaction>.hasNonPremiumReactions (): Boolean {
+  this.forEach {
+    if (!it.needsPremium) {
+      return true
+    }
+  }
+  return false
+}
+
 @JvmOverloads
 fun newSendOptions (disableNotification: Boolean = false,
                     fromBackground: Boolean = false,
