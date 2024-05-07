@@ -44,6 +44,7 @@ const val MAX_CHAT_INVITE_LINK_USER_COUNT = 99999
 const val MAX_CUSTOM_EMOJI_COUNT_PER_REQUEST = 200
 const val MAX_MESSAGE_ENTITY_COUNT = 100
 const val MAX_MESSAGE_CUSTOM_EMOJI_COUNT = 100
+const val MAX_NUMBER_OF_REACTIONS_PER_POST = 11
 @JvmField val SLOW_MODE_OPTIONS = intArrayOf(0, 10, 30, 60, 300, 900, 3600)
 @JvmField val CHAT_TTL_OPTIONS = intArrayOf(0, 86400, 604800, 2678400)
 @JvmField val TME_HOSTS = arrayOf("t.me", "tx.me", "telegram.me", "telegram.dog")

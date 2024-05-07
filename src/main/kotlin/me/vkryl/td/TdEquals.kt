@@ -192,6 +192,89 @@ fun ChatPermissions.equalsTo(b: ChatPermissions): Boolean {
   )
 }
 
+@OptIn(ExperimentalContracts::class)
+fun PollOption.equalsTo(b: PollOption, onlyTextContent: Boolean = false): Boolean {
+  if (COMPILE_CHECK) {
+    PollOption(
+      this.text,
+      this.voterCount,
+      this.votePercentage,
+      this.isChosen,
+      this.isBeingChosen
+    )
+  }
+  return this.text.equalsTo(b.text) && (onlyTextContent || (
+    this.voterCount == b.voterCount &&
+    this.votePercentage == b.votePercentage &&
+    this.isChosen == b.isChosen &&
+    this.isBeingChosen == b.isBeingChosen
+  ))
+}
+
+fun Array<PollOption>.equalsTo (b: Array<PollOption>, onlyTextContent: Boolean = false): Boolean {
+  if (this === b) return true
+  if (this.size != b.size) return false
+  this.forEachIndexed { index, option ->
+    val bOption = b[index]
+    if (!option.equalsTo(bOption, onlyTextContent)) {
+      return false
+    }
+  }
+  return true
+}
+
+@OptIn(ExperimentalContracts::class)
+fun PollType.equalsTo(b: PollType): Boolean {
+  return when {
+    this === b -> true
+    this.constructor != b.constructor -> false
+    else -> when (this.constructor) {
+      PollTypeRegular.CONSTRUCTOR -> {
+        require(this is PollTypeRegular && b is PollTypeRegular)
+        this.allowMultipleAnswers == b.allowMultipleAnswers
+      }
+      PollTypeQuiz.CONSTRUCTOR -> {
+        require(this is PollTypeQuiz && b is PollTypeQuiz)
+        this.explanation.equalsTo(b.explanation) &&
+        this.correctOptionId == b.correctOptionId
+      }
+      else -> {
+        assertPollType_324514f9()
+        throw unsupported(this)
+      }
+    }
+  }
+}
+
+@OptIn(ExperimentalContracts::class)
+fun Poll.equalsTo(b: Poll, onlyTextContent: Boolean = false): Boolean {
+  if (COMPILE_CHECK) {
+    Poll(
+      this.id,
+      this.question,
+      this.options,
+      this.totalVoterCount,
+      this.recentVoterIds,
+      this.isAnonymous,
+      this.type,
+      this.openPeriod,
+      this.closeDate,
+      this.isClosed
+    )
+  }
+  return this.question.equalsTo(b.question) &&
+    this.options.equalsTo(b.options, onlyTextContent) && (onlyTextContent || (
+    this.id == b.id &&
+    this.totalVoterCount == b.totalVoterCount &&
+    this.recentVoterIds.contentEquals(b.recentVoterIds) &&
+    this.isAnonymous == b.isAnonymous &&
+    this.type.equalsTo(b.type) &&
+    this.openPeriod == b.openPeriod &&
+    this.closeDate == b.closeDate &&
+    this.isClosed == b.isClosed
+  ))
+}
+
 fun ChatPermissions.equalsTo(old: ChatPermissions, defaultPermissions: ChatPermissions): Boolean {
   if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
@@ -1758,6 +1841,13 @@ fun SuggestedAction?.equalsTo(b: SuggestedAction?): Boolean {
         }
         this.authorizationDelay == b.authorizationDelay
       }
+      SuggestedActionExtendPremium.CONSTRUCTOR -> {
+        require(this is SuggestedActionExtendPremium && b is SuggestedActionExtendPremium)
+        if (COMPILE_CHECK) {
+          SuggestedActionExtendPremium(this.managePremiumSubscriptionUrl)
+        }
+        this.managePremiumSubscriptionUrl == b.managePremiumSubscriptionUrl
+      }
       SuggestedActionEnableArchiveAndMuteNewChats.CONSTRUCTOR,
       SuggestedActionCheckPassword.CONSTRUCTOR,
       SuggestedActionCheckPhoneNumber.CONSTRUCTOR,
@@ -1768,7 +1858,7 @@ fun SuggestedAction?.equalsTo(b: SuggestedAction?): Boolean {
       SuggestedActionGiftPremiumForChristmas.CONSTRUCTOR,
       SuggestedActionSetBirthdate.CONSTRUCTOR -> true
       else -> {
-        assertSuggestedAction_b50c1148()
+        assertSuggestedAction_96dcb962()
         throw unsupported(this)
       }
     }

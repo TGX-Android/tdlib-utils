@@ -117,6 +117,32 @@ fun FormattedText.addDefaultEntities () {
   }
 }
 
+@OptIn(ExperimentalContracts::class)
+fun FormattedText.split(delimiter: String): Array<FormattedText> {
+  val list = mutableListOf<FormattedText>()
+  var remaining = this
+  do {
+    val index = remaining.text.indexOf(delimiter)
+    if (index == -1) {
+      list.add(remaining)
+      break
+    } else {
+      list.add(remaining.substring(0, index))
+      remaining = remaining.substring(index + delimiter.length)
+    }
+  } while (!remaining.isEmpty())
+  return list.toTypedArray()
+}
+
+@OptIn(ExperimentalContracts::class)
+fun FormattedText.codePointCount(): Int {
+  return if (!this.isEmpty()) {
+    this.text.codePointCount(0, this.text.length)
+  } else {
+    0
+  }
+}
+
 fun concat(vararg texts: FormattedText): FormattedText? {
   if (texts.isNullOrEmpty())
     return null
@@ -531,10 +557,12 @@ fun AuthenticationCodeType.codeLength (fallbackCodeLength: Int): Int {
       (this as AuthenticationCodeTypeCall).length
     AuthenticationCodeTypeMissedCall.CONSTRUCTOR ->
       (this as AuthenticationCodeTypeMissedCall).length
-    AuthenticationCodeTypeFlashCall.CONSTRUCTOR ->
+    AuthenticationCodeTypeFlashCall.CONSTRUCTOR,
+    AuthenticationCodeTypeSmsWord.CONSTRUCTOR,
+    AuthenticationCodeTypeSmsPhrase.CONSTRUCTOR ->
       fallbackCodeLength
     else -> {
-      assertAuthenticationCodeType_bb3a4b1a()
+      assertAuthenticationCodeType_6b7089f4()
       throw unsupported(this)
     }
   }

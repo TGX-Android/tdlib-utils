@@ -626,6 +626,7 @@ fun WebPage?.copyOf (): WebPage? {
       this.voiceNote,
       this.storySenderChatId,
       this.storyId,
+      this.stickers,
       this.instantViewVersion
     )
   }
