@@ -313,6 +313,22 @@ fun ChatPermissions.equalsTo(old: ChatPermissions, defaultPermissions: ChatPermi
   )
 }
 
+fun CanSendMessageToUserResult?.equalsTo(b: CanSendMessageToUserResult?): Boolean {
+  return when {
+    this === b -> true
+    this === null || b === null || this.constructor != b.constructor -> false
+    else -> when (this.constructor) {
+      CanSendMessageToUserResultUserRestrictsNewChats.CONSTRUCTOR,
+      CanSendMessageToUserResultUserIsDeleted.CONSTRUCTOR,
+      CanSendMessageToUserResultOk.CONSTRUCTOR -> true
+      else -> {
+        assertCanSendMessageToUserResult_3ce8a048()
+        throw unsupported(this)
+      }
+    }
+  }
+}
+
 fun ChatActionBar?.equalsTo(b: ChatActionBar?): Boolean {
   return when {
     this === b -> true
@@ -320,14 +336,32 @@ fun ChatActionBar?.equalsTo(b: ChatActionBar?): Boolean {
     else -> when (this.constructor) {
       ChatActionBarReportSpam.CONSTRUCTOR -> {
         require(this is ChatActionBarReportSpam && b is ChatActionBarReportSpam)
+        if (COMPILE_CHECK) {
+          ChatActionBarReportSpam(
+            this.canUnarchive
+          )
+        }
         this.canUnarchive == b.canUnarchive
       }
       ChatActionBarReportAddBlock.CONSTRUCTOR -> {
         require(this is ChatActionBarReportAddBlock && b is ChatActionBarReportAddBlock)
+        if (COMPILE_CHECK) {
+          ChatActionBarReportAddBlock(
+            this.canUnarchive,
+            this.distance
+          )
+        }
         this.canUnarchive == b.canUnarchive && this.distance == b.distance
       }
       ChatActionBarJoinRequest.CONSTRUCTOR -> {
         require(this is ChatActionBarJoinRequest && b is ChatActionBarJoinRequest)
+        if (COMPILE_CHECK) {
+          ChatActionBarJoinRequest(
+            this.title,
+            this.isChannel,
+            this.requestDate
+          )
+        }
         this.title == b.title &&
         this.isChannel == b.isChannel &&
         this.requestDate == b.requestDate
