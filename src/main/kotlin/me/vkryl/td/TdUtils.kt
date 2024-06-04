@@ -1386,6 +1386,7 @@ fun newSendOptions (disableNotification: Boolean = false,
                     protectContent: Boolean = false,
                     updateOrderOfInstalledStickerSets: Boolean = false,
                     schedulingState: MessageSchedulingState? = null,
+                    effectId: Long = 0,
                     sendingId: Int = 0,
                     onlyPreview: Boolean = false): MessageSendOptions {
   return MessageSendOptions(
@@ -1394,6 +1395,7 @@ fun newSendOptions (disableNotification: Boolean = false,
     protectContent,
     updateOrderOfInstalledStickerSets,
     schedulingState,
+    effectId,
     sendingId,
     onlyPreview
   )
@@ -1505,6 +1507,7 @@ fun TextEntityType.canBeNested (): Boolean = when (this.constructor) {
   TextEntityTypeCode.CONSTRUCTOR -> false
   // Can be nested
   TextEntityTypeBlockQuote.CONSTRUCTOR,
+  TextEntityTypeExpandableBlockQuote.CONSTRUCTOR,
   TextEntityTypeBold.CONSTRUCTOR,
   TextEntityTypeItalic.CONSTRUCTOR,
   TextEntityTypeUnderline.CONSTRUCTOR,
@@ -1525,7 +1528,7 @@ fun TextEntityType.canBeNested (): Boolean = when (this.constructor) {
   TextEntityTypeMediaTimestamp.CONSTRUCTOR -> true
   // Unsupported
   else -> {
-    assertTextEntityType_91234a79()
+    assertTextEntityType_56c1e709()
     throw unsupported(this)
   }
 }

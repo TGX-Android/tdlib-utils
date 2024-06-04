@@ -464,6 +464,7 @@ fun TextEntityType?.equalsTo(b: TextEntityType?): Boolean {
         this.customEmojiId == b.customEmojiId
       }
       TextEntityTypeBlockQuote.CONSTRUCTOR,
+      TextEntityTypeExpandableBlockQuote.CONSTRUCTOR,
       TextEntityTypeBankCardNumber.CONSTRUCTOR,
       TextEntityTypeBold.CONSTRUCTOR,
       TextEntityTypeSpoiler.CONSTRUCTOR,
@@ -481,7 +482,7 @@ fun TextEntityType?.equalsTo(b: TextEntityType?): Boolean {
       TextEntityTypeUrl.CONSTRUCTOR ->
         true
       else -> {
-        assertTextEntityType_91234a79()
+        assertTextEntityType_56c1e709()
         throw unsupported(this)
       }
     }

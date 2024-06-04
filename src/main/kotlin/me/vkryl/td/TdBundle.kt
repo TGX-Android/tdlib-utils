@@ -111,11 +111,12 @@ fun Bundle.put (prefix: String, what: TextEntityType?) {
       TextEntityTypeSpoiler.CONSTRUCTOR,
       TextEntityTypeCode.CONSTRUCTOR,
       TextEntityTypePre.CONSTRUCTOR,
-      TextEntityTypeBlockQuote.CONSTRUCTOR -> {
+      TextEntityTypeBlockQuote.CONSTRUCTOR,
+      TextEntityTypeExpandableBlockQuote.CONSTRUCTOR -> {
         // Nothing additional to save
       }
       else -> {
-        assertTextEntityType_91234a79()
+        assertTextEntityType_56c1e709()
         throw unsupported(what)
       }
     }
@@ -177,8 +178,9 @@ fun Bundle.restoreTextEntityType (prefix: String): TextEntityType? {
     TextEntityTypeCode.CONSTRUCTOR -> TextEntityTypeCode()
     TextEntityTypePre.CONSTRUCTOR -> TextEntityTypePre()
     TextEntityTypeBlockQuote.CONSTRUCTOR -> TextEntityTypeBlockQuote()
+    TextEntityTypeExpandableBlockQuote.CONSTRUCTOR -> TextEntityTypeExpandableBlockQuote()
     else -> {
-      assertTextEntityType_91234a79()
+      assertTextEntityType_56c1e709()
       null
     }
   }

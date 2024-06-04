@@ -230,6 +230,7 @@ fun Message.copyTo (dst: Message) {
       this.importInfo,
       this.interactionInfo,
       this.unreadReactions,
+      this.factCheck,
       this.replyTo,
       this.messageThreadId,
       this.savedMessagesTopicId,
@@ -241,6 +242,7 @@ fun Message.copyTo (dst: Message) {
       this.senderBoostCount,
       this.authorSignature,
       this.mediaAlbumId,
+      this.effectId,
       this.restrictionReason,
       this.content,
       this.replyMarkup
@@ -275,6 +277,7 @@ fun Message.copyTo (dst: Message) {
   dst.forwardInfo = this.forwardInfo
   dst.interactionInfo = this.interactionInfo
   dst.unreadReactions = this.unreadReactions
+  dst.factCheck = this.factCheck
   dst.replyTo = this.replyTo
   dst.messageThreadId = this.messageThreadId
   dst.savedMessagesTopicId = this.savedMessagesTopicId
@@ -285,6 +288,7 @@ fun Message.copyTo (dst: Message) {
   dst.senderBoostCount = this.senderBoostCount
   dst.authorSignature = this.authorSignature
   dst.mediaAlbumId = this.mediaAlbumId
+  dst.effectId = this.effectId
   dst.restrictionReason = this.restrictionReason
   dst.content = this.content
   dst.replyMarkup = this.replyMarkup
@@ -397,6 +401,7 @@ fun Message?.copyOf (): Message? {
       this.importInfo,
       this.interactionInfo,
       this.unreadReactions,
+      this.factCheck,
       this.replyTo,
       this.messageThreadId,
       this.savedMessagesTopicId,
@@ -408,6 +413,7 @@ fun Message?.copyOf (): Message? {
       this.senderBoostCount,
       this.authorSignature,
       this.mediaAlbumId,
+      this.effectId,
       this.restrictionReason,
       this.content,
       this.replyMarkup
