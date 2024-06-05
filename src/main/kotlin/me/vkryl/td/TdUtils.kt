@@ -605,6 +605,20 @@ fun MessageContent?.textOrCaption (): FormattedText? {
   }
 }
 
+fun MessageContent?.showCaptionAboveMedia (): Boolean {
+  return when (this?.constructor) {
+    MessagePhoto.CONSTRUCTOR -> (this as MessagePhoto).showCaptionAboveMedia
+    MessageVideo.CONSTRUCTOR -> (this as MessageVideo).showCaptionAboveMedia
+    MessageAnimation.CONSTRUCTOR -> (this as MessageAnimation).showCaptionAboveMedia
+    MessageText.CONSTRUCTOR,
+    MessageAnimatedEmoji.CONSTRUCTOR,
+    MessageDocument.CONSTRUCTOR,
+    MessageVoiceNote.CONSTRUCTOR,
+    MessageAudio.CONSTRUCTOR -> false
+    else -> false
+  }
+}
+
 fun Array<PhotoSize>.findSmallest (): PhotoSize? {
   return if (this.isNotEmpty()) {
     var photoSize: PhotoSize = this[0]
