@@ -86,6 +86,14 @@ fun TextQuote?.isEmpty (): Boolean {
 }
 
 @ExperimentalContracts
+fun ChatFolderIcon?.isEmpty (): Boolean {
+  contract {
+    returns(false) implies (this@isEmpty != null)
+  }
+  return this?.name.isNullOrEmpty()
+}
+
+@ExperimentalContracts
 fun InputTextQuote?.isEmpty (): Boolean {
   contract {
     returns(false) implies (this@isEmpty != null)
