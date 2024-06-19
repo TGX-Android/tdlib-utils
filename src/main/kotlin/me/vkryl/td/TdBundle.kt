@@ -311,6 +311,11 @@ fun Bundle.put (prefix: String, what: InputMessageReplyTo?) {
     when (what.constructor) {
       InputMessageReplyToMessage.CONSTRUCTOR -> {
         require(what is InputMessageReplyToMessage)
+        putLong(prefix + "_messageId", what.messageId)
+        put(prefix + "_quote", what.quote)
+      }
+      InputMessageReplyToExternalMessage.CONSTRUCTOR -> {
+        require(what is InputMessageReplyToExternalMessage)
         putLong(prefix + "_chatId", what.chatId)
         putLong(prefix + "_messageId", what.messageId)
         put(prefix + "_quote", what.quote)
@@ -321,7 +326,7 @@ fun Bundle.put (prefix: String, what: InputMessageReplyTo?) {
         putInt(prefix + "_storyId", what.storyId)
       }
       else -> {
-        assertInputMessageReplyTo_2ecef1c0()
+        assertInputMessageReplyTo_acef6f3a()
         throw unsupported(what)
       }
     }
@@ -333,11 +338,20 @@ fun Bundle.restoreInputMessageReplyTo (prefix: String): InputMessageReplyTo? {
   val constructor = getInt(prefix + "_constructor")
   return when (constructor) {
     InputMessageReplyToMessage.CONSTRUCTOR -> {
+      val messageId = getLong(prefix + "_messageId")
+      val quote = restoreInputTextQuote(prefix + "_quote")
+      if (messageId != 0L) {
+        InputMessageReplyToMessage(messageId, quote)
+      } else {
+        null
+      }
+    }
+    InputMessageReplyToExternalMessage.CONSTRUCTOR -> {
       val chatId = getLong(prefix + "_chatId")
       val messageId = getLong(prefix + "_messageId")
       val quote = restoreInputTextQuote(prefix + "_quote")
       if (messageId != 0L) {
-        InputMessageReplyToMessage(chatId, messageId, quote)
+        InputMessageReplyToExternalMessage(chatId, messageId, quote)
       } else {
         null
       }
@@ -352,7 +366,7 @@ fun Bundle.restoreInputMessageReplyTo (prefix: String): InputMessageReplyTo? {
       }
     }
     else -> {
-      assertInputMessageReplyTo_2ecef1c0()
+      assertInputMessageReplyTo_acef6f3a()
       null
     }
   }
@@ -361,10 +375,19 @@ fun Bundle.restoreInputMessageReplyTo (prefix: String): InputMessageReplyTo? {
 @ExperimentalContracts
 fun Bundle.put (prefix: String, what: DraftMessage?) {
   if (what != null) {
+    if (COMPILE_CHECK) {
+      DraftMessage(
+        what.replyTo,
+        what.date,
+        what.inputMessageText,
+        what.effectId
+      )
+    }
     val inputMessageText = what.inputMessageText as InputMessageText?
     put(prefix + "_replyTo", what.replyTo)
     putInt(prefix + "_date", what.date)
     put(prefix + "_text", inputMessageText)
+    putLong(prefix + "_effect", what.effectId)
   }
 }
 
@@ -373,8 +396,9 @@ fun Bundle.restoreDraftMessage (prefix: String): DraftMessage? {
   val replyTo = restoreInputMessageReplyTo(prefix + "_replyTo")
   val date = getInt(prefix + "_date")
   val inputMessageText = restoreInputMessageText(prefix + "_text")
+  val effectId = getLong(prefix + "_effect")
   return if (inputMessageText != null || replyTo != null) {
-    DraftMessage(replyTo, date, inputMessageText)
+    DraftMessage(replyTo, date, inputMessageText, effectId)
   } else {
     null
   }
@@ -383,6 +407,15 @@ fun Bundle.restoreDraftMessage (prefix: String): DraftMessage? {
 @ExperimentalContracts
 fun Bundle.put (prefix: String, what: MessageReplyInfo?) {
   if (what != null) {
+    if (COMPILE_CHECK) {
+      MessageReplyInfo(
+        what.replyCount,
+        what.recentReplierIds,
+        what.lastReadInboxMessageId,
+        what.lastReadOutboxMessageId,
+        what.lastMessageId
+      )
+    }
     putInt(prefix + "_replyCount", what.replyCount)
     putLong(prefix + "_lastMessageId", what.lastMessageId)
     putLong(prefix + "_lastReadInboxMessageId", what.lastReadInboxMessageId)

@@ -1518,12 +1518,36 @@ fun InputMessageReplyTo?.equalsTo(b: InputMessageReplyTo?): Boolean {
     else -> when (this.constructor) {
       InputMessageReplyToMessage.CONSTRUCTOR -> {
         require(this is InputMessageReplyToMessage && b is InputMessageReplyToMessage)
+        if (COMPILE_CHECK) {
+          InputMessageReplyToMessage(
+            this.messageId,
+            this.quote
+          )
+        }
+        this.messageId == b.messageId &&
+        this.quote.equalsTo(b.quote, true)
+      }
+      InputMessageReplyToExternalMessage.CONSTRUCTOR -> {
+        require(this is InputMessageReplyToExternalMessage && b is InputMessageReplyToExternalMessage)
+        if (COMPILE_CHECK) {
+          InputMessageReplyToExternalMessage(
+            this.chatId,
+            this.messageId,
+            this.quote
+          )
+        }
         this.chatId == b.chatId &&
         this.messageId == b.messageId &&
         this.quote.equalsTo(b.quote, true)
       }
       InputMessageReplyToStory.CONSTRUCTOR -> {
         require(this is InputMessageReplyToStory && b is InputMessageReplyToStory)
+        if (COMPILE_CHECK) {
+          InputMessageReplyToStory(
+            this.storySenderChatId,
+            this.storyId
+          )
+        }
         this.storySenderChatId == b.storySenderChatId &&
         this.storyId == b.storyId
       }
