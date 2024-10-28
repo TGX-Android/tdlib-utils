@@ -1,6 +1,6 @@
 /*
  * This file is a part of tdlib-utils
- * Copyright © Vyacheslav Krylov (slavone@protonmail.ch) 2014
+ * Copyright © 2014 (tgx-android@pm.me)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 @file:JvmName("JSON")
 
-package me.vkryl.td
+package tgx.td
 
 import me.vkryl.core.isEmpty
 import me.vkryl.core.parseInt
@@ -62,11 +62,11 @@ fun asInt (json: JsonValue?): Int {
     else -> 0
   }
 }
-fun asMap (json: JsonValue?): Map<String, JsonValue>? {
-  if (json !is JsonValueObject)
+fun JsonValue?.asMap (): Map<String, JsonValue>? {
+  if (this !is JsonValueObject)
     return null
-  val map = HashMap<String, JsonValue>(json.members.size)
-  for (member in json.members) {
+  val map = HashMap<String, JsonValue>(this.members.size)
+  for (member in this.members) {
     map[member.key] = member.value
   }
   return map

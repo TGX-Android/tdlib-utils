@@ -1,6 +1,6 @@
 /*
  * This file is a part of tdlib-utils
- * Copyright © Vyacheslav Krylov (slavone@protonmail.ch) 2014
+ * Copyright © 2014 (tgx-android@pm.me)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 @file:JvmName("Td")
 @file:JvmMultifileClass
 
-package me.vkryl.td
+package tgx.td
 
 import android.graphics.Path
 import me.vkryl.core.UTF_8
@@ -30,6 +30,8 @@ import org.drinkless.tdlib.TdApi.*
 import kotlin.contracts.ExperimentalContracts
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 fun LanguagePackInfo?.isLocal (): Boolean = this?.id!!.startsWith("X")
 fun LanguagePackInfo?.isBeta (): Boolean = this?.isBeta ?: false
@@ -422,6 +424,7 @@ fun ChatEventAction.findRelatedMessage (): Message? {
     ChatEventMemberLeft.CONSTRUCTOR,
     ChatEventMemberPromoted.CONSTRUCTOR,
     ChatEventMemberRestricted.CONSTRUCTOR,
+    ChatEventMemberSubscriptionExtended.CONSTRUCTOR,
     ChatEventAvailableReactionsChanged.CONSTRUCTOR,
     ChatEventDescriptionChanged.CONSTRUCTOR,
     ChatEventLinkedChatChanged.CONSTRUCTOR,
@@ -444,6 +447,7 @@ fun ChatEventAction.findRelatedMessage (): Message? {
     ChatEventIsAllHistoryAvailableToggled.CONSTRUCTOR,
     ChatEventHasAggressiveAntiSpamEnabledToggled.CONSTRUCTOR,
     ChatEventSignMessagesToggled.CONSTRUCTOR,
+    ChatEventShowMessageSenderToggled.CONSTRUCTOR,
     ChatEventInviteLinkEdited.CONSTRUCTOR,
     ChatEventInviteLinkRevoked.CONSTRUCTOR,
     ChatEventInviteLinkDeleted.CONSTRUCTOR,
@@ -455,11 +459,12 @@ fun ChatEventAction.findRelatedMessage (): Message? {
     ChatEventIsForumToggled.CONSTRUCTOR,
     ChatEventForumTopicCreated.CONSTRUCTOR,
     ChatEventForumTopicEdited.CONSTRUCTOR,
+    ChatEventForumTopicPinned.CONSTRUCTOR,
     ChatEventForumTopicToggleIsClosed.CONSTRUCTOR,
     ChatEventForumTopicToggleIsHidden.CONSTRUCTOR,
     ChatEventForumTopicDeleted.CONSTRUCTOR -> null
     else -> {
-      assertChatEventAction_c4c039bc()
+      assertChatEventAction_b387a44d()
       throw unsupported(this)
     }
   }
@@ -571,7 +576,7 @@ fun MessageText?.findLinkPreviewUrl (): String? {
   return if (this != null) {
     this.linkPreviewOptions?.url.takeIf {
       !it.isNullOrEmpty()
-    } ?: this.webPage?.url.takeIf {
+    } ?: this.linkPreview?.url.takeIf {
       !it.isNullOrEmpty()
     }
   } else {
@@ -605,18 +610,136 @@ fun MessageContent?.textOrCaption (): FormattedText? {
   }
 }
 
+fun InputMessageContent?.textOrCaption (): FormattedText? {
+  return if (this != null) {
+    when (this.constructor) {
+      InputMessageText.CONSTRUCTOR -> {
+        require(this is InputMessageText)
+        this.text
+      }
+      InputMessageAnimation.CONSTRUCTOR -> {
+        require(this is InputMessageAnimation)
+        this.caption
+      }
+      InputMessageAudio.CONSTRUCTOR -> {
+        require(this is InputMessageAudio)
+        this.caption
+      }
+      InputMessageDocument.CONSTRUCTOR -> {
+        require(this is InputMessageDocument)
+        this.caption
+      }
+      InputMessagePaidMedia.CONSTRUCTOR -> {
+        require(this is InputMessagePaidMedia)
+        this.caption
+      }
+      InputMessagePhoto.CONSTRUCTOR -> {
+        require(this is InputMessagePhoto)
+        this.caption
+      }
+      InputMessageVideo.CONSTRUCTOR -> {
+        require(this is InputMessageVideo)
+        this.caption
+      }
+      InputMessageVoiceNote.CONSTRUCTOR -> {
+        require(this is InputMessageVoiceNote)
+        this.caption
+      }
+      InputMessageSticker.CONSTRUCTOR,
+      InputMessageVideoNote.CONSTRUCTOR,
+      InputMessageLocation.CONSTRUCTOR,
+      InputMessageVenue.CONSTRUCTOR,
+      InputMessageContact.CONSTRUCTOR,
+      InputMessageDice.CONSTRUCTOR,
+      InputMessageGame.CONSTRUCTOR,
+      InputMessageInvoice.CONSTRUCTOR,
+      InputMessagePoll.CONSTRUCTOR,
+      InputMessageStory.CONSTRUCTOR,
+      InputMessageForwarded.CONSTRUCTOR -> null
+      else -> {
+        assertInputMessageContent_6d335c()
+        throw unsupported(this)
+      }
+    }
+  } else {
+    null
+  }
+}
+
 fun MessageContent?.showCaptionAboveMedia (): Boolean {
   return when (this?.constructor) {
     MessagePhoto.CONSTRUCTOR -> (this as MessagePhoto).showCaptionAboveMedia
     MessageVideo.CONSTRUCTOR -> (this as MessageVideo).showCaptionAboveMedia
     MessageAnimation.CONSTRUCTOR -> (this as MessageAnimation).showCaptionAboveMedia
+    MessagePaidMedia.CONSTRUCTOR -> (this as MessagePaidMedia).showCaptionAboveMedia
     MessageText.CONSTRUCTOR,
     MessageAnimatedEmoji.CONSTRUCTOR,
     MessageDocument.CONSTRUCTOR,
     MessageVoiceNote.CONSTRUCTOR,
     MessageAudio.CONSTRUCTOR -> false
-    else -> false
+    else -> {
+      assertMessageContent_91c1e338()
+      false
+    }
   }
+}
+
+fun InputMessageContent?.showCaptionAboveMedia (): Boolean {
+  return when (this?.constructor) {
+    InputMessageAnimation.CONSTRUCTOR -> (this as InputMessageAnimation).showCaptionAboveMedia
+    InputMessagePaidMedia.CONSTRUCTOR -> (this as InputMessagePaidMedia).showCaptionAboveMedia
+    InputMessagePhoto.CONSTRUCTOR -> (this as InputMessagePhoto).showCaptionAboveMedia
+    InputMessageVideo.CONSTRUCTOR -> (this as InputMessageVideo).showCaptionAboveMedia
+    InputMessageText.CONSTRUCTOR,
+    InputMessageAudio.CONSTRUCTOR,
+    InputMessageDocument.CONSTRUCTOR,
+    InputMessageSticker.CONSTRUCTOR,
+    InputMessageVideoNote.CONSTRUCTOR,
+    InputMessageVoiceNote.CONSTRUCTOR,
+    InputMessageLocation.CONSTRUCTOR,
+    InputMessageVenue.CONSTRUCTOR,
+    InputMessageContact.CONSTRUCTOR,
+    InputMessageDice.CONSTRUCTOR,
+    InputMessageGame.CONSTRUCTOR,
+    InputMessageInvoice.CONSTRUCTOR,
+    InputMessagePoll.CONSTRUCTOR,
+    InputMessageStory.CONSTRUCTOR,
+    InputMessageForwarded.CONSTRUCTOR -> false
+    else -> {
+      assertInputMessageContent_6d335c()
+      false
+    }
+  }
+}
+
+fun Array<Message>?.findUniqueChatId (): Long {
+  if (!this.isNullOrEmpty()) {
+    val chatId = this[0].chatId
+    for (message in this) {
+      if (message.chatId != chatId) {
+        return 0
+      }
+    }
+    return chatId
+  }
+  return 0
+}
+
+fun Array<Message>?.findUniqueSenderId (): MessageSender? {
+  if (!this.isNullOrEmpty()) {
+    val senderId = this[0].senderId
+    for (message in this) {
+      if (!message.senderId.equalsTo(senderId)) {
+        return null
+      }
+    }
+    return senderId
+  }
+  return null
+}
+
+fun Message?.canGetAddedReactions (): Boolean {
+  return this?.interactionInfo?.reactions?.canGetAddedReactions ?: false
 }
 
 fun Array<PhotoSize>.findSmallest (): PhotoSize? {
@@ -698,7 +821,7 @@ fun Message?.matchesFilter(filter: SearchMessagesFilter?): Boolean {
       else -> false
     }
     SearchMessagesFilterUrl.CONSTRUCTOR -> {
-      (this.content.constructor == MessageText.CONSTRUCTOR && (this.content as MessageText).webPage != null) || this.content.textOrCaption().hasLinks()
+      (this.content.constructor == MessageText.CONSTRUCTOR && (this.content as MessageText).linkPreview != null) || this.content.textOrCaption().hasLinks()
     }
     SearchMessagesFilterUnreadReaction.CONSTRUCTOR -> {
       !this.unreadReactions.isNullOrEmpty()
@@ -1219,7 +1342,7 @@ fun ChatPermissions.count (): Int {
   if (this.canSendVoiceNotes) count++
   if (this.canSendPolls) count++
   if (this.canSendOtherMessages) count++
-  if (this.canAddWebPagePreviews) count++
+  if (this.canAddLinkPreviews) count++
   if (this.canChangeInfo) count++
   if (this.canInviteUsers) count++
   if (this.canPinMessages) count++
@@ -1281,11 +1404,13 @@ fun PushMessageContent.getText (): String? {
     PushMessageContentMediaAlbum.CONSTRUCTOR,
     PushMessageContentStory.CONSTRUCTOR,
     PushMessageContentPremiumGiftCode.CONSTRUCTOR,
-    PushMessageContentPremiumGiveaway.CONSTRUCTOR ->
+    PushMessageContentGiveaway.CONSTRUCTOR,
+    PushMessageContentPaidMedia.CONSTRUCTOR,
+    PushMessageContentGift.CONSTRUCTOR ->
       null
     // unsupported
     else -> {
-      assertPushMessageContent_b17e0a62()
+      assertPushMessageContent_c163df58()
       throw unsupported(this)
     }
   }
@@ -1328,8 +1453,10 @@ fun PushMessageContent.isPinned (): Boolean = when (this.constructor) {
     (this as PushMessageContentVoiceNote).isPinned
   PushMessageContentStory.CONSTRUCTOR ->
     (this as PushMessageContentStory).isPinned
-  PushMessageContentPremiumGiveaway.CONSTRUCTOR ->
-    (this as PushMessageContentPremiumGiveaway).isPinned
+  PushMessageContentGiveaway.CONSTRUCTOR ->
+    (this as PushMessageContentGiveaway).isPinned
+  PushMessageContentPaidMedia.CONSTRUCTOR ->
+    (this as PushMessageContentPaidMedia).isPinned
 
   // Do not have `isPinned` field:
   PushMessageContentContactRegistered.CONSTRUCTOR,
@@ -1347,12 +1474,13 @@ fun PushMessageContent.isPinned (): Boolean = when (this.constructor) {
   PushMessageContentRecurringPayment.CONSTRUCTOR,
   PushMessageContentMessageForwards.CONSTRUCTOR,
   PushMessageContentMediaAlbum.CONSTRUCTOR,
-  PushMessageContentPremiumGiftCode.CONSTRUCTOR ->
+  PushMessageContentPremiumGiftCode.CONSTRUCTOR,
+  PushMessageContentGift.CONSTRUCTOR ->
     false
 
   // unsupported
   else -> {
-    assertPushMessageContent_b17e0a62()
+    assertPushMessageContent_c163df58()
     throw unsupported(this)
   }
 }
@@ -1496,6 +1624,31 @@ fun OptionValue.stringValue (defaultValue: String? = null): String = when (this.
   else -> defaultValue ?: error(this.toString())
 }
 
+@JvmOverloads
+fun JsonValue.boolValue (defaultValue: Boolean = false): Boolean = when (this.constructor) {
+  JsonValueBoolean.CONSTRUCTOR -> (this as JsonValueBoolean).value
+  JsonValueString.CONSTRUCTOR -> (this as JsonValueString).value == "true"
+  JsonValueNumber.CONSTRUCTOR -> (this as JsonValueNumber).value != 0.0
+  else -> defaultValue
+}
+
+@JvmOverloads
+fun JsonValue.stringValue (defaultValue: String = ""): String = when (this.constructor) {
+  JsonValueString.CONSTRUCTOR -> (this as JsonValueString).value
+  else -> defaultValue
+}
+
+@JvmOverloads
+fun JsonValue.numberValue (defaultValue: Double = 0.0): Double = when (this.constructor) {
+  JsonValueNumber.CONSTRUCTOR -> (this as JsonValueNumber).value
+  else -> defaultValue
+}
+
+@JvmOverloads
+fun JsonValue.intValue (defaultValue: Int = 0): Int = this.numberValue(defaultValue.toDouble()).roundToInt()
+@JvmOverloads
+fun JsonValue.longValue (defaultValue: Long = 0): Long = this.numberValue(defaultValue.toDouble()).roundToLong()
+
 fun TextEntityType.isUrl (): Boolean = this.constructor == TextEntityTypeUrl.CONSTRUCTOR
 fun TextEntityType.isTextUrl (): Boolean = this.constructor == TextEntityTypeTextUrl.CONSTRUCTOR
 fun TextEntityType.isEmailAddress (): Boolean = this.constructor == TextEntityTypeEmailAddress.CONSTRUCTOR
@@ -1591,7 +1744,7 @@ fun MessageContent.isListenedOrViewed (): Boolean = when (this.constructor) {
   }
 }
 
-fun WebPage.applyLinkPreviewOptions (options: LinkPreviewOptions?) {
+fun LinkPreview.applyLinkPreviewOptions (options: LinkPreviewOptions?) {
   if (this.hasLargeMedia && options != null) {
     if (options.forceSmallMedia) {
       this.showLargeMedia = false
@@ -1695,4 +1848,73 @@ fun Array<EmojiKeyword>.findUniqueEmojis (): Array<String> {
     emojis.add(it.emoji)
   }
   return emojis.toTypedArray()
+}
+
+fun Thumbnail?.toPhotoSize (): PhotoSize? {
+  return this?.let {
+    when (it.format.constructor) {
+      ThumbnailFormatJpeg.CONSTRUCTOR,
+      ThumbnailFormatPng.CONSTRUCTOR,
+      ThumbnailFormatWebp.CONSTRUCTOR -> {
+        val maxSize = maxOf(it.width, it.height)
+        val type = when {
+          maxSize <= 100 -> "s"
+          maxSize <= 320 -> "m"
+          else -> "x"
+        }
+        PhotoSize(type, it.file, it.width, it.height, null)
+      }
+      else -> null
+    }
+  }
+}
+
+fun toPhoto (vararg array: PhotoSize?): Photo? {
+  val filtered = array.filterNotNull().toTypedArray()
+  return filtered.takeIf { it.isNotEmpty() }?.let {
+    Photo(false, null, filtered)
+  }
+}
+
+fun Sticker?.toThumbnail (): Thumbnail? {
+  return this?.let {
+    when {
+      it.thumbnail != null -> it.thumbnail
+      it.format.isAnimated() -> null
+      else -> {
+        Thumbnail(ThumbnailFormatWebp(), it.width, it.height, it.sticker)
+      }
+    }
+  }
+}
+
+fun Photo?.toThumbnail (): Thumbnail? = this?.sizes?.findSmallest().toThumbnail()
+
+fun PhotoSize?.toThumbnail (): Thumbnail? {
+  return this?.let {
+    Thumbnail(ThumbnailFormatJpeg(), it.width, it.height, it.photo)
+  }
+}
+
+fun ChatPhoto?.toPhoto (): Photo? {
+  return this?.let {
+    Photo(
+      false,
+      it.minithumbnail,
+      it.sizes
+    )
+  }
+}
+
+fun ChatPhoto?.toThumbnail (): Thumbnail? {
+  return this?.sizes?.findSmallest().toThumbnail()
+}
+
+fun ChatMemberStatus?.getMemberUntilDate (): Int {
+  return this?.takeIf {
+    it.constructor == ChatMemberStatusMember.CONSTRUCTOR
+  }?.let {
+    require(it is ChatMemberStatusMember)
+    it.memberUntilDate
+  } ?: 0
 }

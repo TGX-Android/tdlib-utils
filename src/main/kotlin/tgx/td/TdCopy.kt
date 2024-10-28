@@ -1,6 +1,6 @@
 /*
  * This file is a part of tdlib-utils
- * Copyright © Vyacheslav Krylov (slavone@protonmail.ch) 2014
+ * Copyright © 2014 (tgx-android@pm.me)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 @file:JvmName("Td")
 @file:JvmMultifileClass
 
-package me.vkryl.td
+package tgx.td
 
 import org.drinkless.tdlib.TdApi.*
 
@@ -35,7 +35,7 @@ fun ChatPermissions.copyTo (dst: ChatPermissions) {
       this.canSendVoiceNotes,
       this.canSendPolls,
       this.canSendOtherMessages,
-      this.canAddWebPagePreviews,
+      this.canAddLinkPreviews,
       this.canChangeInfo,
       this.canInviteUsers,
       this.canPinMessages,
@@ -51,7 +51,7 @@ fun ChatPermissions.copyTo (dst: ChatPermissions) {
   dst.canSendVoiceNotes = this.canSendVoiceNotes
   dst.canSendPolls = this.canSendPolls
   dst.canSendOtherMessages = this.canSendOtherMessages
-  dst.canAddWebPagePreviews = this.canAddWebPagePreviews
+  dst.canAddLinkPreviews = this.canAddLinkPreviews
   dst.canChangeInfo = this.canChangeInfo
   dst.canInviteUsers = this.canInviteUsers
   dst.canPinMessages = this.canPinMessages
@@ -195,6 +195,64 @@ fun User.copyTo (dst: User) {
   dst.addedToAttachmentMenu = this.addedToAttachmentMenu
 }
 
+fun MessageProperties.copyTo (dst: MessageProperties) {
+  if (COMPILE_CHECK) {
+    // Cause compilation error when any field in TdApi changes
+    MessageProperties(
+      this.canBeCopiedToSecretChat,
+      this.canBeDeletedOnlyForSelf,
+      this.canBeDeletedForAllUsers,
+      this.canBeEdited,
+      this.canBeForwarded,
+      this.canBePaid,
+      this.canBePinned,
+      this.canBeReplied,
+      this.canBeRepliedInAnotherChat,
+      this.canBeSaved,
+      this.canBeSharedInStory,
+      this.canEditSchedulingState,
+      this.canGetEmbeddingCode,
+      this.canGetLink,
+      this.canGetMediaTimestampLinks,
+      this.canGetMessageThread,
+      this.canGetReadDate,
+      this.canGetStatistics,
+      this.canGetViewers,
+      this.canRecognizeSpeech,
+      this.canReportChat,
+      this.canReportReactions,
+      this.canReportSupergroupSpam,
+      this.canSetFactCheck,
+      this.needShowStatistics
+    )
+  }
+  dst.canBeCopiedToSecretChat = this.canBeCopiedToSecretChat
+  dst.canBeDeletedOnlyForSelf = this.canBeDeletedOnlyForSelf
+  dst.canBeDeletedForAllUsers = this.canBeDeletedForAllUsers
+  dst.canBeEdited = this.canBeEdited
+  dst.canBeForwarded = this.canBeForwarded
+  dst.canBePaid = this.canBePaid
+  dst.canBePinned = this.canBePinned
+  dst.canBeReplied = this.canBeReplied
+  dst.canBeRepliedInAnotherChat = this.canBeRepliedInAnotherChat
+  dst.canBeSaved = this.canBeSaved
+  dst.canBeSharedInStory = this.canBeSharedInStory
+  dst.canEditSchedulingState = this.canEditSchedulingState
+  dst.canGetEmbeddingCode = this.canGetEmbeddingCode
+  dst.canGetLink = this.canGetLink
+  dst.canGetMediaTimestampLinks = this.canGetMediaTimestampLinks
+  dst.canGetMessageThread = this.canGetMessageThread
+  dst.canGetReadDate = this.canGetReadDate
+  dst.canGetStatistics = this.canGetStatistics
+  dst.canGetViewers = this.canGetViewers
+  dst.canRecognizeSpeech = this.canRecognizeSpeech
+  dst.canReportChat = this.canReportChat
+  dst.canReportReactions = this.canReportReactions
+  dst.canReportSupergroupSpam = this.canReportSupergroupSpam
+  dst.canSetFactCheck = this.canSetFactCheck
+  dst.needShowStatistics = this.needShowStatistics
+}
+
 fun Message.copyTo (dst: Message) {
   if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
@@ -207,19 +265,7 @@ fun Message.copyTo (dst: Message) {
       this.isOutgoing,
       this.isPinned,
       this.isFromOffline,
-      this.canBeEdited,
-      this.canBeForwarded,
-      this.canBeRepliedInAnotherChat,
       this.canBeSaved,
-      this.canBeDeletedOnlyForSelf,
-      this.canBeDeletedForAllUsers,
-      this.canGetAddedReactions,
-      this.canGetStatistics,
-      this.canGetMessageThread,
-      this.canGetReadDate,
-      this.canGetViewers,
-      this.canGetMediaTimestampLinks,
-      this.canReportReactions,
       this.hasTimestampedMedia,
       this.isChannelPost,
       this.isTopicMessage,
@@ -243,6 +289,7 @@ fun Message.copyTo (dst: Message) {
       this.authorSignature,
       this.mediaAlbumId,
       this.effectId,
+      this.hasSensitiveContent,
       this.restrictionReason,
       this.content,
       this.replyMarkup
@@ -255,19 +302,7 @@ fun Message.copyTo (dst: Message) {
   dst.schedulingState = this.schedulingState
   dst.isOutgoing = this.isOutgoing
   dst.isPinned = this.isPinned
-  dst.canBeEdited = this.canBeEdited
-  dst.canBeForwarded = this.canBeForwarded
-  dst.canBeRepliedInAnotherChat = this.canBeRepliedInAnotherChat
   dst.canBeSaved = this.canBeSaved
-  dst.canBeDeletedOnlyForSelf = this.canBeDeletedOnlyForSelf
-  dst.canBeDeletedForAllUsers = this.canBeDeletedForAllUsers
-  dst.canGetAddedReactions = this.canGetAddedReactions
-  dst.canGetStatistics = this.canGetStatistics
-  dst.canGetMessageThread = this.canGetMessageThread
-  dst.canGetReadDate = this.canGetReadDate
-  dst.canGetViewers = this.canGetViewers
-  dst.canGetMediaTimestampLinks = this.canGetMediaTimestampLinks
-  dst.canReportReactions = this.canReportReactions;
   dst.hasTimestampedMedia = this.hasTimestampedMedia
   dst.isChannelPost = this.isChannelPost
   dst.isTopicMessage = this.isTopicMessage
@@ -289,6 +324,7 @@ fun Message.copyTo (dst: Message) {
   dst.authorSignature = this.authorSignature
   dst.mediaAlbumId = this.mediaAlbumId
   dst.effectId = this.effectId
+  dst.hasSensitiveContent = this.hasSensitiveContent
   dst.restrictionReason = this.restrictionReason
   dst.content = this.content
   dst.replyMarkup = this.replyMarkup
@@ -367,6 +403,38 @@ fun RemoteFile?.copyOf (): RemoteFile? {
   }
 }
 
+fun MessageProperties?.copyOf (): MessageProperties? {
+  return this?.let {
+    MessageProperties(
+      this.canBeCopiedToSecretChat,
+      this.canBeDeletedOnlyForSelf,
+      this.canBeDeletedForAllUsers,
+      this.canBeEdited,
+      this.canBeForwarded,
+      this.canBePaid,
+      this.canBePinned,
+      this.canBeReplied,
+      this.canBeRepliedInAnotherChat,
+      this.canBeSaved,
+      this.canBeSharedInStory,
+      this.canEditSchedulingState,
+      this.canGetEmbeddingCode,
+      this.canGetLink,
+      this.canGetMediaTimestampLinks,
+      this.canGetMessageThread,
+      this.canGetReadDate,
+      this.canGetStatistics,
+      this.canGetViewers,
+      this.canRecognizeSpeech,
+      this.canReportChat,
+      this.canReportReactions,
+      this.canReportSupergroupSpam,
+      this.canSetFactCheck,
+      this.needShowStatistics
+    )
+  }
+}
+
 fun Message?.copyOf (): Message? {
   return this?.let {
     Message(
@@ -378,19 +446,7 @@ fun Message?.copyOf (): Message? {
       this.isOutgoing,
       this.isPinned,
       this.isFromOffline,
-      this.canBeEdited,
-      this.canBeForwarded,
-      this.canBeRepliedInAnotherChat,
       this.canBeSaved,
-      this.canBeDeletedOnlyForSelf,
-      this.canBeDeletedForAllUsers,
-      this.canGetAddedReactions,
-      this.canGetStatistics,
-      this.canGetMessageThread,
-      this.canGetReadDate,
-      this.canGetViewers,
-      this.canGetMediaTimestampLinks,
-      this.canReportReactions,
       this.hasTimestampedMedia,
       this.isChannelPost,
       this.isTopicMessage,
@@ -414,6 +470,7 @@ fun Message?.copyOf (): Message? {
       this.authorSignature,
       this.mediaAlbumId,
       this.effectId,
+      this.hasSensitiveContent,
       this.restrictionReason,
       this.content,
       this.replyMarkup
@@ -481,7 +538,7 @@ fun ChatPermissions?.copyOf (): ChatPermissions? {
       this.canSendVoiceNotes,
       this.canSendPolls,
       this.canSendOtherMessages,
-      this.canAddWebPagePreviews,
+      this.canAddLinkPreviews,
       this.canChangeInfo,
       this.canInviteUsers,
       this.canPinMessages,
@@ -603,36 +660,21 @@ fun LinkPreviewOptions?.copyOf (): LinkPreviewOptions {
   )
 }
 
-fun WebPage?.copyOf (): WebPage? {
+fun LinkPreview?.copyOf (): LinkPreview? {
   return this?.let {
-    WebPage(
+    LinkPreview(
       this.url,
       this.displayUrl,
-      this.type,
       this.siteName,
       this.title,
       this.description,
-      this.photo,
-      this.embedUrl,
-      this.embedType,
-      this.embedWidth,
-      this.embedHeight,
-      this.duration,
       this.author,
+      this.type,
       this.hasLargeMedia,
       this.showLargeMedia,
+      this.showMediaAboveDescription,
       this.skipConfirmation,
       this.showAboveText,
-      this.animation,
-      this.audio,
-      this.document,
-      this.sticker,
-      this.video,
-      this.videoNote,
-      this.voiceNote,
-      this.storySenderChatId,
-      this.storyId,
-      this.stickers,
       this.instantViewVersion
     )
   }

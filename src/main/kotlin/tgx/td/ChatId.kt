@@ -1,6 +1,6 @@
 /*
  * This file is a part of tdlib-utils
- * Copyright © Vyacheslav Krylov (slavone@protonmail.ch) 2014
+ * Copyright © 2014 (tgx-android@pm.me)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 @file:JvmName("ChatId")
 
-package me.vkryl.td
+package tgx.td
 
 import org.drinkless.tdlib.TdApi.*
 

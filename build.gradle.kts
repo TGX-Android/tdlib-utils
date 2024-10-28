@@ -26,5 +26,5 @@ dependencies {
 }
 
 android {
-  namespace = "me.vkryl.td"
+  namespace = "tgx.td.unused"
 }

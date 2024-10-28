@@ -1,6 +1,6 @@
 /*
  * This file is a part of tdlib-utils
- * Copyright © Vyacheslav Krylov (slavone@protonmail.ch) 2014
+ * Copyright © 2014 (tgx-android@pm.me)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 @file:JvmName("TdConstants")
 
-package me.vkryl.td
+package tgx.td
 
 const val MAX_USERNAME_LENGTH = 32
 const val MAX_NAME_LENGTH = 64
@@ -35,6 +35,7 @@ const val BACKGROUND_PATTERN_MIME_TYPE = "application/x-tgwallpattern"
 const val TELEGRAM_ACCOUNT_ID = 777000L
 const val TELEGRAM_CHANNEL_BOT_ACCOUNT_ID = 136817688L
 const val TELEGRAM_REPLIES_BOT_ACCOUNT_ID = 1271266957L
+const val VERIFICATION_CODES_BOT_ACCOUNT_ID = 489000L
 const val TELEGRAM_ANIMATED_EMOJI_STICKER_SET_ID = 1258816259751983L
 const val TELEGRAM_BOT_FATHER_ACCOUNT_ID = 93372553L
 const val TELEGRAM_BOT_FATHER_USERNAME = "BotFather"
