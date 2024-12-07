@@ -210,6 +210,7 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
       this.canBeRepliedInAnotherChat,
       this.canBeSaved,
       this.canBeSharedInStory,
+      this.canEditMedia,
       this.canEditSchedulingState,
       this.canGetEmbeddingCode,
       this.canGetLink,
@@ -237,6 +238,7 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
   dst.canBeRepliedInAnotherChat = this.canBeRepliedInAnotherChat
   dst.canBeSaved = this.canBeSaved
   dst.canBeSharedInStory = this.canBeSharedInStory
+  dst.canEditMedia = this.canEditMedia
   dst.canEditSchedulingState = this.canEditSchedulingState
   dst.canGetEmbeddingCode = this.canGetEmbeddingCode
   dst.canGetLink = this.canGetLink
@@ -417,6 +419,7 @@ fun MessageProperties?.copyOf (): MessageProperties? {
       this.canBeRepliedInAnotherChat,
       this.canBeSaved,
       this.canBeSharedInStory,
+      this.canEditMedia,
       this.canEditSchedulingState,
       this.canGetEmbeddingCode,
       this.canGetLink,

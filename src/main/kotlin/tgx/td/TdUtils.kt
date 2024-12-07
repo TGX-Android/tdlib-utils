@@ -1125,9 +1125,9 @@ fun User?.hasUsername (): Boolean = this?.usernames.hasUsername()
 @JvmOverloads fun Supergroup?.findUsernameByPrefix (usernamePrefix: String, allowDisabled: Boolean = false): Boolean = this?.usernames.findUsernameByPrefix(usernamePrefix, allowDisabled)
 
 @JvmOverloads
-fun buildOutline(sticker: Sticker?, targetWidth: Float, targetHeight: Float = targetWidth, out: Path? = null): Path? {
-  return if (sticker != null) {
-    buildOutline(sticker.outline, sticker.width, sticker.height, targetWidth, targetHeight, out)
+fun buildOutline(outline: Outline?, sticker: Sticker?, targetWidth: Float, targetHeight: Float = targetWidth, out: Path? = null): Path? {
+  return if (outline != null && sticker != null) {
+    buildOutline(outline.paths, sticker.width, sticker.height, targetWidth, targetHeight, out)
   } else {
     out
   }
@@ -1526,6 +1526,7 @@ fun Array<AvailableReaction>.hasNonPremiumReactions (): Boolean {
 fun newSendOptions (disableNotification: Boolean = false,
                     fromBackground: Boolean = false,
                     protectContent: Boolean = false,
+                    allowPaidBroadcast: Boolean = false,
                     updateOrderOfInstalledStickerSets: Boolean = false,
                     schedulingState: MessageSchedulingState? = null,
                     effectId: Long = 0,
@@ -1535,6 +1536,7 @@ fun newSendOptions (disableNotification: Boolean = false,
     disableNotification,
     fromBackground,
     protectContent,
+    allowPaidBroadcast,
     updateOrderOfInstalledStickerSets,
     schedulingState,
     effectId,

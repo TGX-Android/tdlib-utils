@@ -25,20 +25,31 @@ import org.drinkless.tdlib.TdApi.*
 import java.util.*
 import kotlin.contracts.ExperimentalContracts
 
-fun ChatList?.equalsTo(b: ChatList?): Boolean {
+fun <T : Object> T?.safeEqualsTo(b: T?, equalsTo: T.(T) -> Boolean): Boolean {
   return when {
     this === b -> true
-    this === null || b === null || this.constructor != b.constructor -> false
-    else -> when (this.constructor) {
-      ChatListMain.CONSTRUCTOR, ChatListArchive.CONSTRUCTOR -> true
-      ChatListFolder.CONSTRUCTOR -> (this as ChatListFolder).chatFolderId == (b as ChatListFolder).chatFolderId
-      else -> {
-        assertChatList_db6c93ab()
-        throw unsupported(this)
+    this == null || b == null || this.constructor != b.constructor -> false
+    else -> this.equalsTo(b)
+  }
+}
+
+fun <T : Object> Array<T?>.arrayEqualsTo(b: Array<T?>, areEqual: (T, T) -> Boolean): Boolean {
+  return when {
+    this === b -> true
+    this.size != b.size -> false
+    else -> {
+      this.forEachIndexed { index, obj ->
+        val other = b[index]
+        if (!obj.safeEqualsTo(other, areEqual)) {
+          return false
+        }
       }
+      true
     }
   }
 }
+
+// ***
 
 fun ChatAdministratorRights?.equalsTo(b: ChatAdministratorRights?): Boolean {
   return when {
@@ -710,10 +721,12 @@ fun UserPrivacySettingRule.equalsTo(b: UserPrivacySettingRule): Boolean {
       UserPrivacySettingRuleAllowAll.CONSTRUCTOR,
       UserPrivacySettingRuleAllowPremiumUsers.CONSTRUCTOR,
       UserPrivacySettingRuleAllowContacts.CONSTRUCTOR,
+      UserPrivacySettingRuleAllowBots.CONSTRUCTOR,
       UserPrivacySettingRuleRestrictAll.CONSTRUCTOR,
-      UserPrivacySettingRuleRestrictContacts.CONSTRUCTOR -> true
+      UserPrivacySettingRuleRestrictContacts.CONSTRUCTOR,
+      UserPrivacySettingRuleRestrictBots.CONSTRUCTOR -> true
       else -> {
-        assertUserPrivacySettingRule_c58ead3c()
+        assertUserPrivacySettingRule_58b21786()
         throw unsupported(this)
       }
     }
@@ -1056,13 +1069,13 @@ fun InternalLinkType.equalsTo(b: InternalLinkType): Boolean {
             this.botUsername,
             this.webAppShortName,
             this.startParameter,
-            this.isCompact
+            this.mode
           )
         }
         this.botUsername == b.botUsername &&
         this.startParameter == b.startParameter &&
         this.webAppShortName == b.webAppShortName &&
-        this.isCompact == b.isCompact
+        this.mode.equalsTo(b.mode)
       }
       InternalLinkTypeChatBoost.CONSTRUCTOR -> {
         require(this is InternalLinkTypeChatBoost && b is InternalLinkTypeChatBoost)
@@ -1079,12 +1092,12 @@ fun InternalLinkType.equalsTo(b: InternalLinkType): Boolean {
           InternalLinkTypeMainWebApp(
             this.botUsername,
             this.startParameter,
-            this.isCompact
+            this.mode
           )
         }
         this.botUsername == b.botUsername &&
         this.startParameter == b.startParameter &&
-        this.isCompact == b.isCompact
+        this.mode.equalsTo(b.mode)
       }
       InternalLinkTypeStory.CONSTRUCTOR -> {
         require(this is InternalLinkTypeStory && b is InternalLinkTypeStory)
@@ -1125,12 +1138,28 @@ fun InternalLinkType.equalsTo(b: InternalLinkType): Boolean {
         }
         this.linkName == b.linkName
       }
+      InternalLinkTypeChatAffiliateProgram.CONSTRUCTOR -> {
+        require(this is InternalLinkTypeChatAffiliateProgram && b is InternalLinkTypeChatAffiliateProgram)
+        if (COMPILE_CHECK) {
+          InternalLinkTypeChatAffiliateProgram(
+            this.username,
+            this.referrer
+          )
+        }
+        this.username == b.username &&
+        this.referrer == b.referrer
+      }
       else -> {
-        assertInternalLinkType_ff0c4471()
+        assertInternalLinkType_3c3b4a9()
         throw unsupported(this)
       }
     }
   }
+}
+
+fun WebAppOpenMode.equalsTo(b: WebAppOpenMode): Boolean {
+  assertWebAppOpenMode_b354c84f()
+  return this === b || this.constructor == b.constructor
 }
 
 fun TargetChat.equalsTo(b: TargetChat): Boolean {
@@ -1141,10 +1170,7 @@ fun TargetChat.equalsTo(b: TargetChat): Boolean {
       TargetChatCurrent.CONSTRUCTOR -> true
       TargetChatChosen.CONSTRUCTOR -> {
         require(this is TargetChatChosen && b is TargetChatChosen)
-        this.allowUserChats == b.allowUserChats &&
-        this.allowBotChats == b.allowBotChats &&
-        this.allowGroupChats == b.allowGroupChats &&
-        this.allowChannelChats == b.allowChannelChats
+        this.types.equalsTo(b.types)
       }
       TargetChatInternalLink.CONSTRUCTOR -> {
         require(this is TargetChatInternalLink && b is TargetChatInternalLink)
@@ -1156,6 +1182,21 @@ fun TargetChat.equalsTo(b: TargetChat): Boolean {
       }
     }
   }
+}
+
+fun TargetChatTypes.equalsTo(b: TargetChatTypes): Boolean {
+  if (COMPILE_CHECK) {
+    TargetChatTypes(
+      this.allowUserChats,
+      this.allowBotChats,
+      this.allowGroupChats,
+      this.allowChannelChats
+    )
+  }
+  return this.allowUserChats == b.allowUserChats &&
+         this.allowBotChats == b.allowBotChats &&
+         this.allowGroupChats == b.allowGroupChats &&
+         this.allowChannelChats == b.allowChannelChats
 }
 
 fun InlineKeyboardButton.equalsTo(b: InlineKeyboardButton): Boolean {
@@ -1464,6 +1505,104 @@ fun Audio?.equalsTo(b: Audio?): Boolean {
   }
 }
 
+fun ChatPhotoStickerType.equalsTo(b: ChatPhotoStickerType): Boolean {
+  return when {
+    this === b -> true
+    this.constructor != b.constructor -> false
+    else -> {
+      when (this.constructor) {
+        ChatPhotoStickerTypeRegularOrMask.CONSTRUCTOR -> {
+          require(this is ChatPhotoStickerTypeRegularOrMask && b is ChatPhotoStickerTypeRegularOrMask)
+          if (COMPILE_CHECK) {
+            ChatPhotoStickerTypeRegularOrMask(
+              this.stickerSetId,
+              this.stickerId
+            )
+          }
+          this.stickerSetId == b.stickerSetId &&
+          this.stickerId == b.stickerId
+        }
+        ChatPhotoStickerTypeCustomEmoji.CONSTRUCTOR -> {
+          require(this is ChatPhotoStickerTypeCustomEmoji && b is ChatPhotoStickerTypeCustomEmoji)
+          if (COMPILE_CHECK) {
+            ChatPhotoStickerTypeCustomEmoji(
+              this.customEmojiId
+            )
+          }
+          this.customEmojiId == b.customEmojiId
+        }
+        else -> {
+          assertChatPhotoStickerType_b827816a()
+          throw unsupported(this)
+        }
+      }
+    }
+  }
+}
+
+fun ChatPhotoSticker?.equalsTo(b: ChatPhotoSticker?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null -> false
+    else -> {
+      if (COMPILE_CHECK) {
+        ChatPhotoSticker(
+          this.type,
+          this.backgroundFill
+        )
+      }
+      this.type.equalsTo(b.type) &&
+      this.backgroundFill.equalsTo(b.backgroundFill)
+    }
+  }
+}
+
+fun AnimatedChatPhoto?.equalsTo(b: AnimatedChatPhoto?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null -> false
+    else -> {
+      if (COMPILE_CHECK) {
+        AnimatedChatPhoto(
+          this.length,
+          this.file,
+          this.mainFrameTimestamp
+        )
+      }
+      this.length == b.length &&
+      this.file.equalsTo(b.file, true) &&
+      this.mainFrameTimestamp == b.mainFrameTimestamp
+    }
+  }
+}
+
+fun ChatPhoto?.equalsTo(b: ChatPhoto?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null -> false
+    else -> {
+      if (COMPILE_CHECK) {
+        ChatPhoto(
+          this.id,
+          this.addedDate,
+          this.minithumbnail,
+          this.sizes,
+          this.animation,
+          this.smallAnimation,
+          this.sticker
+        )
+      }
+      this.id == b.id &&
+      this.addedDate == b.addedDate &&
+      this.minithumbnail.equalsTo(b.minithumbnail) &&
+      this.sizes.equalsTo(b.sizes) &&
+      this.animation.equalsTo(b.animation) &&
+      this.smallAnimation.equalsTo(b.animation) &&
+      this.sticker.equalsTo(b.sticker)
+    }
+  }
+}
+
 fun Photo?.equalsTo(b: Photo?): Boolean {
   return when {
     this === b -> true
@@ -1508,6 +1647,23 @@ fun Document?.equalsTo(b: Document?): Boolean {
   }
 }
 
+fun Array<Document?>.equalsTo(b: Array<Document?>): Boolean = this.arrayEqualsTo(b, Document::equalsTo)
+
+fun Array<Sticker>.equalsTo(b: Array<Sticker>): Boolean {
+  return when {
+    this === b -> true
+    this.size != b.size -> false
+    else -> {
+      this.forEachIndexed { index, sticker ->
+        if (!sticker.equalsTo(b[index])) {
+          return false
+        }
+      }
+      true
+    }
+  }
+}
+
 fun Sticker?.equalsTo(b: Sticker?): Boolean {
   return when {
     this === b -> true
@@ -1520,7 +1676,6 @@ fun Sticker?.equalsTo(b: Sticker?): Boolean {
       this.emoji.equalsOrBothEmpty(b.emoji) &&
       this.format.equalsTo(b.format) &&
       this.fullType.equalsTo(b.fullType) &&
-      this.outline.equalsTo(outline) &&
       this.thumbnail.equalsTo(b.thumbnail) &&
       this.sticker.equalsTo(b.sticker)
     }
@@ -1770,6 +1925,51 @@ fun InputMessageReplyTo?.equalsTo(b: InputMessageReplyTo?): Boolean {
   }
 }
 
+fun LinkPreviewAlbumMedia?.equalsTo (b: LinkPreviewAlbumMedia?): Boolean {
+  return when {
+    this === b -> true
+    this == null || b == null || this.constructor != b.constructor -> false
+    else -> {
+      when (this.constructor) {
+        LinkPreviewAlbumMediaPhoto.CONSTRUCTOR -> {
+          require(this is LinkPreviewAlbumMediaPhoto && b is LinkPreviewAlbumMediaPhoto)
+          if (COMPILE_CHECK) {
+            LinkPreviewAlbumMediaPhoto(
+              this.photo
+            )
+          }
+          this.photo.equalsTo(b.photo)
+        }
+        LinkPreviewAlbumMediaVideo.CONSTRUCTOR -> {
+          require(this is LinkPreviewAlbumMediaVideo && b is LinkPreviewAlbumMediaVideo)
+          if (COMPILE_CHECK) {
+            LinkPreviewAlbumMediaVideo(
+              this.video
+            )
+          }
+          this.video.equalsTo(b.video)
+        }
+        else -> {
+          assertLinkPreviewAlbumMedia_8c33c943()
+          throw unsupported(this)
+        }
+      }
+    }
+  }
+}
+
+fun Array<LinkPreviewAlbumMedia>.equalsTo (b: Array<LinkPreviewAlbumMedia>): Boolean {
+  if (this === b) return true
+  if (this.size != b.size) return false
+  this.forEachIndexed { index, media ->
+    val bMedia = b[index]
+    if (!media.equalsTo(bMedia)) {
+      return false
+    }
+  }
+  return true
+}
+
 fun LinkPreviewType?.equalsTo(b: LinkPreviewType?): Boolean {
   return when {
     this === b -> true
@@ -1778,127 +1978,324 @@ fun LinkPreviewType?.equalsTo(b: LinkPreviewType?): Boolean {
       when (this.constructor) {
         LinkPreviewTypeAlbum.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeAlbum && b is LinkPreviewTypeAlbum)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeAlbum(
+              this.media,
+              this.caption
+            )
+          }
+          this.media.equalsTo(b.media) &&
+          this.caption == b.caption
         }
         LinkPreviewTypeAnimation.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeAnimation && b is LinkPreviewTypeAnimation)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeAnimation(
+              this.animation
+            )
+          }
+          this.animation.equalsTo(b.animation)
         }
         LinkPreviewTypeApp.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeApp && b is LinkPreviewTypeApp)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeApp(
+              this.photo
+            )
+          }
+          this.photo.equalsTo(b.photo)
         }
         LinkPreviewTypeArticle.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeArticle && b is LinkPreviewTypeArticle)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeArticle(
+              this.photo
+            )
+          }
+          this.photo.equalsTo(b.photo)
         }
         LinkPreviewTypeAudio.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeAudio && b is LinkPreviewTypeAudio)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeAudio(
+              this.audio
+            )
+          }
+          this.audio.equalsTo(b.audio)
         }
         LinkPreviewTypeBackground.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeBackground && b is LinkPreviewTypeBackground)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeBackground(
+              this.document,
+              this.backgroundType
+            )
+          }
+          this.document.equalsTo(b.document) &&
+          this.backgroundType.equalsTo(b.backgroundType)
         }
         LinkPreviewTypeChannelBoost.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeChannelBoost && b is LinkPreviewTypeChannelBoost)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeChannelBoost(
+              this.photo
+            )
+          }
+          this.photo.equalsTo(b.photo)
         }
         LinkPreviewTypeChat.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeChat && b is LinkPreviewTypeChat)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeChat(
+              this.type,
+              this.photo,
+              this.createsJoinRequest
+            )
+          }
+          this.type.constructor == b.type.constructor &&
+          this.photo.equalsTo(b.photo) &&
+          this.createsJoinRequest == b.createsJoinRequest
         }
         LinkPreviewTypeDocument.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeDocument && b is LinkPreviewTypeDocument)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeDocument(
+              this.document
+            )
+          }
+          this.document.equalsTo(b.document)
         }
         LinkPreviewTypeEmbeddedAnimationPlayer.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeEmbeddedAnimationPlayer && b is LinkPreviewTypeEmbeddedAnimationPlayer)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeEmbeddedAnimationPlayer(
+              this.url,
+              this.thumbnail,
+              this.duration,
+              this.width,
+              this.height
+            )
+          }
+          this.url == b.url &&
+          this.thumbnail.equalsTo(b.thumbnail) &&
+          this.duration == b.duration &&
+          this.width == b.width &&
+          this.height == b.height
         }
         LinkPreviewTypeEmbeddedAudioPlayer.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeEmbeddedAudioPlayer && b is LinkPreviewTypeEmbeddedAudioPlayer)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeEmbeddedAudioPlayer(
+              this.url,
+              this.thumbnail,
+              this.duration,
+              this.width,
+              this.height
+            )
+          }
+          this.url == b.url &&
+          this.thumbnail.equalsTo(b.thumbnail) &&
+          this.duration == b.duration &&
+          this.width == b.width &&
+          this.height == b.height
         }
         LinkPreviewTypeEmbeddedVideoPlayer.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeEmbeddedVideoPlayer && b is LinkPreviewTypeEmbeddedVideoPlayer)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeEmbeddedVideoPlayer(
+              this.url,
+              this.thumbnail,
+              this.duration,
+              this.width,
+              this.height
+            )
+          }
+          this.url == b.url &&
+          this.thumbnail.equalsTo(b.thumbnail) &&
+          this.duration == b.duration &&
+          this.width == b.width &&
+          this.height == b.height
         }
         LinkPreviewTypeInvoice.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeInvoice && b is LinkPreviewTypeInvoice)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeInvoice()
+          }
+          true // no fields
         }
         LinkPreviewTypeMessage.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeMessage && b is LinkPreviewTypeMessage)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeMessage()
+          }
+          true // no fields
         }
         LinkPreviewTypePhoto.CONSTRUCTOR -> {
           require(this is LinkPreviewTypePhoto && b is LinkPreviewTypePhoto)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypePhoto(
+              this.photo
+            )
+          }
+          this.photo.equalsTo(b.photo)
         }
         LinkPreviewTypePremiumGiftCode.CONSTRUCTOR -> {
           require(this is LinkPreviewTypePremiumGiftCode && b is LinkPreviewTypePremiumGiftCode)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypePremiumGiftCode()
+          }
+          true // no fields
         }
         LinkPreviewTypeShareableChatFolder.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeShareableChatFolder && b is LinkPreviewTypeShareableChatFolder)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeShareableChatFolder()
+          }
+          true // no fields
         }
         LinkPreviewTypeSticker.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeSticker && b is LinkPreviewTypeSticker)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeSticker(
+              this.sticker
+            )
+          }
+          this.sticker.equalsTo(b.sticker)
         }
         LinkPreviewTypeStickerSet.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeStickerSet && b is LinkPreviewTypeStickerSet)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeStickerSet(
+              this.stickers
+            )
+          }
+          this.stickers.equalsTo(b.stickers)
         }
         LinkPreviewTypeStory.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeStory && b is LinkPreviewTypeStory)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeStory(
+              this.storySenderChatId,
+              this.storyId
+            )
+          }
+          this.storySenderChatId == b.storySenderChatId &&
+          this.storyId == b.storyId
         }
         LinkPreviewTypeSupergroupBoost.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeSupergroupBoost && b is LinkPreviewTypeSupergroupBoost)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeSupergroupBoost(
+              this.photo
+            )
+          }
+          this.photo.equalsTo(b.photo)
         }
         LinkPreviewTypeTheme.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeTheme && b is LinkPreviewTypeTheme)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeTheme(
+              this.documents,
+              this.settings
+            )
+          }
+          this.documents.equalsTo(b.documents) &&
+          this.settings.equalsTo(b.settings)
         }
         LinkPreviewTypeUnsupported.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeUnsupported && b is LinkPreviewTypeUnsupported)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeUnsupported()
+          }
+          true // no fields
         }
         LinkPreviewTypeUser.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeUser && b is LinkPreviewTypeUser)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeUser(
+              this.photo,
+              this.isBot
+            )
+          }
+          this.photo.equalsTo(b.photo) &&
+          this.isBot == b.isBot
         }
         LinkPreviewTypeVideo.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeVideo && b is LinkPreviewTypeVideo)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeVideo(
+              this.video
+            )
+          }
+          this.video.equalsTo(b.video)
         }
         LinkPreviewTypeVideoChat.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeVideoChat && b is LinkPreviewTypeVideoChat)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeVideoChat(
+              this.photo,
+              this.isLiveStream
+            )
+          }
+          this.photo.equalsTo(b.photo) &&
+          this.isLiveStream == b.isLiveStream
         }
         LinkPreviewTypeVideoNote.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeVideoNote && b is LinkPreviewTypeVideoNote)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeVideoNote(
+              this.videoNote
+            )
+          }
+          this.videoNote.equalsTo(b.videoNote)
         }
         LinkPreviewTypeVoiceNote.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeVoiceNote && b is LinkPreviewTypeVoiceNote)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeVoiceNote(
+              this.voiceNote
+            )
+          }
+          this.voiceNote.equalsTo(b.voiceNote)
         }
         LinkPreviewTypeWebApp.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeWebApp && b is LinkPreviewTypeWebApp)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeWebApp(
+              this.photo
+            )
+          }
+          this.photo.equalsTo(b.photo)
         }
         LinkPreviewTypeExternalAudio.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeExternalAudio && b is LinkPreviewTypeExternalAudio)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeExternalAudio(
+              this.url,
+              this.mimeType,
+              this.duration
+            )
+          }
+          this.url == b.url &&
+          this.mimeType == b.mimeType &&
+          this.duration == b.duration
         }
         LinkPreviewTypeExternalVideo.CONSTRUCTOR -> {
           require(this is LinkPreviewTypeExternalVideo && b is LinkPreviewTypeExternalVideo)
-          TODO()
+          if (COMPILE_CHECK) {
+            LinkPreviewTypeExternalVideo(
+              this.url,
+              this.mimeType,
+              this.width,
+              this.height,
+              this.duration
+            )
+          }
+          this.url == b.url &&
+          this.mimeType == b.mimeType &&
+          this.width == b.width &&
+          this.height == b.height &&
+          this.duration == b.duration
         }
         else -> {
           assertLinkPreviewType_eb86a63d()
@@ -2353,4 +2750,63 @@ fun OptionValue?.equalsTo(b: OptionValue?): Boolean {
       }
     }
   }
+}
+
+// ***
+
+fun ChatList?.equalsTo(other: ChatList?): Boolean = this.safeEqualsTo(other) { b ->
+  when (this.constructor) {
+    ChatListMain.CONSTRUCTOR,
+    ChatListArchive.CONSTRUCTOR ->
+      true
+    ChatListFolder.CONSTRUCTOR -> {
+      require(this is ChatListFolder && b is ChatListFolder)
+      if (COMPILE_CHECK) {
+        ChatListFolder(
+          this.chatFolderId
+        )
+      }
+      this.chatFolderId == b.chatFolderId
+    }
+    else -> {
+      assertChatList_db6c93ab()
+      throw unsupported(this)
+    }
+  }
+}
+
+fun Background?.equalsTo(other: Background?): Boolean = this.safeEqualsTo(other) { b ->
+  if (COMPILE_CHECK) {
+    Background(
+      this.id,
+      this.isDefault,
+      this.isDark,
+      this.name,
+      this.document,
+      this.type
+    )
+  }
+  this.id == b.id &&
+  this.isDefault == b.isDefault &&
+  this.isDark == b.isDark &&
+  this.name == b.name &&
+  this.document == b.document &&
+  this.type.equalsTo(b.type)
+}
+
+fun ThemeSettings?.equalsTo(other: ThemeSettings?): Boolean = this.safeEqualsTo(other) { b ->
+  if (COMPILE_CHECK) {
+    ThemeSettings(
+      this.accentColor,
+      this.background,
+      this.outgoingMessageFill,
+      this.animateOutgoingMessageFill,
+      this.outgoingMessageAccentColor
+    )
+  }
+  this.accentColor == b.accentColor &&
+  this.background.equalsTo(b.background) &&
+  this.outgoingMessageFill.equalsTo(b.outgoingMessageFill) &&
+  this.animateOutgoingMessageFill == b.animateOutgoingMessageFill &&
+  this.outgoingMessageFill.equalsTo(b.outgoingMessageFill)
 }
