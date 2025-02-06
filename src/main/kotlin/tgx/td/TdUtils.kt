@@ -1503,7 +1503,7 @@ fun EmojiStatus?.customEmojiId (): Long = this?.type?.let {
     }
     EmojiStatusTypeUpgradedGift.CONSTRUCTOR -> {
       require(it is EmojiStatusTypeUpgradedGift)
-      it.symbolCustomEmojiId
+      it.modelCustomEmojiId
     }
     else -> {
       assertEmojiStatusType_acfd58c8()
