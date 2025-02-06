@@ -73,12 +73,13 @@ fun LinkPreviewType.getDuration (): Int {
     LinkPreviewTypeTheme.CONSTRUCTOR,
     LinkPreviewTypeUnsupported.CONSTRUCTOR,
     LinkPreviewTypeUser.CONSTRUCTOR,
+    LinkPreviewTypeUpgradedGift.CONSTRUCTOR,
     LinkPreviewTypeVideoChat.CONSTRUCTOR,
     LinkPreviewTypeVideoNote.CONSTRUCTOR,
     LinkPreviewTypeVoiceNote.CONSTRUCTOR,
     LinkPreviewTypeWebApp.CONSTRUCTOR -> 0
     else -> {
-      assertLinkPreviewType_eb86a63d()
+      assertLinkPreviewType_e4d80559()
       throw unsupported(this)
     }
   }
@@ -91,7 +92,7 @@ fun LinkPreviewType.getAnimation (): Animation? {
       this.animation
     }
     else -> {
-      assertLinkPreviewType_eb86a63d()
+      assertLinkPreviewType_e4d80559()
       null
     }
   }
@@ -113,7 +114,7 @@ fun LinkPreviewType.getVideo (): Video? {
       }
     }
     else -> {
-      assertLinkPreviewType_eb86a63d()
+      assertLinkPreviewType_e4d80559()
       null
     }
   }
@@ -152,8 +153,12 @@ fun LinkPreviewType.getSticker (): Sticker? {
       require(this is LinkPreviewTypeSticker)
       this.sticker
     }
+    LinkPreviewTypeUpgradedGift.CONSTRUCTOR -> {
+      require(this is LinkPreviewTypeUpgradedGift)
+      this.gift.symbol.sticker
+    }
     else -> {
-      assertLinkPreviewType_eb86a63d()
+      assertLinkPreviewType_e4d80559()
       null
     }
   }
@@ -223,8 +228,10 @@ fun LinkPreviewType.getPhoto (): Photo? {
       this.photo
     }
     LinkPreviewTypeAnimation.CONSTRUCTOR,
+    LinkPreviewTypeAudio.CONSTRUCTOR,
     LinkPreviewTypeBackground.CONSTRUCTOR,
     LinkPreviewTypeDocument.CONSTRUCTOR,
+    LinkPreviewTypeVideo.CONSTRUCTOR,
     LinkPreviewTypeInvoice.CONSTRUCTOR,
     LinkPreviewTypeMessage.CONSTRUCTOR,
     LinkPreviewTypePremiumGiftCode.CONSTRUCTOR,
@@ -234,12 +241,13 @@ fun LinkPreviewType.getPhoto (): Photo? {
     LinkPreviewTypeStory.CONSTRUCTOR,
     LinkPreviewTypeTheme.CONSTRUCTOR,
     LinkPreviewTypeUnsupported.CONSTRUCTOR,
+    LinkPreviewTypeUpgradedGift.CONSTRUCTOR,
     LinkPreviewTypeVideoNote.CONSTRUCTOR,
     LinkPreviewTypeVoiceNote.CONSTRUCTOR,
     LinkPreviewTypeExternalAudio.CONSTRUCTOR,
     LinkPreviewTypeExternalVideo.CONSTRUCTOR -> null
     else -> {
-      assertLinkPreviewType_eb86a63d()
+      assertLinkPreviewType_e4d80559()
       throw unsupported(this)
     }
   }
@@ -358,6 +366,10 @@ fun LinkPreviewType.getThumbnail (): Thumbnail? {
       require(this is LinkPreviewTypeUnsupported)
       null
     }
+    LinkPreviewTypeUpgradedGift.CONSTRUCTOR -> {
+      require(this is LinkPreviewTypeUpgradedGift)
+      this.gift.symbol.sticker.toThumbnail()
+    }
     LinkPreviewTypeUser.CONSTRUCTOR -> {
       require(this is LinkPreviewTypeUser)
       this.photo.toThumbnail()
@@ -387,7 +399,7 @@ fun LinkPreviewType.getThumbnail (): Thumbnail? {
       null
     }
     else -> {
-      assertLinkPreviewType_eb86a63d()
+      assertLinkPreviewType_e4d80559()
       throw unsupported(this)
     }
   }

@@ -1495,6 +1495,23 @@ fun Supergroup?.isScam (): Boolean = this?.verificationStatus?.isScam ?: false
 fun Supergroup?.isFake (): Boolean = this?.verificationStatus?.isFake ?: false
 fun Supergroup?.isVerified (): Boolean = this?.verificationStatus?.isVerified ?: false
 
+fun EmojiStatus?.customEmojiId (): Long = this?.type?.let {
+  when (it.constructor) {
+    EmojiStatusTypeCustomEmoji.CONSTRUCTOR -> {
+      require(it is EmojiStatusTypeCustomEmoji)
+      it.customEmojiId
+    }
+    EmojiStatusTypeUpgradedGift.CONSTRUCTOR -> {
+      require(it is EmojiStatusTypeUpgradedGift)
+      it.symbolCustomEmojiId
+    }
+    else -> {
+      assertEmojiStatusType_acfd58c8()
+      throw unsupported(it)
+    }
+  }
+} ?: 0L
+
 fun AvailableReactions.isAvailable (reactionType: ReactionType): Boolean {
   if (isEmpty())
     return false
