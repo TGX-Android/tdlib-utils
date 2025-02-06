@@ -33,6 +33,14 @@ fun FormattedText?.isEmpty (): Boolean {
 }
 
 @ExperimentalContracts
+fun ChatFolderName?.isEmpty (): Boolean {
+  contract {
+    returns(false) implies (this@isEmpty != null)
+  }
+  return this == null || this.text.isEmpty()
+}
+
+@ExperimentalContracts
 fun RichText?.isEmpty (): Boolean {
   contract {
     returns(false) implies (this@isEmpty != null)

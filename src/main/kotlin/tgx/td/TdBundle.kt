@@ -206,6 +206,19 @@ fun Bundle.restoreTextEntity (prefix: String): TextEntity? {
 }
 
 @ExperimentalContracts
+fun Bundle.put (prefix: String, what: ChatFolderName) {
+  put(prefix + "_text", what.text)
+  putBoolean(prefix + "_animateCustomEmoji", what.animateCustomEmoji)
+}
+
+fun Bundle.restoreChatFolderName (prefix: String): ChatFolderName {
+  return ChatFolderName(
+    restoreFormattedText(prefix + "_text") ?: FormattedText("", arrayOf()),
+    getBoolean(prefix + "_animateCustomEmoji", true)
+  )
+}
+
+@ExperimentalContracts
 fun Bundle.put (prefix: String, what: FormattedText?) {
   if (!what.isEmpty()) {
     putString(prefix + "_text", what.text)

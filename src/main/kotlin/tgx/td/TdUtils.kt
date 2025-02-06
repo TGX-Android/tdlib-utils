@@ -678,7 +678,7 @@ fun MessageContent?.showCaptionAboveMedia (): Boolean {
     MessageVoiceNote.CONSTRUCTOR,
     MessageAudio.CONSTRUCTOR -> false
     else -> {
-      assertMessageContent_91c1e338()
+      assertMessageContent_640c68ad()
       false
     }
   }
@@ -1406,11 +1406,12 @@ fun PushMessageContent.getText (): String? {
     PushMessageContentPremiumGiftCode.CONSTRUCTOR,
     PushMessageContentGiveaway.CONSTRUCTOR,
     PushMessageContentPaidMedia.CONSTRUCTOR,
-    PushMessageContentGift.CONSTRUCTOR ->
+    PushMessageContentGift.CONSTRUCTOR,
+    PushMessageContentUpgradedGift.CONSTRUCTOR ->
       null
     // unsupported
     else -> {
-      assertPushMessageContent_c163df58()
+      assertPushMessageContent_7e58be7d()
       throw unsupported(this)
     }
   }
@@ -1475,15 +1476,24 @@ fun PushMessageContent.isPinned (): Boolean = when (this.constructor) {
   PushMessageContentMessageForwards.CONSTRUCTOR,
   PushMessageContentMediaAlbum.CONSTRUCTOR,
   PushMessageContentPremiumGiftCode.CONSTRUCTOR,
-  PushMessageContentGift.CONSTRUCTOR ->
+  PushMessageContentGift.CONSTRUCTOR,
+  PushMessageContentUpgradedGift.CONSTRUCTOR ->
     false
 
   // unsupported
   else -> {
-    assertPushMessageContent_c163df58()
+    assertPushMessageContent_7e58be7d()
     throw unsupported(this)
   }
 }
+
+fun User?.isScam (): Boolean = this?.verificationStatus?.isScam ?: false
+fun User?.isFake (): Boolean = this?.verificationStatus?.isFake ?: false
+fun User?.isVerified (): Boolean = this?.verificationStatus?.isVerified ?: false
+
+fun Supergroup?.isScam (): Boolean = this?.verificationStatus?.isScam ?: false
+fun Supergroup?.isFake (): Boolean = this?.verificationStatus?.isFake ?: false
+fun Supergroup?.isVerified (): Boolean = this?.verificationStatus?.isVerified ?: false
 
 fun AvailableReactions.isAvailable (reactionType: ReactionType): Boolean {
   if (isEmpty())

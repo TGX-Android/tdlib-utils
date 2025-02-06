@@ -151,12 +151,10 @@ fun User.copyTo (dst: User) {
       this.isContact,
       this.isMutualContact,
       this.isCloseFriend,
-      this.isVerified,
+      this.verificationStatus,
       this.isPremium,
       this.isSupport,
       this.restrictionReason,
-      this.isScam,
-      this.isFake,
       this.hasActiveStories,
       this.hasUnreadActiveStories,
       this.restrictsNewChats,
@@ -180,12 +178,10 @@ fun User.copyTo (dst: User) {
   dst.isContact = this.isContact
   dst.isMutualContact = this.isMutualContact
   dst.isCloseFriend = this.isCloseFriend
-  dst.isVerified = this.isVerified
+  dst.verificationStatus = this.verificationStatus
   dst.isPremium = this.isPremium
   dst.isSupport = this.isSupport
   dst.restrictionReason = this.restrictionReason
-  dst.isScam = this.isScam
-  dst.isFake = this.isFake
   dst.hasActiveStories = this.hasActiveStories
   dst.hasUnreadActiveStories = this.hasUnreadActiveStories
   dst.restrictsNewChats = this.restrictsNewChats
@@ -710,7 +706,7 @@ fun Usernames.copyOf (): Usernames = Usernames(
 )
 
 fun ChatFolder.copyOf (): ChatFolder = ChatFolder(
-  this.title,
+  this.name,
   this.icon,
   this.colorId,
   this.isShareable,
