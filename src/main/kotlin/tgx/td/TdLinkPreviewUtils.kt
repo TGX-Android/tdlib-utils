@@ -227,11 +227,17 @@ fun LinkPreviewType.getPhoto (): Photo? {
       require(this is LinkPreviewTypeWebApp)
       this.photo
     }
-    LinkPreviewTypeAnimation.CONSTRUCTOR,
+    LinkPreviewTypeAnimation.CONSTRUCTOR -> {
+      require(this is LinkPreviewTypeAnimation)
+      this.animation.thumbnail.toPhoto(this.animation.minithumbnail)
+    }
+    LinkPreviewTypeVideo.CONSTRUCTOR -> {
+      require(this is LinkPreviewTypeVideo)
+      this.video.thumbnail.toPhoto(this.video.minithumbnail)
+    }
     LinkPreviewTypeAudio.CONSTRUCTOR,
     LinkPreviewTypeBackground.CONSTRUCTOR,
     LinkPreviewTypeDocument.CONSTRUCTOR,
-    LinkPreviewTypeVideo.CONSTRUCTOR,
     LinkPreviewTypeInvoice.CONSTRUCTOR,
     LinkPreviewTypeMessage.CONSTRUCTOR,
     LinkPreviewTypePremiumGiftCode.CONSTRUCTOR,

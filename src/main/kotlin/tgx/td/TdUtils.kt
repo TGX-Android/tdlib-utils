@@ -1879,6 +1879,12 @@ fun Array<EmojiKeyword>.findUniqueEmojis (): Array<String> {
   return emojis.toTypedArray()
 }
 
+fun Thumbnail?.toPhoto (minithumbnail: Minithumbnail?): Photo? {
+  return this.toPhotoSize()?.let {
+    Photo(false, minithumbnail, arrayOf(it))
+  }
+}
+
 fun Thumbnail?.toPhotoSize (): PhotoSize? {
   return this?.let {
     when (it.format.constructor) {
