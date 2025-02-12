@@ -620,6 +620,7 @@ fun UpgradedGift?.equalsTo(other: UpgradedGift?): Boolean = this.safeEqualsTo(ot
       this.ownerId,
       this.ownerAddress,
       this.ownerName,
+      this.giftAddress,
       this.model,
       this.symbol,
       this.backdrop,
@@ -635,6 +636,7 @@ fun UpgradedGift?.equalsTo(other: UpgradedGift?): Boolean = this.safeEqualsTo(ot
   this.ownerId.equalsTo(b.ownerId) &&
   this.ownerAddress.equalsOrEmpty(b.ownerAddress) &&
   this.ownerName.equalsOrEmpty(b.ownerName) &&
+  this.giftAddress.equalsOrEmpty(b.giftAddress) &&
   this.model.equalsTo(b.model) &&
   this.symbol.equalsTo(b.symbol) &&
   this.backdrop.equalsTo(b.backdrop) &&
@@ -2120,10 +2122,14 @@ fun LinkPreviewType?.equalsTo(other: LinkPreviewType?): Boolean = this.safeEqual
       require(this is LinkPreviewTypeVideo && b is LinkPreviewTypeVideo)
       if (COMPILE_CHECK) {
         LinkPreviewTypeVideo(
-          this.video
+          this.video,
+          this.cover,
+          this.startTimestamp
         )
       }
-      this.video.equalsTo(b.video)
+      this.startTimestamp == b.startTimestamp &&
+      this.video.equalsTo(b.video) &&
+      this.cover.equalsTo(b.cover)
     }
     LinkPreviewTypeVideoChat.CONSTRUCTOR -> {
       require(this is LinkPreviewTypeVideoChat && b is LinkPreviewTypeVideoChat)
