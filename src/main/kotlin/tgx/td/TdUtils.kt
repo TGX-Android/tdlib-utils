@@ -173,6 +173,8 @@ fun FormattedText.concat(text: FormattedText): FormattedText {
   return FormattedText(this.text + text.text, entities)
 }
 
+fun emptyFormattedText (): FormattedText = FormattedText("", arrayOf())
+
 @ExperimentalContracts
 fun FormattedText?.trim (): FormattedText? {
   if (this == null || this.isEmpty())
