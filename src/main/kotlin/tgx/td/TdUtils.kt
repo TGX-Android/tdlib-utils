@@ -1409,11 +1409,15 @@ fun PushMessageContent.getText (): String? {
     PushMessageContentGiveaway.CONSTRUCTOR,
     PushMessageContentPaidMedia.CONSTRUCTOR,
     PushMessageContentGift.CONSTRUCTOR,
-    PushMessageContentUpgradedGift.CONSTRUCTOR ->
+    PushMessageContentUpgradedGift.CONSTRUCTOR,
+    PushMessageContentInviteVideoChatParticipants.CONSTRUCTOR,
+    PushMessageContentProximityAlertTriggered.CONSTRUCTOR,
+    PushMessageContentVideoChatEnded.CONSTRUCTOR,
+    PushMessageContentVideoChatStarted.CONSTRUCTOR ->
       null
     // unsupported
     else -> {
-      assertPushMessageContent_7e58be7d()
+      assertPushMessageContent_6685917b()
       throw unsupported(this)
     }
   }
@@ -1479,12 +1483,16 @@ fun PushMessageContent.isPinned (): Boolean = when (this.constructor) {
   PushMessageContentMediaAlbum.CONSTRUCTOR,
   PushMessageContentPremiumGiftCode.CONSTRUCTOR,
   PushMessageContentGift.CONSTRUCTOR,
-  PushMessageContentUpgradedGift.CONSTRUCTOR ->
+  PushMessageContentUpgradedGift.CONSTRUCTOR,
+  PushMessageContentInviteVideoChatParticipants.CONSTRUCTOR,
+  PushMessageContentProximityAlertTriggered.CONSTRUCTOR,
+  PushMessageContentVideoChatEnded.CONSTRUCTOR,
+  PushMessageContentVideoChatStarted.CONSTRUCTOR ->
     false
 
   // unsupported
   else -> {
-    assertPushMessageContent_7e58be7d()
+    assertPushMessageContent_6685917b()
     throw unsupported(this)
   }
 }
@@ -1556,6 +1564,7 @@ fun newSendOptions (disableNotification: Boolean = false,
                     fromBackground: Boolean = false,
                     protectContent: Boolean = false,
                     allowPaidBroadcast: Boolean = false,
+                    paidMessageStarCount: Long = 0,
                     updateOrderOfInstalledStickerSets: Boolean = false,
                     schedulingState: MessageSchedulingState? = null,
                     effectId: Long = 0,
@@ -1566,6 +1575,7 @@ fun newSendOptions (disableNotification: Boolean = false,
     fromBackground,
     protectContent,
     allowPaidBroadcast,
+    paidMessageStarCount,
     updateOrderOfInstalledStickerSets,
     schedulingState,
     effectId,

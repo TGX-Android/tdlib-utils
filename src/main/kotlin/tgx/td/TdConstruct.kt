@@ -99,8 +99,9 @@ fun constructUserPrivacySetting (@UserPrivacySetting.Constructors constructor: I
     UserPrivacySettingShowStatus.CONSTRUCTOR -> UserPrivacySettingShowStatus()
     UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages.CONSTRUCTOR -> UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages()
     UserPrivacySettingAutosaveGifts.CONSTRUCTOR -> UserPrivacySettingAutosaveGifts()
+    UserPrivacySettingAllowUnpaidMessages.CONSTRUCTOR -> UserPrivacySettingAllowUnpaidMessages()
     else -> {
-      assertUserPrivacySetting_99ac9ff()
+      assertUserPrivacySetting_6bbb3d7e()
       error(constructor.toString())
     }
   }

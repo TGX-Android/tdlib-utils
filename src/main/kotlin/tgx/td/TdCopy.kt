@@ -158,6 +158,7 @@ fun User.copyTo (dst: User) {
       this.hasActiveStories,
       this.hasUnreadActiveStories,
       this.restrictsNewChats,
+      this.paidMessageStarCount,
       this.haveAccess,
       this.type,
       this.languageCode,
@@ -185,6 +186,7 @@ fun User.copyTo (dst: User) {
   dst.hasActiveStories = this.hasActiveStories
   dst.hasUnreadActiveStories = this.hasUnreadActiveStories
   dst.restrictsNewChats = this.restrictsNewChats
+  dst.paidMessageStarCount = this.paidMessageStarCount
   dst.haveAccess = this.haveAccess
   dst.type = this.type
   dst.languageCode = this.languageCode
@@ -284,6 +286,7 @@ fun Message.copyTo (dst: Message) {
       this.viaBotUserId,
       this.senderBusinessBotUserId,
       this.senderBoostCount,
+      this.paidMessageStarCount,
       this.authorSignature,
       this.mediaAlbumId,
       this.effectId,
@@ -319,6 +322,7 @@ fun Message.copyTo (dst: Message) {
   dst.autoDeleteIn = this.autoDeleteIn
   dst.viaBotUserId = this.viaBotUserId
   dst.senderBoostCount = this.senderBoostCount
+  dst.paidMessageStarCount = this.paidMessageStarCount
   dst.authorSignature = this.authorSignature
   dst.mediaAlbumId = this.mediaAlbumId
   dst.effectId = this.effectId
@@ -466,6 +470,7 @@ fun Message?.copyOf (): Message? {
       this.viaBotUserId,
       this.senderBusinessBotUserId,
       this.senderBoostCount,
+      this.paidMessageStarCount,
       this.authorSignature,
       this.mediaAlbumId,
       this.effectId,
