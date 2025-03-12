@@ -233,7 +233,7 @@ fun LinkPreviewType.getPhoto (): Photo? {
     }
     LinkPreviewTypeVideo.CONSTRUCTOR -> {
       require(this is LinkPreviewTypeVideo)
-      this.video.thumbnail.toPhoto(this.video.minithumbnail)
+      this.cover ?: this.video.thumbnail.toPhoto(this.video.minithumbnail)
     }
     LinkPreviewTypeAudio.CONSTRUCTOR,
     LinkPreviewTypeBackground.CONSTRUCTOR,
