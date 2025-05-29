@@ -464,9 +464,10 @@ fun ChatEventAction.findRelatedMessage (): Message? {
     ChatEventForumTopicPinned.CONSTRUCTOR,
     ChatEventForumTopicToggleIsClosed.CONSTRUCTOR,
     ChatEventForumTopicToggleIsHidden.CONSTRUCTOR,
-    ChatEventForumTopicDeleted.CONSTRUCTOR -> null
+    ChatEventForumTopicDeleted.CONSTRUCTOR,
+    ChatEventAutomaticTranslationToggled.CONSTRUCTOR -> null
     else -> {
-      assertChatEventAction_b387a44d()
+      assertChatEventAction_53b6b01e()
       throw unsupported(this)
     }
   }
@@ -680,7 +681,7 @@ fun MessageContent?.showCaptionAboveMedia (): Boolean {
     MessageVoiceNote.CONSTRUCTOR,
     MessageAudio.CONSTRUCTOR -> false
     else -> {
-      assertMessageContent_640c68ad()
+      assertMessageContent_235cea4f()
       false
     }
   }

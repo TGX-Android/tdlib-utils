@@ -335,7 +335,7 @@ fun Bundle.put (prefix: String, what: InputMessageReplyTo?) {
       }
       InputMessageReplyToStory.CONSTRUCTOR -> {
         require(what is InputMessageReplyToStory)
-        putLong(prefix + "_chatId", what.storySenderChatId)
+        putLong(prefix + "_chatId", what.storyPosterChatId)
         putInt(prefix + "_storyId", what.storyId)
       }
       else -> {

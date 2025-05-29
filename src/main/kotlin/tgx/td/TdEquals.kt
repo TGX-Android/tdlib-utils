@@ -392,11 +392,11 @@ fun InputMessageReplyTo?.equalsTo(b: InputMessageReplyTo?): Boolean {
         require(this is InputMessageReplyToStory && b is InputMessageReplyToStory)
         if (COMPILE_CHECK) {
           InputMessageReplyToStory(
-            this.storySenderChatId,
+            this.storyPosterChatId,
             this.storyId
           )
         }
-        this.storySenderChatId == b.storySenderChatId &&
+        this.storyPosterChatId == b.storyPosterChatId &&
         this.storyId == b.storyId
       }
       else -> {

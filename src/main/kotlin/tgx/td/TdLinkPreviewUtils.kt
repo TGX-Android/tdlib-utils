@@ -75,11 +75,12 @@ fun LinkPreviewType.getDuration (): Int {
     LinkPreviewTypeUser.CONSTRUCTOR,
     LinkPreviewTypeUpgradedGift.CONSTRUCTOR,
     LinkPreviewTypeVideoChat.CONSTRUCTOR,
+    LinkPreviewTypeGroupCall.CONSTRUCTOR,
     LinkPreviewTypeVideoNote.CONSTRUCTOR,
     LinkPreviewTypeVoiceNote.CONSTRUCTOR,
     LinkPreviewTypeWebApp.CONSTRUCTOR -> 0
     else -> {
-      assertLinkPreviewType_e4d80559()
+      assertLinkPreviewType_e3ce10d5()
       throw unsupported(this)
     }
   }
@@ -92,7 +93,7 @@ fun LinkPreviewType.getAnimation (): Animation? {
       this.animation
     }
     else -> {
-      assertLinkPreviewType_e4d80559()
+      assertLinkPreviewType_e3ce10d5()
       null
     }
   }
@@ -114,7 +115,7 @@ fun LinkPreviewType.getVideo (): Video? {
       }
     }
     else -> {
-      assertLinkPreviewType_e4d80559()
+      assertLinkPreviewType_e3ce10d5()
       null
     }
   }
@@ -158,7 +159,7 @@ fun LinkPreviewType.getSticker (): Sticker? {
       this.gift.symbol.sticker
     }
     else -> {
-      assertLinkPreviewType_e4d80559()
+      assertLinkPreviewType_e3ce10d5()
       null
     }
   }
@@ -251,9 +252,10 @@ fun LinkPreviewType.getPhoto (): Photo? {
     LinkPreviewTypeVideoNote.CONSTRUCTOR,
     LinkPreviewTypeVoiceNote.CONSTRUCTOR,
     LinkPreviewTypeExternalAudio.CONSTRUCTOR,
-    LinkPreviewTypeExternalVideo.CONSTRUCTOR -> null
+    LinkPreviewTypeExternalVideo.CONSTRUCTOR,
+    LinkPreviewTypeGroupCall.CONSTRUCTOR -> null
     else -> {
-      assertLinkPreviewType_e4d80559()
+      assertLinkPreviewType_e3ce10d5()
       throw unsupported(this)
     }
   }
@@ -404,8 +406,12 @@ fun LinkPreviewType.getThumbnail (): Thumbnail? {
       require(this is LinkPreviewTypeExternalVideo)
       null
     }
+    LinkPreviewTypeGroupCall.CONSTRUCTOR -> {
+      require(this is LinkPreviewTypeGroupCall)
+      null
+    }
     else -> {
-      assertLinkPreviewType_e4d80559()
+      assertLinkPreviewType_e3ce10d5()
       throw unsupported(this)
     }
   }
