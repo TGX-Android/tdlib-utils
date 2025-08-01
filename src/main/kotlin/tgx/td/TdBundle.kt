@@ -467,3 +467,69 @@ fun Bundle.restoreMessageReplyInfo (prefix: String): MessageReplyInfo? {
     lastMessageId
   )
 }
+
+fun Bundle.put (prefix: String, what: MessageTopic?) {
+  if (what != null) {
+    putInt(prefix + "_constructor", what.constructor)
+    when (what.constructor) {
+      MessageTopicForum.CONSTRUCTOR -> {
+        require(what is MessageTopicForum)
+        if (COMPILE_CHECK) {
+          MessageTopicForum(
+            what.forumTopicId
+          )
+        }
+        putLong(prefix + "_forumTopicId", what.forumTopicId)
+      }
+      MessageTopicDirectMessages.CONSTRUCTOR -> {
+        require(what is MessageTopicDirectMessages)
+        if (COMPILE_CHECK) {
+          MessageTopicDirectMessages(
+            what.directMessagesChatTopicId
+          )
+        }
+        putLong(prefix + "_directMessagesChatTopicId", what.directMessagesChatTopicId)
+      }
+      MessageTopicSavedMessages.CONSTRUCTOR -> {
+        require(what is MessageTopicSavedMessages)
+        if (COMPILE_CHECK) {
+          MessageTopicSavedMessages(
+            what.savedMessagesTopicId
+          )
+        }
+        putLong(prefix + "_savedMessagesTopicId", what.savedMessagesTopicId)
+      }
+      else -> {
+        assertMessageTopic_e5c08b7c()
+      }
+    }
+  }
+}
+
+fun Bundle.restoreMessageTopic (prefix: String): MessageTopic? {
+  val constructor = getInt(prefix + "_constructor", 0)
+  if (constructor != 0) {
+    return when (constructor) {
+      MessageTopicForum.CONSTRUCTOR -> {
+        MessageTopicForum(
+          getLong(prefix + "_forumTopicId", 0)
+        )
+      }
+      MessageTopicDirectMessages.CONSTRUCTOR -> {
+        MessageTopicDirectMessages(
+          getLong(prefix + "_directMessagesChatTopicId", 0)
+        )
+      }
+      MessageTopicSavedMessages.CONSTRUCTOR -> {
+        MessageTopicSavedMessages(
+          getLong(prefix + "_savedMessagesTopicId", 0)
+        )
+      }
+      else -> {
+        assertMessageTopic_e5c08b7c()
+        null
+      }
+    }
+  }
+  return null
+}

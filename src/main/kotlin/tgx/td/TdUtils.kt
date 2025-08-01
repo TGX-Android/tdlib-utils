@@ -658,9 +658,10 @@ fun InputMessageContent?.textOrCaption (): FormattedText? {
       InputMessageInvoice.CONSTRUCTOR,
       InputMessagePoll.CONSTRUCTOR,
       InputMessageStory.CONSTRUCTOR,
-      InputMessageForwarded.CONSTRUCTOR -> null
+      InputMessageForwarded.CONSTRUCTOR,
+      InputMessageChecklist.CONSTRUCTOR -> null
       else -> {
-        assertInputMessageContent_6d335c()
+        assertInputMessageContent_65313187()
         throw unsupported(this)
       }
     }
@@ -681,7 +682,7 @@ fun MessageContent?.showCaptionAboveMedia (): Boolean {
     MessageVoiceNote.CONSTRUCTOR,
     MessageAudio.CONSTRUCTOR -> false
     else -> {
-      assertMessageContent_235cea4f()
+      assertMessageContent_ef7732f4()
       false
     }
   }
@@ -709,7 +710,7 @@ fun InputMessageContent?.showCaptionAboveMedia (): Boolean {
     InputMessageStory.CONSTRUCTOR,
     InputMessageForwarded.CONSTRUCTOR -> false
     else -> {
-      assertInputMessageContent_6d335c()
+      assertInputMessageContent_65313187()
       false
     }
   }
@@ -1389,6 +1390,9 @@ fun PushMessageContent.getText (): String? {
     PushMessageContentInvoice.CONSTRUCTOR,
     PushMessageContentLocation.CONSTRUCTOR,
     PushMessageContentPoll.CONSTRUCTOR,
+    PushMessageContentChecklist.CONSTRUCTOR,
+    PushMessageContentChecklistTasksDone.CONSTRUCTOR,
+    PushMessageContentChecklistTasksAdded.CONSTRUCTOR,
     PushMessageContentScreenshotTaken.CONSTRUCTOR,
     PushMessageContentSuggestProfilePhoto.CONSTRUCTOR,
     PushMessageContentSticker.CONSTRUCTOR,
@@ -1418,7 +1422,7 @@ fun PushMessageContent.getText (): String? {
       null
     // unsupported
     else -> {
-      assertPushMessageContent_6685917b()
+      assertPushMessageContent_55b7513d()
       throw unsupported(this)
     }
   }
@@ -1449,6 +1453,8 @@ fun PushMessageContent.isPinned (): Boolean = when (this.constructor) {
     (this as PushMessageContentPhoto).isPinned
   PushMessageContentPoll.CONSTRUCTOR ->
     (this as PushMessageContentPoll).isPinned
+  PushMessageContentChecklist.CONSTRUCTOR ->
+    (this as PushMessageContentChecklist).isPinned
   PushMessageContentSticker.CONSTRUCTOR ->
     (this as PushMessageContentSticker).isPinned
   PushMessageContentText.CONSTRUCTOR ->
@@ -1488,12 +1494,14 @@ fun PushMessageContent.isPinned (): Boolean = when (this.constructor) {
   PushMessageContentInviteVideoChatParticipants.CONSTRUCTOR,
   PushMessageContentProximityAlertTriggered.CONSTRUCTOR,
   PushMessageContentVideoChatEnded.CONSTRUCTOR,
-  PushMessageContentVideoChatStarted.CONSTRUCTOR ->
+  PushMessageContentVideoChatStarted.CONSTRUCTOR,
+  PushMessageContentChecklistTasksDone.CONSTRUCTOR,
+  PushMessageContentChecklistTasksAdded.CONSTRUCTOR ->
     false
 
   // unsupported
   else -> {
-    assertPushMessageContent_6685917b()
+    assertPushMessageContent_55b7513d()
     throw unsupported(this)
   }
 }
@@ -1561,7 +1569,8 @@ fun Array<AvailableReaction>.hasNonPremiumReactions (): Boolean {
 }
 
 @JvmOverloads
-fun newSendOptions (disableNotification: Boolean = false,
+fun newSendOptions (directChatMessagesTopicId: Long = 0L,
+                    disableNotification: Boolean = false,
                     fromBackground: Boolean = false,
                     protectContent: Boolean = false,
                     allowPaidBroadcast: Boolean = false,
@@ -1572,6 +1581,7 @@ fun newSendOptions (disableNotification: Boolean = false,
                     sendingId: Int = 0,
                     onlyPreview: Boolean = false): MessageSendOptions {
   return MessageSendOptions(
+    directChatMessagesTopicId,
     disableNotification,
     fromBackground,
     protectContent,
@@ -1587,11 +1597,13 @@ fun newSendOptions (disableNotification: Boolean = false,
 
 @JvmOverloads
 fun newSendOptions (options: MessageSendOptions?,
+                    directChatMessagesTopicId: Long = 0L,
                     forceDisableNotifications: Boolean = false,
                     forceUpdateOrderOfInstalledStickerSets: Boolean = false,
                     updatedSchedulingState: MessageSchedulingState? = null): MessageSendOptions {
   return if (options != null) {
     newSendOptions(
+      directChatMessagesTopicId = directChatMessagesTopicId.takeIf { it != 0L } ?: options.directMessagesChatTopicId,
       disableNotification = forceDisableNotifications || options.disableNotification,
       fromBackground = options.fromBackground,
       protectContent = options.protectContent,
@@ -1600,6 +1612,7 @@ fun newSendOptions (options: MessageSendOptions?,
     )
   } else {
     newSendOptions(
+      directChatMessagesTopicId = directChatMessagesTopicId,
       disableNotification = forceDisableNotifications,
       fromBackground = false,
       protectContent = false,
@@ -1966,3 +1979,10 @@ fun ChatMemberStatus?.getMemberUntilDate (): Int {
     it.memberUntilDate
   } ?: 0
 }
+
+fun MessageTopic?.directMessagesChatTopicId (): Long = this?.takeIf {
+  it.constructor == MessageTopicDirectMessages.CONSTRUCTOR
+}?.let {
+  require(it is MessageTopicDirectMessages)
+  it.directMessagesChatTopicId
+} ?: 0L

@@ -197,6 +197,8 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
   if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
     MessageProperties(
+      this.canAddTasks,
+      this.canBeCopied,
       this.canBeCopiedToSecretChat,
       this.canBeDeletedOnlyForSelf,
       this.canBeDeletedForAllUsers,
@@ -210,13 +212,16 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
       this.canBeSharedInStory,
       this.canEditMedia,
       this.canEditSchedulingState,
+      this.canGetAuthor,
       this.canGetEmbeddingCode,
       this.canGetLink,
       this.canGetMediaTimestampLinks,
       this.canGetMessageThread,
       this.canGetReadDate,
       this.canGetStatistics,
+      this.canGetVideoAdvertisements,
       this.canGetViewers,
+      this.canMarkTasksAsDone,
       this.canRecognizeSpeech,
       this.canReportChat,
       this.canReportReactions,
@@ -225,6 +230,8 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
       this.needShowStatistics
     )
   }
+  dst.canAddTasks = this.canAddTasks
+  dst.canBeCopied = this.canBeCopied
   dst.canBeCopiedToSecretChat = this.canBeCopiedToSecretChat
   dst.canBeDeletedOnlyForSelf = this.canBeDeletedOnlyForSelf
   dst.canBeDeletedForAllUsers = this.canBeDeletedForAllUsers
@@ -238,13 +245,16 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
   dst.canBeSharedInStory = this.canBeSharedInStory
   dst.canEditMedia = this.canEditMedia
   dst.canEditSchedulingState = this.canEditSchedulingState
+  dst.canGetAuthor = this.canGetAuthor
   dst.canGetEmbeddingCode = this.canGetEmbeddingCode
   dst.canGetLink = this.canGetLink
   dst.canGetMediaTimestampLinks = this.canGetMediaTimestampLinks
   dst.canGetMessageThread = this.canGetMessageThread
   dst.canGetReadDate = this.canGetReadDate
   dst.canGetStatistics = this.canGetStatistics
+  dst.canGetVideoAdvertisements = this.canGetVideoAdvertisements
   dst.canGetViewers = this.canGetViewers
+  dst.canMarkTasksAsDone = this.canMarkTasksAsDone
   dst.canRecognizeSpeech = this.canRecognizeSpeech
   dst.canReportChat = this.canReportChat
   dst.canReportReactions = this.canReportReactions
@@ -268,7 +278,6 @@ fun Message.copyTo (dst: Message) {
       this.canBeSaved,
       this.hasTimestampedMedia,
       this.isChannelPost,
-      this.isTopicMessage,
       this.containsUnreadMention,
       this.date,
       this.editDate,
@@ -279,7 +288,7 @@ fun Message.copyTo (dst: Message) {
       this.factCheck,
       this.replyTo,
       this.messageThreadId,
-      this.savedMessagesTopicId,
+      this.topicId,
       this.selfDestructType,
       this.selfDestructIn,
       this.autoDeleteIn,
@@ -306,7 +315,6 @@ fun Message.copyTo (dst: Message) {
   dst.canBeSaved = this.canBeSaved
   dst.hasTimestampedMedia = this.hasTimestampedMedia
   dst.isChannelPost = this.isChannelPost
-  dst.isTopicMessage = this.isTopicMessage
   dst.containsUnreadMention = this.containsUnreadMention
   dst.date = this.date
   dst.editDate = this.editDate
@@ -316,7 +324,7 @@ fun Message.copyTo (dst: Message) {
   dst.factCheck = this.factCheck
   dst.replyTo = this.replyTo
   dst.messageThreadId = this.messageThreadId
-  dst.savedMessagesTopicId = this.savedMessagesTopicId
+  dst.topicId = this.topicId
   dst.selfDestructType = this.selfDestructType
   dst.selfDestructIn = this.selfDestructIn
   dst.autoDeleteIn = this.autoDeleteIn
@@ -408,6 +416,8 @@ fun RemoteFile?.copyOf (): RemoteFile? {
 fun MessageProperties?.copyOf (): MessageProperties? {
   return this?.let {
     MessageProperties(
+      this.canAddTasks,
+      this.canBeCopied,
       this.canBeCopiedToSecretChat,
       this.canBeDeletedOnlyForSelf,
       this.canBeDeletedForAllUsers,
@@ -421,14 +431,17 @@ fun MessageProperties?.copyOf (): MessageProperties? {
       this.canBeSharedInStory,
       this.canEditMedia,
       this.canEditSchedulingState,
+      this.canGetAuthor,
       this.canGetEmbeddingCode,
       this.canGetLink,
       this.canGetMediaTimestampLinks,
       this.canGetMessageThread,
       this.canGetReadDate,
       this.canGetStatistics,
+      this.canGetVideoAdvertisements,
       this.canGetViewers,
       this.canRecognizeSpeech,
+      this.canMarkTasksAsDone,
       this.canReportChat,
       this.canReportReactions,
       this.canReportSupergroupSpam,
@@ -452,7 +465,6 @@ fun Message?.copyOf (): Message? {
       this.canBeSaved,
       this.hasTimestampedMedia,
       this.isChannelPost,
-      this.isTopicMessage,
       this.containsUnreadMention,
       this.date,
       this.editDate,
@@ -463,7 +475,7 @@ fun Message?.copyOf (): Message? {
       this.factCheck,
       this.replyTo,
       this.messageThreadId,
-      this.savedMessagesTopicId,
+      this.topicId,
       this.selfDestructType,
       this.selfDestructIn,
       this.autoDeleteIn,
@@ -686,14 +698,13 @@ fun LinkPreview?.copyOf (): LinkPreview? {
 
 fun SearchChatMessages.copyOf (): SearchChatMessages = SearchChatMessages(
   this.chatId,
+  this.topicId,
   this.query,
   this.senderId,
   this.fromMessageId,
   this.offset,
   this.limit,
-  this.filter,
-  this.messageThreadId,
-  this.savedMessagesTopicId
+  this.filter
 )
 
 fun SearchSecretMessages.copyOf (): SearchSecretMessages = SearchSecretMessages(
