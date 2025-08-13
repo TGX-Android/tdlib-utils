@@ -85,6 +85,10 @@ fun isSecret (chatId: Long): Boolean = toSecretChatId(chatId) != 0
 fun isPrivate (chatId: Long): Boolean = toUserId(chatId) != 0L
 fun isSupergroup (chatId: Long): Boolean = toSupergroupId(chatId) != 0L
 
+fun isMonoforumChat (chatId: Long): Boolean {
+  return toSupergroupId(chatId) in MIN_MONOFORUM_CHANNEL_ID .. MAX_MONOFORUM_CHANNEL_ID
+}
+
 fun isUserChat (chatId: Long): Boolean {
   return when (getType(chatId, false)) {
     ChatTypePrivate.CONSTRUCTOR, ChatTypeSecret.CONSTRUCTOR -> true
