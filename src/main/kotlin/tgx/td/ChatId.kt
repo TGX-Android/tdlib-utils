@@ -23,6 +23,9 @@ import org.drinkless.tdlib.TdApi.*
 
 // the last (1 << 31) - 1 identifiers will be used for secret chat dialog identifiers
 const val MAX_CHANNEL_ID = 1000000000000L - (1L shl 31)
+const val MIN_MONOFORUM_CHANNEL_ID = 1000000000000L + (1L shl 31) + 1
+const val MAX_MONOFORUM_CHANNEL_ID = 3000000000000L
+
 const val MAX_USER_ID = (1L shl 40) - 1
 const val MAX_GROUP_ID = 999999999999L
 const val ZERO_SECRET_CHAT_ID = -2000000000000L
@@ -44,6 +47,9 @@ fun getType (chatId: Long, validate: Boolean = true): Int {
       }
       ZERO_SECRET_CHAT_ID + Int.MIN_VALUE <= chatId && chatId != ZERO_SECRET_CHAT_ID -> {
         ChatTypeSecret.CONSTRUCTOR
+      }
+      ZERO_CHANNEL_ID - MAX_MONOFORUM_CHANNEL_ID <= chatId -> {
+        ChatTypeSupergroup.CONSTRUCTOR
       }
       else -> {
         if (validate) {
