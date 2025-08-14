@@ -1316,7 +1316,7 @@ fun StickerFullType?.isPremium (): Boolean {
 
 fun Sticker?.isPremium (): Boolean = this?.fullType.isPremium()
 
-fun ChatPermissions.count (): Int {
+fun ChatPermissions.count (isForum: Boolean): IntRange {
   if (COMPILE_CHECK) {
     // Whenever there's change, also check TdConstants.CHAT_PERMISSIONS_COUNT
     ChatPermissions(
@@ -1350,8 +1350,9 @@ fun ChatPermissions.count (): Int {
   if (this.canChangeInfo) count++
   if (this.canInviteUsers) count++
   if (this.canPinMessages) count++
-  if (this.canCreateTopics) count++
-  return count
+  if (isForum && this.canCreateTopics) count++
+  val maxCount = CHAT_PERMISSIONS_COUNT - if (isForum) 0 else 1
+  return IntRange(count, maxCount)
 }
 
 fun ChatInviteLink.isTemporary (): Boolean = this.expirationDate != 0 || this.memberCount != 0 || this.memberLimit != 0
