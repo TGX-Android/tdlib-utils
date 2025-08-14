@@ -369,11 +369,13 @@ fun InputMessageReplyTo?.equalsTo(b: InputMessageReplyTo?): Boolean {
         if (COMPILE_CHECK) {
           InputMessageReplyToMessage(
             this.messageId,
-            this.quote
+            this.quote,
+            this.checklistTaskId
           )
         }
         this.messageId == b.messageId &&
-        this.quote.equalsTo(b.quote, true)
+        this.quote.equalsTo(b.quote, true) &&
+        this.checklistTaskId == b.checklistTaskId
       }
       InputMessageReplyToExternalMessage.CONSTRUCTOR -> {
         require(this is InputMessageReplyToExternalMessage && b is InputMessageReplyToExternalMessage)
@@ -381,12 +383,14 @@ fun InputMessageReplyTo?.equalsTo(b: InputMessageReplyTo?): Boolean {
           InputMessageReplyToExternalMessage(
             this.chatId,
             this.messageId,
-            this.quote
+            this.quote,
+            this.checklistTaskId
           )
         }
         this.chatId == b.chatId &&
         this.messageId == b.messageId &&
-        this.quote.equalsTo(b.quote, true)
+        this.quote.equalsTo(b.quote, true) &&
+        this.checklistTaskId == b.checklistTaskId
       }
       InputMessageReplyToStory.CONSTRUCTOR -> {
         require(this is InputMessageReplyToStory && b is InputMessageReplyToStory)

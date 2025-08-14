@@ -197,9 +197,12 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
   if (COMPILE_CHECK) {
     // Cause compilation error when any field in TdApi changes
     MessageProperties(
+      this.canAddOffer,
       this.canAddTasks,
+      this.canBeApproved,
       this.canBeCopied,
       this.canBeCopiedToSecretChat,
+      this.canBeDeclined,
       this.canBeDeletedOnlyForSelf,
       this.canBeDeletedForAllUsers,
       this.canBeEdited,
@@ -212,6 +215,7 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
       this.canBeSharedInStory,
       this.canEditMedia,
       this.canEditSchedulingState,
+      this.canEditSuggestedPostInfo,
       this.canGetAuthor,
       this.canGetEmbeddingCode,
       this.canGetLink,
@@ -230,9 +234,12 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
       this.needShowStatistics
     )
   }
+  dst.canAddOffer = this.canAddOffer
   dst.canAddTasks = this.canAddTasks
+  dst.canBeApproved = this.canBeApproved
   dst.canBeCopied = this.canBeCopied
   dst.canBeCopiedToSecretChat = this.canBeCopiedToSecretChat
+  dst.canBeDeclined = this.canBeDeclined
   dst.canBeDeletedOnlyForSelf = this.canBeDeletedOnlyForSelf
   dst.canBeDeletedForAllUsers = this.canBeDeletedForAllUsers
   dst.canBeEdited = this.canBeEdited
@@ -245,6 +252,7 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
   dst.canBeSharedInStory = this.canBeSharedInStory
   dst.canEditMedia = this.canEditMedia
   dst.canEditSchedulingState = this.canEditSchedulingState
+  dst.canEditSuggestedPostInfo = this.canEditSuggestedPostInfo
   dst.canGetAuthor = this.canGetAuthor
   dst.canGetEmbeddingCode = this.canGetEmbeddingCode
   dst.canGetLink = this.canGetLink
@@ -278,6 +286,8 @@ fun Message.copyTo (dst: Message) {
       this.canBeSaved,
       this.hasTimestampedMedia,
       this.isChannelPost,
+      this.isPaidStarSuggestedPost,
+      this.isPaidTonSuggestedPost,
       this.containsUnreadMention,
       this.date,
       this.editDate,
@@ -286,6 +296,7 @@ fun Message.copyTo (dst: Message) {
       this.interactionInfo,
       this.unreadReactions,
       this.factCheck,
+      this.suggestedPostInfo,
       this.replyTo,
       this.messageThreadId,
       this.topicId,
@@ -315,6 +326,8 @@ fun Message.copyTo (dst: Message) {
   dst.canBeSaved = this.canBeSaved
   dst.hasTimestampedMedia = this.hasTimestampedMedia
   dst.isChannelPost = this.isChannelPost
+  dst.isPaidStarSuggestedPost = this.isPaidStarSuggestedPost
+  dst.isPaidTonSuggestedPost = this.isPaidTonSuggestedPost
   dst.containsUnreadMention = this.containsUnreadMention
   dst.date = this.date
   dst.editDate = this.editDate
@@ -322,6 +335,7 @@ fun Message.copyTo (dst: Message) {
   dst.interactionInfo = this.interactionInfo
   dst.unreadReactions = this.unreadReactions
   dst.factCheck = this.factCheck
+  dst.suggestedPostInfo = this.suggestedPostInfo
   dst.replyTo = this.replyTo
   dst.messageThreadId = this.messageThreadId
   dst.topicId = this.topicId
@@ -416,9 +430,12 @@ fun RemoteFile?.copyOf (): RemoteFile? {
 fun MessageProperties?.copyOf (): MessageProperties? {
   return this?.let {
     MessageProperties(
+      this.canAddOffer,
       this.canAddTasks,
+      this.canBeApproved,
       this.canBeCopied,
       this.canBeCopiedToSecretChat,
+      this.canBeDeclined,
       this.canBeDeletedOnlyForSelf,
       this.canBeDeletedForAllUsers,
       this.canBeEdited,
@@ -431,6 +448,7 @@ fun MessageProperties?.copyOf (): MessageProperties? {
       this.canBeSharedInStory,
       this.canEditMedia,
       this.canEditSchedulingState,
+      this.canEditSuggestedPostInfo,
       this.canGetAuthor,
       this.canGetEmbeddingCode,
       this.canGetLink,
@@ -465,6 +483,8 @@ fun Message?.copyOf (): Message? {
       this.canBeSaved,
       this.hasTimestampedMedia,
       this.isChannelPost,
+      this.isPaidStarSuggestedPost,
+      this.isPaidTonSuggestedPost,
       this.containsUnreadMention,
       this.date,
       this.editDate,
@@ -473,6 +493,7 @@ fun Message?.copyOf (): Message? {
       this.interactionInfo,
       this.unreadReactions,
       this.factCheck,
+      this.suggestedPostInfo,
       this.replyTo,
       this.messageThreadId,
       this.topicId,
@@ -624,6 +645,7 @@ fun ChatAdministratorRights?.copyOf (): ChatAdministratorRights? {
       this.canPostStories,
       this.canEditStories,
       this.canDeleteStories,
+      this.canManageDirectMessages,
       this.isAnonymous
     )
   }

@@ -208,6 +208,7 @@ fun ChatAdministratorRights?.equalsTo(other: ChatAdministratorRights?): Boolean 
       this.canPostStories,
       this.canEditStories,
       this.canDeleteStories,
+      this.canManageDirectMessages,
       this.isAnonymous
     )
   }
@@ -225,6 +226,7 @@ fun ChatAdministratorRights?.equalsTo(other: ChatAdministratorRights?): Boolean 
   this.canPostStories == b.canPostStories &&
   this.canEditStories == b.canEditStories &&
   this.canDeleteStories == b.canDeleteStories &&
+  this.canManageDirectMessages == b.canManageDirectMessages &&
   this.isAnonymous == b.isAnonymous
 }
 
@@ -630,6 +632,7 @@ fun UpgradedGift?.equalsTo(other: UpgradedGift?): Boolean = this.safeEqualsTo(ot
   if (COMPILE_CHECK) {
     UpgradedGift(
       this.id,
+      this.publisherChatId,
       this.title,
       this.name,
       this.number,
@@ -647,6 +650,7 @@ fun UpgradedGift?.equalsTo(other: UpgradedGift?): Boolean = this.safeEqualsTo(ot
     )
   }
   this.id == b.id &&
+  this.publisherChatId == b.publisherChatId &&
   this.number == b.number &&
   this.totalUpgradedCount == b.totalUpgradedCount &&
   this.maxUpgradedCount == b.maxUpgradedCount &&
@@ -1368,6 +1372,7 @@ fun InternalLinkType?.equalsTo(other: InternalLinkType?): Boolean = this.safeEqu
     InternalLinkTypeEditProfileSettings.CONSTRUCTOR,
     InternalLinkTypeLanguageSettings.CONSTRUCTOR,
     InternalLinkTypeMyStars.CONSTRUCTOR,
+    InternalLinkTypeMyToncoins.CONSTRUCTOR,
     InternalLinkTypePrivacyAndSecuritySettings.CONSTRUCTOR,
     InternalLinkTypeQrCodeAuthentication.CONSTRUCTOR,
     InternalLinkTypeRestorePurchases.CONSTRUCTOR,
@@ -1764,7 +1769,7 @@ fun InternalLinkType?.equalsTo(other: InternalLinkType?): Boolean = this.safeEqu
       this.mode.equalsTo(b.mode)
     }
     else -> {
-      assertInternalLinkType_547871e()
+      assertInternalLinkType_35d33133()
       throw unsupported(this)
     }
   }
@@ -2180,10 +2185,12 @@ fun LinkPreviewType?.equalsTo(other: LinkPreviewType?): Boolean = this.safeEqual
       if (COMPILE_CHECK) {
         LinkPreviewTypeVideoChat(
           this.photo,
-          this.isLiveStream
+          this.isLiveStream,
+          this.joinsAsSpeaker
         )
       }
       this.isLiveStream == b.isLiveStream &&
+      this.joinsAsSpeaker == b.joinsAsSpeaker &&
       this.photo.equalsTo(b.photo)
     }
     LinkPreviewTypeVideoNote.CONSTRUCTOR -> {
@@ -2245,13 +2252,15 @@ fun MessageReplyTo?.equalsTo(other: MessageReplyTo?): Boolean = this.safeEqualsT
           this.chatId,
           this.messageId,
           this.quote,
+          this.checklistTaskId,
           this.origin,
           this.originSendDate,
           this.content
         )
       }
       this.chatId == b.chatId &&
-      this.messageId == b.messageId
+      this.messageId == b.messageId &&
+      this.checklistTaskId == b.checklistTaskId
       // ignored: this.quote.equalsTo(b.quote)
       // ignored: this.origin.equalsTo(b.origin)
       // ignored: this.originSendDate == b.originSendDate

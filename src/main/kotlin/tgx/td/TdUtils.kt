@@ -682,7 +682,7 @@ fun MessageContent?.showCaptionAboveMedia (): Boolean {
     MessageVoiceNote.CONSTRUCTOR,
     MessageAudio.CONSTRUCTOR -> false
     else -> {
-      assertMessageContent_ef7732f4()
+      assertMessageContent_7c00740()
       false
     }
   }
@@ -1570,6 +1570,7 @@ fun Array<AvailableReaction>.hasNonPremiumReactions (): Boolean {
 
 @JvmOverloads
 fun newSendOptions (directChatMessagesTopicId: Long = 0L,
+                    inputSuggestedPostInfo: InputSuggestedPostInfo? = null,
                     disableNotification: Boolean = false,
                     fromBackground: Boolean = false,
                     protectContent: Boolean = false,
@@ -1582,6 +1583,7 @@ fun newSendOptions (directChatMessagesTopicId: Long = 0L,
                     onlyPreview: Boolean = false): MessageSendOptions {
   return MessageSendOptions(
     directChatMessagesTopicId,
+    inputSuggestedPostInfo,
     disableNotification,
     fromBackground,
     protectContent,
@@ -1598,12 +1600,14 @@ fun newSendOptions (directChatMessagesTopicId: Long = 0L,
 @JvmOverloads
 fun newSendOptions (options: MessageSendOptions?,
                     directChatMessagesTopicId: Long = 0L,
+                    inputSuggestedPostInfo: InputSuggestedPostInfo? = null,
                     forceDisableNotifications: Boolean = false,
                     forceUpdateOrderOfInstalledStickerSets: Boolean = false,
                     updatedSchedulingState: MessageSchedulingState? = null): MessageSendOptions {
   return if (options != null) {
     newSendOptions(
       directChatMessagesTopicId = directChatMessagesTopicId.takeIf { it != 0L } ?: options.directMessagesChatTopicId,
+      inputSuggestedPostInfo = inputSuggestedPostInfo ?: options.suggestedPostInfo,
       disableNotification = forceDisableNotifications || options.disableNotification,
       fromBackground = options.fromBackground,
       protectContent = options.protectContent,
@@ -1613,6 +1617,7 @@ fun newSendOptions (options: MessageSendOptions?,
   } else {
     newSendOptions(
       directChatMessagesTopicId = directChatMessagesTopicId,
+      inputSuggestedPostInfo = inputSuggestedPostInfo,
       disableNotification = forceDisableNotifications,
       fromBackground = false,
       protectContent = false,
@@ -1828,6 +1833,7 @@ fun ChatAdministratorRights?.setAllAdministratorRights (value: Boolean) {
         false,
         false,
         false,
+        false,
         false
       )
     }
@@ -1845,6 +1851,7 @@ fun ChatAdministratorRights?.setAllAdministratorRights (value: Boolean) {
     this.canPostStories = value
     this.canEditStories = value
     this.canDeleteStories = value
+    this.canManageDirectMessages = value
     this.isAnonymous = value
   }
 }
@@ -1856,6 +1863,7 @@ fun ChatAdministratorRights?.setAllAdministratorRights (value: Boolean) {
 @JvmOverloads fun ChatAdministratorRights.isEmpty (rights: ChatPermissions? = null): Boolean {
   if (COMPILE_CHECK) {
     ChatAdministratorRights(
+      false,
       false,
       false,
       false,
@@ -1887,6 +1895,7 @@ fun ChatAdministratorRights?.setAllAdministratorRights (value: Boolean) {
     !this.canPostStories &&
     !this.canEditStories &&
     !this.canDeleteStories &&
+    !this.canManageDirectMessages &&
     !this.isAnonymous
 }
 

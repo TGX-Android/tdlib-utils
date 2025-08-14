@@ -317,6 +317,81 @@ fun Bundle.restoreInputMessageText (prefix: String): InputMessageText? {
   }
 }
 
+fun Bundle.put (prefix: String, what: SuggestedPostPrice?) {
+  if (what != null) {
+    putInt(prefix + "_constructor", what.constructor)
+    when (what.constructor) {
+      SuggestedPostPriceStar.CONSTRUCTOR -> {
+        require(what is SuggestedPostPriceStar)
+        if (COMPILE_CHECK) {
+          SuggestedPostPriceStar(
+            what.starCount
+          )
+        }
+        putLong(prefix + "_starCount", what.starCount)
+      }
+      SuggestedPostPriceTon.CONSTRUCTOR -> {
+        require(what is SuggestedPostPriceTon)
+        if (COMPILE_CHECK) {
+          SuggestedPostPriceTon(
+            what.toncoinCentCount
+          )
+        }
+        putLong(prefix + "_toncoinCentCount", what.toncoinCentCount)
+      }
+      else -> {
+        assertSuggestedPostPrice_d4a0c0ea()
+        throw unsupported(what)
+      }
+    }
+  }
+}
+
+fun Bundle.restoreSuggestedPostPrice (prefix: String): SuggestedPostPrice? {
+  val constructor = getInt(prefix + "_constructor")
+  return when (constructor) {
+    SuggestedPostPriceStar.CONSTRUCTOR -> {
+      SuggestedPostPriceStar(
+        getLong(prefix + "_starCount")
+      )
+    }
+    SuggestedPostPriceTon.CONSTRUCTOR -> {
+      SuggestedPostPriceTon(
+        getLong(prefix + "_toncoinCentCount")
+      )
+    }
+    else -> {
+      assertSuggestedPostPrice_d4a0c0ea()
+      null
+    }
+  }
+
+}
+
+fun Bundle.put (prefix: String, what: InputSuggestedPostInfo?) {
+  if (what != null) {
+    if (COMPILE_CHECK) {
+      InputSuggestedPostInfo(
+        what.price,
+        what.sendDate
+      )
+    }
+    put(prefix + "_price", what.price)
+    putInt(prefix + "_sendDate", what.sendDate)
+  }
+}
+
+fun Bundle.restoreInputSuggestedPostInfo (prefix: String): InputSuggestedPostInfo? {
+  val price = restoreSuggestedPostPrice(prefix + "_price")
+  val sendDate = getInt(prefix + "_sendDate")
+  return price?.let {
+    InputSuggestedPostInfo(
+      price,
+      sendDate
+    )
+  }
+}
+
 @ExperimentalContracts
 fun Bundle.put (prefix: String, what: InputMessageReplyTo?) {
   if (what != null) {
@@ -326,12 +401,14 @@ fun Bundle.put (prefix: String, what: InputMessageReplyTo?) {
         require(what is InputMessageReplyToMessage)
         putLong(prefix + "_messageId", what.messageId)
         put(prefix + "_quote", what.quote)
+        putInt(prefix + "_checklistTaskId", what.checklistTaskId)
       }
       InputMessageReplyToExternalMessage.CONSTRUCTOR -> {
         require(what is InputMessageReplyToExternalMessage)
         putLong(prefix + "_chatId", what.chatId)
         putLong(prefix + "_messageId", what.messageId)
         put(prefix + "_quote", what.quote)
+        putInt(prefix + "_checklistTaskId", what.checklistTaskId)
       }
       InputMessageReplyToStory.CONSTRUCTOR -> {
         require(what is InputMessageReplyToStory)
@@ -353,8 +430,9 @@ fun Bundle.restoreInputMessageReplyTo (prefix: String): InputMessageReplyTo? {
     InputMessageReplyToMessage.CONSTRUCTOR -> {
       val messageId = getLong(prefix + "_messageId")
       val quote = restoreInputTextQuote(prefix + "_quote")
+      val checklistTaskId = getInt(prefix + "_checklistTaskId")
       if (messageId != 0L) {
-        InputMessageReplyToMessage(messageId, quote)
+        InputMessageReplyToMessage(messageId, quote, checklistTaskId)
       } else {
         null
       }
@@ -363,8 +441,9 @@ fun Bundle.restoreInputMessageReplyTo (prefix: String): InputMessageReplyTo? {
       val chatId = getLong(prefix + "_chatId")
       val messageId = getLong(prefix + "_messageId")
       val quote = restoreInputTextQuote(prefix + "_quote")
+      val checklistTaskId = getInt(prefix + "_checklistTaskId")
       if (messageId != 0L) {
-        InputMessageReplyToExternalMessage(chatId, messageId, quote)
+        InputMessageReplyToExternalMessage(chatId, messageId, quote, checklistTaskId)
       } else {
         null
       }
@@ -393,7 +472,8 @@ fun Bundle.put (prefix: String, what: DraftMessage?) {
         what.replyTo,
         what.date,
         what.inputMessageText,
-        what.effectId
+        what.effectId,
+        what.suggestedPostInfo
       )
     }
     val inputMessageText = what.inputMessageText as InputMessageText?
@@ -401,6 +481,7 @@ fun Bundle.put (prefix: String, what: DraftMessage?) {
     putInt(prefix + "_date", what.date)
     put(prefix + "_text", inputMessageText)
     putLong(prefix + "_effect", what.effectId)
+    put(prefix + "_suggestedPostInfo", what.suggestedPostInfo)
   }
 }
 
@@ -410,8 +491,9 @@ fun Bundle.restoreDraftMessage (prefix: String): DraftMessage? {
   val date = getInt(prefix + "_date")
   val inputMessageText = restoreInputMessageText(prefix + "_text")
   val effectId = getLong(prefix + "_effect")
+  val suggestedPostInfo = restoreInputSuggestedPostInfo(prefix + "_suggestedPostInfo")
   return if (inputMessageText != null || replyTo != null) {
-    DraftMessage(replyTo, date, inputMessageText, effectId)
+    DraftMessage(replyTo, date, inputMessageText, effectId, suggestedPostInfo)
   } else {
     null
   }
