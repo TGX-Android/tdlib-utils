@@ -1996,3 +1996,24 @@ fun MessageTopic?.directMessagesChatTopicId (): Long = this?.takeIf {
   require(it is MessageTopicDirectMessages)
   it.directMessagesChatTopicId
 } ?: 0L
+
+fun RestrictionInfo?.hasRestriction (restrictSensitiveContent: Boolean = false): Boolean = this?.let {
+  it.restrictionReason.isNotEmpty() || (restrictSensitiveContent && it.hasSensitiveContent)
+} ?: false
+
+fun ChatTheme?.themeName (): String = this?.let {
+  when (this.constructor) {
+    ChatThemeEmoji.CONSTRUCTOR -> {
+      require(this is ChatThemeEmoji)
+      this.name
+    }
+    ChatThemeGift.CONSTRUCTOR -> {
+      require(this is ChatThemeGift)
+      this.giftTheme.gift.name
+    }
+    else -> {
+      assertChatTheme_2045e6f0()
+      throw unsupported(this)
+    }
+  }
+} ?: ""

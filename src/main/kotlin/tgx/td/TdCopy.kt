@@ -154,7 +154,7 @@ fun User.copyTo (dst: User) {
       this.verificationStatus,
       this.isPremium,
       this.isSupport,
-      this.restrictionReason,
+      this.restrictionInfo,
       this.hasActiveStories,
       this.hasUnreadActiveStories,
       this.restrictsNewChats,
@@ -182,7 +182,7 @@ fun User.copyTo (dst: User) {
   dst.verificationStatus = this.verificationStatus
   dst.isPremium = this.isPremium
   dst.isSupport = this.isSupport
-  dst.restrictionReason = this.restrictionReason
+  dst.restrictionInfo = this.restrictionInfo
   dst.hasActiveStories = this.hasActiveStories
   dst.hasUnreadActiveStories = this.hasUnreadActiveStories
   dst.restrictsNewChats = this.restrictsNewChats
@@ -310,8 +310,7 @@ fun Message.copyTo (dst: Message) {
       this.authorSignature,
       this.mediaAlbumId,
       this.effectId,
-      this.hasSensitiveContent,
-      this.restrictionReason,
+      this.restrictionInfo,
       this.content,
       this.replyMarkup
     )
@@ -348,8 +347,7 @@ fun Message.copyTo (dst: Message) {
   dst.authorSignature = this.authorSignature
   dst.mediaAlbumId = this.mediaAlbumId
   dst.effectId = this.effectId
-  dst.hasSensitiveContent = this.hasSensitiveContent
-  dst.restrictionReason = this.restrictionReason
+  dst.restrictionInfo = this.restrictionInfo
   dst.content = this.content
   dst.replyMarkup = this.replyMarkup
 }
@@ -507,8 +505,7 @@ fun Message?.copyOf (): Message? {
       this.authorSignature,
       this.mediaAlbumId,
       this.effectId,
-      this.hasSensitiveContent,
-      this.restrictionReason,
+      this.restrictionInfo,
       this.content,
       this.replyMarkup
     )
@@ -551,7 +548,7 @@ fun Chat?.copyOf (): Chat? {
       this.messageAutoDeleteTime,
       this.emojiStatus,
       this.background,
-      this.themeName,
+      this.theme,
       this.actionBar,
       this.businessBotManageBar,
       this.videoChat,

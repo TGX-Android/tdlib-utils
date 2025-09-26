@@ -60,6 +60,8 @@ fun LinkPreviewType.getDuration (): Int {
     LinkPreviewTypeBackground.CONSTRUCTOR,
     LinkPreviewTypeChannelBoost.CONSTRUCTOR,
     LinkPreviewTypeChat.CONSTRUCTOR,
+    LinkPreviewTypeDirectMessagesChat.CONSTRUCTOR,
+    LinkPreviewTypeGiftCollection.CONSTRUCTOR,
     LinkPreviewTypeDocument.CONSTRUCTOR,
     LinkPreviewTypeInvoice.CONSTRUCTOR,
     LinkPreviewTypeMessage.CONSTRUCTOR,
@@ -69,6 +71,7 @@ fun LinkPreviewType.getDuration (): Int {
     LinkPreviewTypeSticker.CONSTRUCTOR,
     LinkPreviewTypeStickerSet.CONSTRUCTOR,
     LinkPreviewTypeStory.CONSTRUCTOR,
+    LinkPreviewTypeStoryAlbum.CONSTRUCTOR,
     LinkPreviewTypeSupergroupBoost.CONSTRUCTOR,
     LinkPreviewTypeTheme.CONSTRUCTOR,
     LinkPreviewTypeUnsupported.CONSTRUCTOR,
@@ -80,7 +83,7 @@ fun LinkPreviewType.getDuration (): Int {
     LinkPreviewTypeVoiceNote.CONSTRUCTOR,
     LinkPreviewTypeWebApp.CONSTRUCTOR -> 0
     else -> {
-      assertLinkPreviewType_e3ce10d5()
+      assertLinkPreviewType_4868cb55()
       throw unsupported(this)
     }
   }
@@ -93,7 +96,7 @@ fun LinkPreviewType.getAnimation (): Animation? {
       this.animation
     }
     else -> {
-      assertLinkPreviewType_e3ce10d5()
+      assertLinkPreviewType_4868cb55()
       null
     }
   }
@@ -115,7 +118,7 @@ fun LinkPreviewType.getVideo (): Video? {
       }
     }
     else -> {
-      assertLinkPreviewType_e3ce10d5()
+      assertLinkPreviewType_4868cb55()
       null
     }
   }
@@ -159,7 +162,7 @@ fun LinkPreviewType.getSticker (): Sticker? {
       this.gift.symbol.sticker
     }
     else -> {
-      assertLinkPreviewType_e3ce10d5()
+      assertLinkPreviewType_4868cb55()
       null
     }
   }
@@ -208,6 +211,10 @@ fun LinkPreviewType.getPhoto (): Photo? {
       require(this is LinkPreviewTypeChat)
       this.photo.toPhoto()
     }
+    LinkPreviewTypeDirectMessagesChat.CONSTRUCTOR -> {
+      require(this is LinkPreviewTypeDirectMessagesChat)
+      this.photo.toPhoto()
+    }
     LinkPreviewTypeSupergroupBoost.CONSTRUCTOR -> {
       require(this is LinkPreviewTypeSupergroupBoost)
       this.photo.toPhoto()
@@ -246,6 +253,8 @@ fun LinkPreviewType.getPhoto (): Photo? {
     LinkPreviewTypeSticker.CONSTRUCTOR,
     LinkPreviewTypeStickerSet.CONSTRUCTOR,
     LinkPreviewTypeStory.CONSTRUCTOR,
+    LinkPreviewTypeStoryAlbum.CONSTRUCTOR,
+    LinkPreviewTypeGiftCollection.CONSTRUCTOR,
     LinkPreviewTypeTheme.CONSTRUCTOR,
     LinkPreviewTypeUnsupported.CONSTRUCTOR,
     LinkPreviewTypeUpgradedGift.CONSTRUCTOR,
@@ -255,7 +264,7 @@ fun LinkPreviewType.getPhoto (): Photo? {
     LinkPreviewTypeExternalVideo.CONSTRUCTOR,
     LinkPreviewTypeGroupCall.CONSTRUCTOR -> null
     else -> {
-      assertLinkPreviewType_e3ce10d5()
+      assertLinkPreviewType_4868cb55()
       throw unsupported(this)
     }
   }
@@ -326,6 +335,10 @@ fun LinkPreviewType.getThumbnail (): Thumbnail? {
       require(this is LinkPreviewTypeChat)
       this.photo.toThumbnail()
     }
+    LinkPreviewTypeDirectMessagesChat.CONSTRUCTOR -> {
+      require(this is LinkPreviewTypeDirectMessagesChat)
+      this.photo.toThumbnail()
+    }
     LinkPreviewTypeDocument.CONSTRUCTOR -> {
       require(this is LinkPreviewTypeDocument)
       this.document.thumbnail
@@ -362,6 +375,10 @@ fun LinkPreviewType.getThumbnail (): Thumbnail? {
       require(this is LinkPreviewTypeStory)
       null
     }
+    LinkPreviewTypeStoryAlbum.CONSTRUCTOR -> {
+      require(this is LinkPreviewTypeStoryAlbum)
+      null
+    }
     LinkPreviewTypeSupergroupBoost.CONSTRUCTOR -> {
       require(this is LinkPreviewTypeSupergroupBoost)
       this.photo.toThumbnail()
@@ -377,6 +394,10 @@ fun LinkPreviewType.getThumbnail (): Thumbnail? {
     LinkPreviewTypeUpgradedGift.CONSTRUCTOR -> {
       require(this is LinkPreviewTypeUpgradedGift)
       this.gift.symbol.sticker.toThumbnail()
+    }
+    LinkPreviewTypeGiftCollection.CONSTRUCTOR -> {
+      require(this is LinkPreviewTypeGiftCollection)
+      null
     }
     LinkPreviewTypeUser.CONSTRUCTOR -> {
       require(this is LinkPreviewTypeUser)
@@ -411,7 +432,7 @@ fun LinkPreviewType.getThumbnail (): Thumbnail? {
       null
     }
     else -> {
-      assertLinkPreviewType_e3ce10d5()
+      assertLinkPreviewType_4868cb55()
       throw unsupported(this)
     }
   }
