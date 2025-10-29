@@ -682,7 +682,7 @@ fun MessageContent?.showCaptionAboveMedia (): Boolean {
     MessageVoiceNote.CONSTRUCTOR,
     MessageAudio.CONSTRUCTOR -> false
     else -> {
-      assertMessageContent_7c00740()
+      assertMessageContent_52d0a6e8()
       false
     }
   }
@@ -1396,6 +1396,7 @@ fun PushMessageContent.getText (): String? {
     PushMessageContentChecklistTasksAdded.CONSTRUCTOR,
     PushMessageContentScreenshotTaken.CONSTRUCTOR,
     PushMessageContentSuggestProfilePhoto.CONSTRUCTOR,
+    PushMessageContentSuggestBirthdate.CONSTRUCTOR,
     PushMessageContentSticker.CONSTRUCTOR,
     PushMessageContentVideoNote.CONSTRUCTOR,
     PushMessageContentBasicGroupChatCreate.CONSTRUCTOR,
@@ -1423,7 +1424,7 @@ fun PushMessageContent.getText (): String? {
       null
     // unsupported
     else -> {
-      assertPushMessageContent_55b7513d()
+      assertPushMessageContent_366f79c5()
       throw unsupported(this)
     }
   }
@@ -1477,6 +1478,7 @@ fun PushMessageContent.isPinned (): Boolean = when (this.constructor) {
   PushMessageContentContactRegistered.CONSTRUCTOR,
   PushMessageContentScreenshotTaken.CONSTRUCTOR,
   PushMessageContentSuggestProfilePhoto.CONSTRUCTOR,
+  PushMessageContentSuggestBirthdate.CONSTRUCTOR,
   PushMessageContentBasicGroupChatCreate.CONSTRUCTOR,
   PushMessageContentChatAddMembers.CONSTRUCTOR,
   PushMessageContentChatChangePhoto.CONSTRUCTOR,
@@ -1502,7 +1504,7 @@ fun PushMessageContent.isPinned (): Boolean = when (this.constructor) {
 
   // unsupported
   else -> {
-    assertPushMessageContent_55b7513d()
+    assertPushMessageContent_366f79c5()
     throw unsupported(this)
   }
 }
@@ -1570,8 +1572,7 @@ fun Array<AvailableReaction>.hasNonPremiumReactions (): Boolean {
 }
 
 @JvmOverloads
-fun newSendOptions (directChatMessagesTopicId: Long = 0L,
-                    inputSuggestedPostInfo: InputSuggestedPostInfo? = null,
+fun newSendOptions (inputSuggestedPostInfo: InputSuggestedPostInfo? = null,
                     disableNotification: Boolean = false,
                     fromBackground: Boolean = false,
                     protectContent: Boolean = false,
@@ -1583,7 +1584,6 @@ fun newSendOptions (directChatMessagesTopicId: Long = 0L,
                     sendingId: Int = 0,
                     onlyPreview: Boolean = false): MessageSendOptions {
   return MessageSendOptions(
-    directChatMessagesTopicId,
     inputSuggestedPostInfo,
     disableNotification,
     fromBackground,
@@ -1600,14 +1600,12 @@ fun newSendOptions (directChatMessagesTopicId: Long = 0L,
 
 @JvmOverloads
 fun newSendOptions (options: MessageSendOptions?,
-                    directChatMessagesTopicId: Long = 0L,
                     inputSuggestedPostInfo: InputSuggestedPostInfo? = null,
                     forceDisableNotifications: Boolean = false,
                     forceUpdateOrderOfInstalledStickerSets: Boolean = false,
                     updatedSchedulingState: MessageSchedulingState? = null): MessageSendOptions {
   return if (options != null) {
     newSendOptions(
-      directChatMessagesTopicId = directChatMessagesTopicId.takeIf { it != 0L } ?: options.directMessagesChatTopicId,
       inputSuggestedPostInfo = inputSuggestedPostInfo ?: options.suggestedPostInfo,
       disableNotification = forceDisableNotifications || options.disableNotification,
       fromBackground = options.fromBackground,
@@ -1617,7 +1615,6 @@ fun newSendOptions (options: MessageSendOptions?,
     )
   } else {
     newSendOptions(
-      directChatMessagesTopicId = directChatMessagesTopicId,
       inputSuggestedPostInfo = inputSuggestedPostInfo,
       disableNotification = forceDisableNotifications,
       fromBackground = false,
@@ -1996,6 +1993,44 @@ fun MessageTopic?.directMessagesChatTopicId (): Long = this?.takeIf {
   require(it is MessageTopicDirectMessages)
   it.directMessagesChatTopicId
 } ?: 0L
+
+fun MessageTopic?.messageThreadId (): Long = this?.takeIf {
+  it.constructor == MessageTopicThread.CONSTRUCTOR
+}?.let {
+  require(it is MessageTopicThread)
+  it.messageThreadId
+} ?: 0L
+
+fun MessageTopic?.matchesTopic (viewingTopic: MessageTopic?): Boolean = when {
+  viewingTopic == null -> true
+  this == null -> false
+  else -> this.equalsTo(viewingTopic)
+}
+
+fun MessageTopic?.cacheKey (): String = this?.let {
+  when (it.constructor) {
+    MessageTopicThread.CONSTRUCTOR -> {
+      require(it is MessageTopicThread)
+      "thread${it.messageThreadId}"
+    }
+    MessageTopicForum.CONSTRUCTOR -> {
+      require(it is MessageTopicForum)
+      "forum${it.forumTopicId}"
+    }
+    MessageTopicDirectMessages.CONSTRUCTOR -> {
+      require(it is MessageTopicDirectMessages)
+      "direct${it.directMessagesChatTopicId}"
+    }
+    MessageTopicSavedMessages.CONSTRUCTOR -> {
+      require(it is MessageTopicSavedMessages)
+      "saved${it.savedMessagesTopicId}"
+    }
+    else -> {
+      assertMessageTopic_98b4a9a3()
+      throw unsupported(this)
+    }
+  }
+} ?: "null"
 
 fun RestrictionInfo?.hasRestriction (restrictSensitiveContent: Boolean = false): Boolean = this?.let {
   it.restrictionReason.isNotEmpty() || (restrictSensitiveContent && it.hasSensitiveContent)

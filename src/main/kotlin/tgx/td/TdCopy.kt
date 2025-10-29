@@ -145,6 +145,7 @@ fun User.copyTo (dst: User) {
       this.profilePhoto,
       this.accentColorId,
       this.backgroundCustomEmojiId,
+      this.upgradedGiftColors,
       this.profileAccentColorId,
       this.profileBackgroundCustomEmojiId,
       this.emojiStatus,
@@ -173,6 +174,7 @@ fun User.copyTo (dst: User) {
   dst.profilePhoto = this.profilePhoto
   dst.accentColorId = this.accentColorId
   dst.backgroundCustomEmojiId = this.backgroundCustomEmojiId
+  dst.upgradedGiftColors = this.upgradedGiftColors
   dst.profileAccentColorId = this.profileAccentColorId
   dst.profileBackgroundCustomEmojiId = this.profileBackgroundCustomEmojiId
   dst.emojiStatus = this.emojiStatus
@@ -298,7 +300,6 @@ fun Message.copyTo (dst: Message) {
       this.factCheck,
       this.suggestedPostInfo,
       this.replyTo,
-      this.messageThreadId,
       this.topicId,
       this.selfDestructType,
       this.selfDestructIn,
@@ -336,7 +337,6 @@ fun Message.copyTo (dst: Message) {
   dst.factCheck = this.factCheck
   dst.suggestedPostInfo = this.suggestedPostInfo
   dst.replyTo = this.replyTo
-  dst.messageThreadId = this.messageThreadId
   dst.topicId = this.topicId
   dst.selfDestructType = this.selfDestructType
   dst.selfDestructIn = this.selfDestructIn
@@ -493,7 +493,6 @@ fun Message?.copyOf (): Message? {
       this.factCheck,
       this.suggestedPostInfo,
       this.replyTo,
-      this.messageThreadId,
       this.topicId,
       this.selfDestructType,
       this.selfDestructIn,
@@ -521,6 +520,7 @@ fun Chat?.copyOf (): Chat? {
       this.photo,
       this.accentColorId,
       this.backgroundCustomEmojiId,
+      this.upgradedGiftColors,
       this.profileAccentColorId,
       this.profileBackgroundCustomEmojiId,
       this.permissions,

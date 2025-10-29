@@ -20,6 +20,7 @@
 
 package tgx.td
 
+import android.content.Intent
 import android.os.Bundle
 import org.drinkless.tdlib.TdApi.*
 import kotlin.contracts.ExperimentalContracts
@@ -550,10 +551,27 @@ fun Bundle.restoreMessageReplyInfo (prefix: String): MessageReplyInfo? {
   )
 }
 
+fun Intent.put (prefix: String, what: MessageTopic?) {
+  if (what != null) {
+    val bundle = Bundle()
+    bundle.put(prefix, what)
+    putExtras(bundle)
+  }
+}
+
 fun Bundle.put (prefix: String, what: MessageTopic?) {
   if (what != null) {
     putInt(prefix + "_constructor", what.constructor)
     when (what.constructor) {
+      MessageTopicThread.CONSTRUCTOR -> {
+        require(what is MessageTopicThread)
+        if (COMPILE_CHECK) {
+          MessageTopicThread(
+            what.messageThreadId
+          )
+        }
+        putLong(prefix + "_messageThreadId", what.messageThreadId)
+      }
       MessageTopicForum.CONSTRUCTOR -> {
         require(what is MessageTopicForum)
         if (COMPILE_CHECK) {
@@ -561,7 +579,7 @@ fun Bundle.put (prefix: String, what: MessageTopic?) {
             what.forumTopicId
           )
         }
-        putLong(prefix + "_forumTopicId", what.forumTopicId)
+        putInt(prefix + "_forumTopicId", what.forumTopicId)
       }
       MessageTopicDirectMessages.CONSTRUCTOR -> {
         require(what is MessageTopicDirectMessages)
@@ -582,7 +600,7 @@ fun Bundle.put (prefix: String, what: MessageTopic?) {
         putLong(prefix + "_savedMessagesTopicId", what.savedMessagesTopicId)
       }
       else -> {
-        assertMessageTopic_e5c08b7c()
+        assertMessageTopic_98b4a9a3()
       }
     }
   }
@@ -592,9 +610,14 @@ fun Bundle.restoreMessageTopic (prefix: String): MessageTopic? {
   val constructor = getInt(prefix + "_constructor", 0)
   if (constructor != 0) {
     return when (constructor) {
+      MessageTopicThread.CONSTRUCTOR -> {
+        MessageTopicThread(
+          getLong(prefix + "_messageThreadId", 0)
+        )
+      }
       MessageTopicForum.CONSTRUCTOR -> {
         MessageTopicForum(
-          getLong(prefix + "_forumTopicId", 0)
+          getInt(prefix + "_forumTopicId", 0)
         )
       }
       MessageTopicDirectMessages.CONSTRUCTOR -> {
@@ -608,7 +631,7 @@ fun Bundle.restoreMessageTopic (prefix: String): MessageTopic? {
         )
       }
       else -> {
-        assertMessageTopic_e5c08b7c()
+        assertMessageTopic_98b4a9a3()
         null
       }
     }
