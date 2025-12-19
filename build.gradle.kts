@@ -16,13 +16,14 @@
  */
 
 plugins {
-    id("com.android.library")
-    id("module-plugin")
+  id(libs.plugins.android.library.get().pluginId)
+  alias(libs.plugins.kotlin.android)
+  id("tgx-module")
 }
 
 dependencies {
-    implementation(project(":tdlib"))
-    implementation(project(":vkryl:core"))
+  implementation(project(":tdlib"))
+  implementation(project(":vkryl:core"))
 }
 
 android {
