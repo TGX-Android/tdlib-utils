@@ -96,12 +96,13 @@ fun constructUserPrivacySetting (@UserPrivacySetting.Constructors constructor: I
     UserPrivacySettingShowBio.CONSTRUCTOR -> UserPrivacySettingShowBio()
     UserPrivacySettingShowBirthdate.CONSTRUCTOR -> UserPrivacySettingShowBirthdate()
     UserPrivacySettingShowProfilePhoto.CONSTRUCTOR -> UserPrivacySettingShowProfilePhoto()
+    UserPrivacySettingShowProfileAudio.CONSTRUCTOR -> UserPrivacySettingShowProfileAudio()
     UserPrivacySettingShowStatus.CONSTRUCTOR -> UserPrivacySettingShowStatus()
     UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages.CONSTRUCTOR -> UserPrivacySettingAllowPrivateVoiceAndVideoNoteMessages()
     UserPrivacySettingAutosaveGifts.CONSTRUCTOR -> UserPrivacySettingAutosaveGifts()
     UserPrivacySettingAllowUnpaidMessages.CONSTRUCTOR -> UserPrivacySettingAllowUnpaidMessages()
     else -> {
-      assertUserPrivacySetting_6bbb3d7e()
+      assertUserPrivacySetting_a60188bf()
       error(constructor.toString())
     }
   }

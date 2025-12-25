@@ -81,9 +81,11 @@ fun LinkPreviewType.getDuration (): Int {
     LinkPreviewTypeGroupCall.CONSTRUCTOR,
     LinkPreviewTypeVideoNote.CONSTRUCTOR,
     LinkPreviewTypeVoiceNote.CONSTRUCTOR,
+    LinkPreviewTypeGiftAuction.CONSTRUCTOR,
+    LinkPreviewTypeLiveStory.CONSTRUCTOR,
     LinkPreviewTypeWebApp.CONSTRUCTOR -> 0
     else -> {
-      assertLinkPreviewType_4868cb55()
+      assertLinkPreviewType_a9a3ffcd()
       throw unsupported(this)
     }
   }
@@ -96,7 +98,7 @@ fun LinkPreviewType.getAnimation (): Animation? {
       this.animation
     }
     else -> {
-      assertLinkPreviewType_4868cb55()
+      assertLinkPreviewType_a9a3ffcd()
       null
     }
   }
@@ -118,7 +120,7 @@ fun LinkPreviewType.getVideo (): Video? {
       }
     }
     else -> {
-      assertLinkPreviewType_4868cb55()
+      assertLinkPreviewType_a9a3ffcd()
       null
     }
   }
@@ -162,7 +164,7 @@ fun LinkPreviewType.getSticker (): Sticker? {
       this.gift.symbol.sticker
     }
     else -> {
-      assertLinkPreviewType_4868cb55()
+      assertLinkPreviewType_a9a3ffcd()
       null
     }
   }
@@ -262,9 +264,11 @@ fun LinkPreviewType.getPhoto (): Photo? {
     LinkPreviewTypeVoiceNote.CONSTRUCTOR,
     LinkPreviewTypeExternalAudio.CONSTRUCTOR,
     LinkPreviewTypeExternalVideo.CONSTRUCTOR,
+    LinkPreviewTypeGiftAuction.CONSTRUCTOR,
+    LinkPreviewTypeLiveStory.CONSTRUCTOR,
     LinkPreviewTypeGroupCall.CONSTRUCTOR -> null
     else -> {
-      assertLinkPreviewType_4868cb55()
+      assertLinkPreviewType_a9a3ffcd()
       throw unsupported(this)
     }
   }
@@ -431,8 +435,16 @@ fun LinkPreviewType.getThumbnail (): Thumbnail? {
       require(this is LinkPreviewTypeGroupCall)
       null
     }
+    LinkPreviewTypeGiftAuction.CONSTRUCTOR -> {
+      require(this is LinkPreviewTypeGiftAuction)
+      null
+    }
+    LinkPreviewTypeLiveStory.CONSTRUCTOR -> {
+      require(this is LinkPreviewTypeLiveStory)
+      null
+    }
     else -> {
-      assertLinkPreviewType_4868cb55()
+      assertLinkPreviewType_a9a3ffcd()
       throw unsupported(this)
     }
   }

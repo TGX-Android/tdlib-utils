@@ -156,8 +156,7 @@ fun User.copyTo (dst: User) {
       this.isPremium,
       this.isSupport,
       this.restrictionInfo,
-      this.hasActiveStories,
-      this.hasUnreadActiveStories,
+      this.activeStoryState,
       this.restrictsNewChats,
       this.paidMessageStarCount,
       this.haveAccess,
@@ -185,8 +184,7 @@ fun User.copyTo (dst: User) {
   dst.isPremium = this.isPremium
   dst.isSupport = this.isSupport
   dst.restrictionInfo = this.restrictionInfo
-  dst.hasActiveStories = this.hasActiveStories
-  dst.hasUnreadActiveStories = this.hasUnreadActiveStories
+  dst.activeStoryState = this.activeStoryState
   dst.restrictsNewChats = this.restrictsNewChats
   dst.paidMessageStarCount = this.paidMessageStarCount
   dst.haveAccess = this.haveAccess
@@ -737,7 +735,8 @@ fun SearchSecretMessages.copyOf (): SearchSecretMessages = SearchSecretMessages(
 fun Usernames.copyOf (): Usernames = Usernames(
   this.activeUsernames.copyOf(),
   this.disabledUsernames.copyOf(),
-  this.editableUsername
+  this.editableUsername,
+  this.collectibleUsernames.copyOf()
 )
 
 fun ChatFolder.copyOf (): ChatFolder = ChatFolder(
