@@ -203,7 +203,8 @@ fun InputTextQuote?.equalsTo(b: InputTextQuote?, ignoreDefaultEntities: Boolean 
   }
 }
 
-@JvmOverloads fun File?.equalsTo(b: File?, onlyIdentifier: Boolean = true): Boolean {
+@JvmOverloads
+fun File?.equalsTo(b: File?, onlyIdentifier: Boolean = true): Boolean {
   return when {
     this === b -> true
     this === null || b === null -> false
@@ -257,7 +258,8 @@ fun ChatEventLogFilters?.equalsTo(b: ChatEventLogFilters?): Boolean {
   )
 }
 
-@JvmOverloads fun Minithumbnail?.equalsTo(b: Minithumbnail?, checkJpegBytes: Boolean = false): Boolean {
+@JvmOverloads
+fun Minithumbnail?.equalsTo(b: Minithumbnail?, checkJpegBytes: Boolean = false): Boolean {
   return when {
     this === b -> true
     this == null || b == null -> false
@@ -292,7 +294,8 @@ fun Array<PhotoSize>?.equalsTo(b: Array<PhotoSize>?): Boolean {
   }
 }
 
-@JvmOverloads fun VoiceNote?.equalsTo(b: VoiceNote?, checkWaveformBytes: Boolean = false): Boolean {
+@JvmOverloads
+fun VoiceNote?.equalsTo(b: VoiceNote?, checkWaveformBytes: Boolean = false): Boolean {
   return when {
     this === b -> true
     this == null || b == null -> false
@@ -310,7 +313,8 @@ fun Array<PhotoSize>?.equalsTo(b: Array<PhotoSize>?): Boolean {
 }
 
 @ExperimentalContracts
-@JvmOverloads fun DraftMessage?.equalsTo(b: DraftMessage?, ignoreDate: Boolean = false): Boolean {
+@JvmOverloads
+fun DraftMessage?.equalsTo(b: DraftMessage?, ignoreDate: Boolean = false): Boolean {
   return when {
     this === b -> true
     this == null || b == null -> false
@@ -503,7 +507,8 @@ fun MessageImportInfo?.equalsTo(b: MessageImportInfo?, compareDate: Boolean = tr
   }
 }
 
-@JvmOverloads fun MessageOrigin?.equalsTo(b: MessageOrigin?, checkMessageId: Boolean = true): Boolean {
+@JvmOverloads
+fun MessageOrigin?.equalsTo(b: MessageOrigin?, checkMessageId: Boolean = true): Boolean {
   return when {
     this === b -> true
     this == null || b == null || this.constructor != b.constructor -> false
@@ -535,7 +540,8 @@ fun MessageImportInfo?.equalsTo(b: MessageImportInfo?, compareDate: Boolean = tr
   }
 }
 
-@JvmOverloads fun ForwardSource?.equalsTo(b: ForwardSource?, checkMetadata: Boolean = true): Boolean {
+@JvmOverloads
+fun ForwardSource?.equalsTo(b: ForwardSource?, checkMetadata: Boolean = true): Boolean {
   return when {
     this === b -> true
     this == null || b == null -> false

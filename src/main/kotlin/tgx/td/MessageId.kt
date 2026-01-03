@@ -24,7 +24,11 @@ import me.vkryl.core.removeElement
 import org.drinkless.tdlib.TdApi.*
 import kotlin.math.min
 
-class MessageId @JvmOverloads constructor (val chatId: Long, val messageId: Long, val otherMessageIds: LongArray? = null) {
+class MessageId @JvmOverloads constructor (
+  val chatId: Long,
+  val messageId: Long,
+  val otherMessageIds: LongArray? = null
+) {
   constructor(message: Message) : this(message.chatId, message.id)
   constructor(replyTo: MessageReplyToMessage) : this(replyTo.chatId, replyTo.messageId)
   constructor(replyTo: InputMessageReplyToMessage, chatId: Long) : this(chatId, replyTo.messageId)
@@ -78,10 +82,14 @@ class MessageId @JvmOverloads constructor (val chatId: Long, val messageId: Long
     const val MAX_VALID_ID = (Int.MAX_VALUE shl 20).toLong()
     const val MIN_VALID_ID = 1L
 
-    @JvmStatic fun fromServerMessageId (serverMessageId: Long): Long = serverMessageId shl 20
-    @JvmStatic fun toServerMessageId (tdlibMessageId: Long): Long = if (tdlibMessageId % (1 shl 20) == 0L) tdlibMessageId shr 20 else 0
+    @JvmStatic
+    fun fromServerMessageId (serverMessageId: Long): Long = serverMessageId shl 20
 
-    @JvmStatic fun valueOf (replyTo: MessageReplyTo?): MessageId? = if (replyTo?.constructor == MessageReplyToMessage.CONSTRUCTOR) {
+    @JvmStatic
+    fun toServerMessageId (tdlibMessageId: Long): Long = if (tdlibMessageId % (1 shl 20) == 0L) tdlibMessageId shr 20 else 0
+
+    @JvmStatic
+    fun valueOf (replyTo: MessageReplyTo?): MessageId? = if (replyTo?.constructor == MessageReplyToMessage.CONSTRUCTOR) {
       MessageId(replyTo as MessageReplyToMessage)
     } else {
       null

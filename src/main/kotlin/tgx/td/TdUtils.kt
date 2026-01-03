@@ -272,16 +272,17 @@ fun FormattedText.substring(start: Int, end: Int = this.text.length): FormattedT
 }
 
 fun TextEntityType?.isEssential (): Boolean {
-  return when (this?.constructor) {
-    TextEntityTypeBankCardNumber.CONSTRUCTOR,
-    TextEntityTypeHashtag.CONSTRUCTOR,
-    TextEntityTypeCashtag.CONSTRUCTOR,
-    TextEntityTypeMention.CONSTRUCTOR,
-    TextEntityTypeUrl.CONSTRUCTOR,
-    TextEntityTypeMediaTimestamp.CONSTRUCTOR -> false
-    null -> false
-    else -> true
-  }
+  return this?.let {
+    when (it.constructor) {
+      TextEntityTypeBankCardNumber.CONSTRUCTOR,
+      TextEntityTypeHashtag.CONSTRUCTOR,
+      TextEntityTypeCashtag.CONSTRUCTOR,
+      TextEntityTypeMention.CONSTRUCTOR,
+      TextEntityTypeUrl.CONSTRUCTOR,
+      TextEntityTypeMediaTimestamp.CONSTRUCTOR -> false
+      else -> true
+    }
+  } ?: false
 }
 
 fun Array<TextEntity>?.findEssential (): Array<TextEntity>? {
@@ -1072,7 +1073,8 @@ fun Usernames?.primaryUsername (): String? {
   }
 }
 
-@JvmOverloads fun Usernames?.hasUsername (checkDisabled: Boolean = false): Boolean = !this.isEmpty(checkDisabled)
+@JvmOverloads
+fun Usernames?.hasUsername (checkDisabled: Boolean = false): Boolean = !this.isEmpty(checkDisabled)
 
 fun Supergroup?.primaryUsername (): String? = this?.usernames.primaryUsername()
 fun User?.primaryUsername (): String? = this?.usernames.primaryUsername()
@@ -1080,7 +1082,8 @@ fun User?.primaryUsername (): String? = this?.usernames.primaryUsername()
 fun Supergroup?.hasUsername (): Boolean = this?.usernames.hasUsername()
 fun User?.hasUsername (): Boolean = this?.usernames.hasUsername()
 
-@JvmOverloads fun Usernames?.findUsername (username: String, allowDisabled: Boolean = false): Boolean {
+@JvmOverloads
+fun Usernames?.findUsername (username: String, allowDisabled: Boolean = false): Boolean {
   if (username.isNotEmpty() && this != null) {
     for (activeUsername in this.activeUsernames) {
       if (activeUsername.equals(username, ignoreCase = true)) {
@@ -1101,10 +1104,14 @@ fun User?.hasUsername (): Boolean = this?.usernames.hasUsername()
   return false
 }
 
-@JvmOverloads fun Supergroup?.findUsername (username: String, allowDisabled: Boolean = false): Boolean = this?.usernames.findUsername(username, allowDisabled)
-@JvmOverloads fun User?.findUsername (username: String, allowDisabled: Boolean = false): Boolean = this?.usernames.findUsername(username, allowDisabled)
+@JvmOverloads
+fun Supergroup?.findUsername (username: String, allowDisabled: Boolean = false): Boolean = this?.usernames.findUsername(username, allowDisabled)
 
-@JvmOverloads fun Usernames?.findUsernameByPrefix (usernamePrefix: String, allowDisabled: Boolean = false): Boolean {
+@JvmOverloads
+fun User?.findUsername (username: String, allowDisabled: Boolean = false): Boolean = this?.usernames.findUsername(username, allowDisabled)
+
+@JvmOverloads
+fun Usernames?.findUsernameByPrefix (usernamePrefix: String, allowDisabled: Boolean = false): Boolean {
   if (usernamePrefix.isNotEmpty() && this != null) {
     for (activeUsername in this.activeUsernames) {
       if (activeUsername.startsWith(usernamePrefix, ignoreCase = true)) {
@@ -1125,8 +1132,11 @@ fun User?.hasUsername (): Boolean = this?.usernames.hasUsername()
   return false
 }
 
-@JvmOverloads fun User?.findUsernameByPrefix (usernamePrefix: String, allowDisabled: Boolean = false): Boolean = this?.usernames.findUsernameByPrefix(usernamePrefix, allowDisabled)
-@JvmOverloads fun Supergroup?.findUsernameByPrefix (usernamePrefix: String, allowDisabled: Boolean = false): Boolean = this?.usernames.findUsernameByPrefix(usernamePrefix, allowDisabled)
+@JvmOverloads
+fun User?.findUsernameByPrefix (usernamePrefix: String, allowDisabled: Boolean = false): Boolean = this?.usernames.findUsernameByPrefix(usernamePrefix, allowDisabled)
+
+@JvmOverloads
+fun Supergroup?.findUsernameByPrefix (usernamePrefix: String, allowDisabled: Boolean = false): Boolean = this?.usernames.findUsernameByPrefix(usernamePrefix, allowDisabled)
 
 @JvmOverloads
 fun buildOutline(outline: Outline?, sticker: Sticker?, targetWidth: Float, targetHeight: Float = targetWidth, out: Path? = null): Path? {
@@ -1232,7 +1242,8 @@ fun StickerFormat.isAnimated (): Boolean {
   }
 }
 
-@JvmOverloads fun MessageReplyInfo?.hasUnread (lastGlobalReadInboxMessageId: Long = 0): Boolean {
+@JvmOverloads
+fun MessageReplyInfo?.hasUnread (lastGlobalReadInboxMessageId: Long = 0): Boolean {
   return this != null && this.lastMessageId != 0L && this.lastMessageId > max(lastGlobalReadInboxMessageId, this.lastReadInboxMessageId)
 }
 
@@ -1248,9 +1259,8 @@ fun CharSequence.subSequence(entity: TextEntity?): CharSequence? {
   }
 }
 
-@kotlin.ExperimentalStdlibApi
 fun FormattedText?.findUrl(lookupUrl: String, returnAny: Boolean): String? {
-  if (this?.entities?.isNullOrEmpty() ?: return null)
+  if (this?.entities.isNullOrEmpty())
     return null
   val lookupUri = wrapHttps(lookupUrl) ?: return null
   var count = 0
@@ -1704,6 +1714,7 @@ fun JsonValue.numberValue (defaultValue: Double = 0.0): Double = when (this.cons
 
 @JvmOverloads
 fun JsonValue.intValue (defaultValue: Int = 0): Int = this.numberValue(defaultValue.toDouble()).roundToInt()
+
 @JvmOverloads
 fun JsonValue.longValue (defaultValue: Long = 0): Long = this.numberValue(defaultValue.toDouble()).roundToLong()
 
@@ -1789,7 +1800,8 @@ fun MessageContent.isListenedOrViewed (): Boolean = when (this.constructor) {
   else -> false
 }
 
-@JvmOverloads fun LinkPreviewOptions?.reset (keepShowAboveText: Boolean = false) {
+@JvmOverloads
+fun LinkPreviewOptions?.reset (keepShowAboveText: Boolean = false) {
   this?.let {
     if (COMPILE_CHECK) {
       LinkPreviewOptions(false, "", false, false, false)
@@ -1854,11 +1866,13 @@ fun ChatAdministratorRights?.setAllAdministratorRights (value: Boolean) {
   }
 }
 
-@JvmOverloads fun ChatMemberStatusAdministrator.isEmpty (rights: ChatPermissions? = null): Boolean {
+@JvmOverloads
+fun ChatMemberStatusAdministrator.isEmpty (rights: ChatPermissions? = null): Boolean {
   return this.customTitle.isNullOrEmpty() && this.rights.isEmpty(rights)
 }
 
-@JvmOverloads fun ChatAdministratorRights.isEmpty (rights: ChatPermissions? = null): Boolean {
+@JvmOverloads
+fun ChatAdministratorRights.isEmpty (rights: ChatPermissions? = null): Boolean {
   if (COMPILE_CHECK) {
     ChatAdministratorRights(
       false,
