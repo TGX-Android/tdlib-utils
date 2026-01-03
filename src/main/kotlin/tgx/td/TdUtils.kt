@@ -660,9 +660,10 @@ fun InputMessageContent?.textOrCaption (): FormattedText? {
       InputMessagePoll.CONSTRUCTOR,
       InputMessageStory.CONSTRUCTOR,
       InputMessageForwarded.CONSTRUCTOR,
-      InputMessageChecklist.CONSTRUCTOR -> null
+      InputMessageChecklist.CONSTRUCTOR,
+      InputMessageStakeDice.CONSTRUCTOR  -> null
       else -> {
-        assertInputMessageContent_65313187()
+        assertInputMessageContent_eb9f33ef()
         throw unsupported(this)
       }
     }
@@ -683,7 +684,7 @@ fun MessageContent?.showCaptionAboveMedia (): Boolean {
     MessageVoiceNote.CONSTRUCTOR,
     MessageAudio.CONSTRUCTOR -> false
     else -> {
-      assertMessageContent_e0365d1c()
+      assertMessageContent_11bff7df()
       false
     }
   }
@@ -709,9 +710,11 @@ fun InputMessageContent?.showCaptionAboveMedia (): Boolean {
     InputMessageInvoice.CONSTRUCTOR,
     InputMessagePoll.CONSTRUCTOR,
     InputMessageStory.CONSTRUCTOR,
-    InputMessageForwarded.CONSTRUCTOR -> false
+    InputMessageForwarded.CONSTRUCTOR,
+    InputMessageStakeDice.CONSTRUCTOR ->
+      false
     else -> {
-      assertInputMessageContent_65313187()
+      assertInputMessageContent_eb9f33ef()
       false
     }
   }

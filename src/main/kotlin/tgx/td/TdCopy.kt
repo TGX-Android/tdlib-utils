@@ -310,6 +310,7 @@ fun Message.copyTo (dst: Message) {
       this.mediaAlbumId,
       this.effectId,
       this.restrictionInfo,
+      this.summaryLanguageCode,
       this.content,
       this.replyMarkup
     )
@@ -346,6 +347,7 @@ fun Message.copyTo (dst: Message) {
   dst.mediaAlbumId = this.mediaAlbumId
   dst.effectId = this.effectId
   dst.restrictionInfo = this.restrictionInfo
+  dst.summaryLanguageCode = this.summaryLanguageCode
   dst.content = this.content
   dst.replyMarkup = this.replyMarkup
 }
@@ -503,6 +505,7 @@ fun Message?.copyOf (): Message? {
       this.mediaAlbumId,
       this.effectId,
       this.restrictionInfo,
+      this.summaryLanguageCode,
       this.content,
       this.replyMarkup
     )
