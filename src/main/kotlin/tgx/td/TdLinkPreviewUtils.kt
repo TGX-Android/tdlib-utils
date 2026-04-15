@@ -83,9 +83,10 @@ fun LinkPreviewType.getDuration (): Int {
     LinkPreviewTypeVoiceNote.CONSTRUCTOR,
     LinkPreviewTypeGiftAuction.CONSTRUCTOR,
     LinkPreviewTypeLiveStory.CONSTRUCTOR,
-    LinkPreviewTypeWebApp.CONSTRUCTOR -> 0
+    LinkPreviewTypeWebApp.CONSTRUCTOR,
+    LinkPreviewTypeRequestManagedBot.CONSTRUCTOR -> 0
     else -> {
-      assertLinkPreviewType_a9a3ffcd()
+      assertLinkPreviewType_2358f218()
       throw unsupported(this)
     }
   }
@@ -98,7 +99,7 @@ fun LinkPreviewType.getAnimation (): Animation? {
       this.animation
     }
     else -> {
-      assertLinkPreviewType_a9a3ffcd()
+      assertLinkPreviewType_2358f218()
       null
     }
   }
@@ -120,7 +121,7 @@ fun LinkPreviewType.getVideo (): Video? {
       }
     }
     else -> {
-      assertLinkPreviewType_a9a3ffcd()
+      assertLinkPreviewType_2358f218()
       null
     }
   }
@@ -164,7 +165,7 @@ fun LinkPreviewType.getSticker (): Sticker? {
       this.gift.symbol.sticker
     }
     else -> {
-      assertLinkPreviewType_a9a3ffcd()
+      assertLinkPreviewType_2358f218()
       null
     }
   }
@@ -266,9 +267,10 @@ fun LinkPreviewType.getPhoto (): Photo? {
     LinkPreviewTypeExternalVideo.CONSTRUCTOR,
     LinkPreviewTypeGiftAuction.CONSTRUCTOR,
     LinkPreviewTypeLiveStory.CONSTRUCTOR,
-    LinkPreviewTypeGroupCall.CONSTRUCTOR -> null
+    LinkPreviewTypeGroupCall.CONSTRUCTOR,
+    LinkPreviewTypeRequestManagedBot.CONSTRUCTOR -> null
     else -> {
-      assertLinkPreviewType_a9a3ffcd()
+      assertLinkPreviewType_2358f218()
       throw unsupported(this)
     }
   }
@@ -443,134 +445,13 @@ fun LinkPreviewType.getThumbnail (): Thumbnail? {
       require(this is LinkPreviewTypeLiveStory)
       null
     }
+    LinkPreviewTypeRequestManagedBot.CONSTRUCTOR -> {
+      require(this is LinkPreviewTypeRequestManagedBot)
+      null
+    }
     else -> {
-      assertLinkPreviewType_a9a3ffcd()
+      assertLinkPreviewType_2358f218()
       throw unsupported(this)
     }
   }
 }
-
-/*fun LinkPreviewType.getVideo (): Video? {
-  return when (this.constructor) {
-    LinkPreviewTypeAudio.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeAudio)
-      null
-    }
-    LinkPreviewTypeEmbeddedAnimationPlayer.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeEmbeddedAnimationPlayer)
-      null
-    }
-    LinkPreviewTypeEmbeddedAudioPlayer.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeEmbeddedAudioPlayer)
-      null
-    }
-    LinkPreviewTypeEmbeddedVideoPlayer.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeEmbeddedVideoPlayer)
-      null
-    }
-    LinkPreviewTypeVideo.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeVideo)
-      null
-    }
-     LinkPreviewTypeAlbum.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeAlbum)
-      null
-    }
-     LinkPreviewTypeAnimation.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeAnimation)
-      null
-    }
-     LinkPreviewTypeApp.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeApp)
-      null
-    }
-     LinkPreviewTypeArticle.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeArticle)
-      null
-    }
-     LinkPreviewTypeBackground.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeBackground)
-      null
-    }
-     LinkPreviewTypeChannelBoost.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeChannelBoost)
-      null
-    }
-     LinkPreviewTypeChat.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeChat)
-      null
-    }
-     LinkPreviewTypeDocument.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeDocument)
-      null
-    }
-     LinkPreviewTypeInvoice.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeInvoice)
-      null
-    }
-     LinkPreviewTypeMessage.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeMessage)
-      null
-    }
-     LinkPreviewTypePhoto.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypePhoto)
-      null
-    }
-     LinkPreviewTypePremiumGiftCode.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypePremiumGiftCode)
-      null
-    }
-     LinkPreviewTypeShareableChatFolder.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeShareableChatFolder)
-      null
-    }
-     LinkPreviewTypeSticker.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeSticker)
-      null
-    }
-     LinkPreviewTypeStickerSet.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeStickerSet)
-      null
-    }
-     LinkPreviewTypeStory.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeStory)
-      null
-    }
-     LinkPreviewTypeSupergroupBoost.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeSupergroupBoost)
-      null
-    }
-     LinkPreviewTypeTheme.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeTheme)
-      null
-    }
-     LinkPreviewTypeUnsupported.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeUnsupported)
-      null
-    }
-     LinkPreviewTypeUser.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeUser)
-      null
-    }
-     LinkPreviewTypeVideoChat.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeVideoChat)
-      null
-    }
-     LinkPreviewTypeVideoNote.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeVideoNote)
-      null
-    }
-     LinkPreviewTypeVoiceNote.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeVoiceNote)
-      null
-    }
-    LinkPreviewTypeWebApp.CONSTRUCTOR -> {
-      require(this is LinkPreviewTypeWebApp)
-      null
-    }
-    else -> {
-      assertLinkPreviewType_fa8b177c()
-      throw unsupported(this)
-    }
-  }
-}*/

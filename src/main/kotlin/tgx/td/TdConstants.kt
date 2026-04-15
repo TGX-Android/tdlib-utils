@@ -53,3 +53,5 @@ const val MAX_NUMBER_OF_REACTIONS_PER_POST = 11
 @JvmField val TELEGRAPH_HOSTS = arrayOf("telegra.ph", "graph.org", "te.legra.ph")
 
 internal const val COMPILE_CHECK = false
+
+const val TEXT_FORMAT_NEUTRAL = "neutral"

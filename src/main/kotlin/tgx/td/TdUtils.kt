@@ -466,9 +466,10 @@ fun ChatEventAction.findRelatedMessage (): Message? {
     ChatEventForumTopicToggleIsClosed.CONSTRUCTOR,
     ChatEventForumTopicToggleIsHidden.CONSTRUCTOR,
     ChatEventForumTopicDeleted.CONSTRUCTOR,
-    ChatEventAutomaticTranslationToggled.CONSTRUCTOR -> null
+    ChatEventAutomaticTranslationToggled.CONSTRUCTOR,
+    ChatEventMemberTagChanged.CONSTRUCTOR -> null
     else -> {
-      assertChatEventAction_53b6b01e()
+      assertChatEventAction_3964b51d()
       throw unsupported(this)
     }
   }
@@ -684,7 +685,7 @@ fun MessageContent?.showCaptionAboveMedia (): Boolean {
     MessageVoiceNote.CONSTRUCTOR,
     MessageAudio.CONSTRUCTOR -> false
     else -> {
-      assertMessageContent_11bff7df()
+      assertMessageContent_baa076bf()
       false
     }
   }
@@ -820,6 +821,8 @@ fun Message?.matchesFilter(filter: SearchMessagesFilter?): Boolean {
     SearchMessagesFilterFailedToSend.CONSTRUCTOR -> this.sendingState?.constructor == MessageSendingStateFailed.CONSTRUCTOR
     SearchMessagesFilterPinned.CONSTRUCTOR -> this.isPinned
     SearchMessagesFilterUnreadMention.CONSTRUCTOR -> this.containsUnreadMention
+    SearchMessagesFilterPoll.CONSTRUCTOR -> this.content.constructor == MessagePoll.CONSTRUCTOR
+    SearchMessagesFilterUnreadPollVote.CONSTRUCTOR -> false // TODO(server/TDLib)
     SearchMessagesFilterPhotoAndVideo.CONSTRUCTOR -> when (this.content.constructor) {
       MessagePhoto.CONSTRUCTOR, MessageVideo.CONSTRUCTOR -> true
       else -> false
@@ -837,7 +840,7 @@ fun Message?.matchesFilter(filter: SearchMessagesFilter?): Boolean {
     SearchMessagesFilterEmpty.CONSTRUCTOR -> true
     SearchMessagesFilterMention.CONSTRUCTOR -> false // TODO
     else -> {
-      assertSearchMessagesFilter_f22b2582()
+      assertSearchMessagesFilter_4cf63b98()
       throw unsupported(filter)
     }
   }
@@ -1291,14 +1294,6 @@ fun FormattedText?.findUrl(lookupUrl: String, returnAny: Boolean): String? {
   }
 }
 
-fun ChatMemberStatus.getCustomTitle (): String? {
-  return when (this.constructor) {
-    ChatMemberStatusCreator.CONSTRUCTOR -> (this as ChatMemberStatusCreator).customTitle
-    ChatMemberStatusAdministrator.CONSTRUCTOR -> (this as ChatMemberStatusAdministrator).customTitle
-    else -> null
-  }
-}
-
 fun ChatType.matchesScope(scope: NotificationSettingsScope): Boolean {
   return when (scope.constructor) {
     NotificationSettingsScopePrivateChats.CONSTRUCTOR -> this.constructor == ChatTypePrivate.CONSTRUCTOR || this.constructor == ChatTypeSecret.CONSTRUCTOR
@@ -1333,6 +1328,7 @@ fun ChatPermissions.count (isForum: Boolean): IntRange {
   if (COMPILE_CHECK) {
     // Whenever there's change, also check TdConstants.CHAT_PERMISSIONS_COUNT
     ChatPermissions(
+      false,
       false,
       false,
       false,
@@ -1404,6 +1400,7 @@ fun PushMessageContent.getText (): String? {
     PushMessageContentInvoice.CONSTRUCTOR,
     PushMessageContentLocation.CONSTRUCTOR,
     PushMessageContentPoll.CONSTRUCTOR,
+    PushMessageContentPollOptionAdded.CONSTRUCTOR,
     PushMessageContentChecklist.CONSTRUCTOR,
     PushMessageContentChecklistTasksDone.CONSTRUCTOR,
     PushMessageContentChecklistTasksAdded.CONSTRUCTOR,
@@ -1437,7 +1434,7 @@ fun PushMessageContent.getText (): String? {
       null
     // unsupported
     else -> {
-      assertPushMessageContent_366f79c5()
+      assertPushMessageContent_fd03564b()
       throw unsupported(this)
     }
   }
@@ -1512,12 +1509,12 @@ fun PushMessageContent.isPinned (): Boolean = when (this.constructor) {
   PushMessageContentVideoChatEnded.CONSTRUCTOR,
   PushMessageContentVideoChatStarted.CONSTRUCTOR,
   PushMessageContentChecklistTasksDone.CONSTRUCTOR,
-  PushMessageContentChecklistTasksAdded.CONSTRUCTOR ->
+  PushMessageContentPollOptionAdded.CONSTRUCTOR ->
     false
 
   // unsupported
   else -> {
-    assertPushMessageContent_366f79c5()
+    assertPushMessageContent_fd03564b()
     throw unsupported(this)
   }
 }
@@ -1753,6 +1750,7 @@ fun TextEntityType.canBeNested (): Boolean = when (this.constructor) {
   TextEntityTypeStrikethrough.CONSTRUCTOR,
   TextEntityTypeSpoiler.CONSTRUCTOR,
   TextEntityTypeTextUrl.CONSTRUCTOR,
+  TextEntityTypeDateTime.CONSTRUCTOR,
   TextEntityTypeMentionName.CONSTRUCTOR,
   TextEntityTypeCustomEmoji.CONSTRUCTOR,
   // Automatically detected, also OK
@@ -1767,7 +1765,7 @@ fun TextEntityType.canBeNested (): Boolean = when (this.constructor) {
   TextEntityTypeMediaTimestamp.CONSTRUCTOR -> true
   // Unsupported
   else -> {
-    assertTextEntityType_56c1e709()
+    assertTextEntityType_aefd8e69()
     throw unsupported(this)
   }
 }
@@ -1847,6 +1845,7 @@ fun ChatAdministratorRights?.setAllAdministratorRights (value: Boolean) {
         false,
         false,
         false,
+        false,
         false
       )
     }
@@ -1870,14 +1869,14 @@ fun ChatAdministratorRights?.setAllAdministratorRights (value: Boolean) {
 }
 
 @JvmOverloads
-fun ChatMemberStatusAdministrator.isEmpty (rights: ChatPermissions? = null): Boolean {
-  return this.customTitle.isNullOrEmpty() && this.rights.isEmpty(rights)
-}
+fun ChatMemberStatusAdministrator.isEmpty (rights: ChatPermissions? = null): Boolean =
+  this.rights.isEmpty(rights)
 
 @JvmOverloads
 fun ChatAdministratorRights.isEmpty (rights: ChatPermissions? = null): Boolean {
   if (COMPILE_CHECK) {
     ChatAdministratorRights(
+      false,
       false,
       false,
       false,

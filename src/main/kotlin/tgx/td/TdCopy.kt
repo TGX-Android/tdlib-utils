@@ -36,6 +36,7 @@ fun ChatPermissions.copyTo (dst: ChatPermissions) {
       this.canSendPolls,
       this.canSendOtherMessages,
       this.canAddLinkPreviews,
+      this.canEditTag,
       this.canChangeInfo,
       this.canInviteUsers,
       this.canPinMessages,
@@ -51,6 +52,7 @@ fun ChatPermissions.copyTo (dst: ChatPermissions) {
   dst.canSendVoiceNotes = this.canSendVoiceNotes
   dst.canSendPolls = this.canSendPolls
   dst.canSendOtherMessages = this.canSendOtherMessages
+  dst.canEditTag = this.canEditTag
   dst.canAddLinkPreviews = this.canAddLinkPreviews
   dst.canChangeInfo = this.canChangeInfo
   dst.canInviteUsers = this.canInviteUsers
@@ -231,6 +233,8 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
       this.canReportReactions,
       this.canReportSupergroupSpam,
       this.canSetFactCheck,
+      this.hasProtectedContentByCurrentUser,
+      this.hasProtectedContentByOtherUser,
       this.needShowStatistics
     )
   }
@@ -268,6 +272,8 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
   dst.canReportReactions = this.canReportReactions
   dst.canReportSupergroupSpam = this.canReportSupergroupSpam
   dst.canSetFactCheck = this.canSetFactCheck
+  dst.hasProtectedContentByCurrentUser = this.hasProtectedContentByCurrentUser
+  dst.hasProtectedContentByOtherUser = this.hasProtectedContentByOtherUser
   dst.needShowStatistics = this.needShowStatistics
 }
 
@@ -305,6 +311,7 @@ fun Message.copyTo (dst: Message) {
       this.viaBotUserId,
       this.senderBusinessBotUserId,
       this.senderBoostCount,
+      this.senderTag,
       this.paidMessageStarCount,
       this.authorSignature,
       this.mediaAlbumId,
@@ -342,6 +349,7 @@ fun Message.copyTo (dst: Message) {
   dst.autoDeleteIn = this.autoDeleteIn
   dst.viaBotUserId = this.viaBotUserId
   dst.senderBoostCount = this.senderBoostCount
+  dst.senderTag = this.senderTag
   dst.paidMessageStarCount = this.paidMessageStarCount
   dst.authorSignature = this.authorSignature
   dst.mediaAlbumId = this.mediaAlbumId
@@ -462,6 +470,8 @@ fun MessageProperties?.copyOf (): MessageProperties? {
       this.canReportReactions,
       this.canReportSupergroupSpam,
       this.canSetFactCheck,
+      this.hasProtectedContentByCurrentUser,
+      this.hasProtectedContentByOtherUser,
       this.needShowStatistics
     )
   }
@@ -500,6 +510,7 @@ fun Message?.copyOf (): Message? {
       this.viaBotUserId,
       this.senderBusinessBotUserId,
       this.senderBoostCount,
+      this.senderTag,
       this.paidMessageStarCount,
       this.authorSignature,
       this.mediaAlbumId,
@@ -544,6 +555,7 @@ fun Chat?.copyOf (): Chat? {
       this.lastReadOutboxMessageId,
       this.unreadMentionCount,
       this.unreadReactionCount,
+      this.unreadPollVoteCount,
       this.notificationSettings,
       this.availableReactions,
       this.messageAutoDeleteTime,
@@ -574,6 +586,7 @@ fun ChatPermissions?.copyOf (): ChatPermissions? {
       this.canSendPolls,
       this.canSendOtherMessages,
       this.canAddLinkPreviews,
+      this.canEditTag,
       this.canChangeInfo,
       this.canInviteUsers,
       this.canPinMessages,
@@ -644,6 +657,7 @@ fun ChatAdministratorRights?.copyOf (): ChatAdministratorRights? {
       this.canEditStories,
       this.canDeleteStories,
       this.canManageDirectMessages,
+      this.canManageTags,
       this.isAnonymous
     )
   }
@@ -653,13 +667,11 @@ fun ChatMemberStatus?.copyOf (): ChatMemberStatus? {
   return this?.let {
     when (constructor) {
       ChatMemberStatusCreator.CONSTRUCTOR -> ChatMemberStatusCreator(
-        (this as ChatMemberStatusCreator).customTitle,
-        this.isAnonymous,
+        (this as ChatMemberStatusCreator).isAnonymous,
         this.isMember
       )
       ChatMemberStatusAdministrator.CONSTRUCTOR -> ChatMemberStatusAdministrator(
-        (this as ChatMemberStatusAdministrator).customTitle,
-        this.canBeEdited,
+        (this as ChatMemberStatusAdministrator).canBeEdited,
         this.rights.copyOf()
       )
       ChatMemberStatusBanned.CONSTRUCTOR -> ChatMemberStatusBanned((this as ChatMemberStatusBanned).bannedUntilDate)

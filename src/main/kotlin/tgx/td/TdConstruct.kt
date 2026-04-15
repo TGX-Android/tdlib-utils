@@ -41,8 +41,10 @@ fun constructSearchMessagesFilter (@SearchMessagesFilter.Constructors constructo
     SearchMessagesFilterFailedToSend.CONSTRUCTOR -> SearchMessagesFilterFailedToSend()
     SearchMessagesFilterUnreadReaction.CONSTRUCTOR -> SearchMessagesFilterUnreadReaction()
     SearchMessagesFilterPinned.CONSTRUCTOR -> SearchMessagesFilterPinned()
+    SearchMessagesFilterPoll.CONSTRUCTOR -> SearchMessagesFilterPoll()
+    SearchMessagesFilterUnreadPollVote.CONSTRUCTOR -> SearchMessagesFilterUnreadPollVote()
     else -> {
-      assertSearchMessagesFilter_f22b2582()
+      assertSearchMessagesFilter_4cf63b98()
       error(constructor.toString())
     }
   }

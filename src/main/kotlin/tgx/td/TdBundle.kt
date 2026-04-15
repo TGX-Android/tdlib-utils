@@ -93,6 +93,11 @@ fun Bundle.put (prefix: String, what: TextEntityType?) {
         require(what is TextEntityTypeMediaTimestamp)
         putInt(prefix + "_media_timestamp", what.mediaTimestamp)
       }
+      TextEntityTypeDateTime.CONSTRUCTOR -> {
+        require(what is TextEntityTypeDateTime)
+        putInt(prefix + "_unix_time", what.unixTime)
+        put(prefix + "_formatting_type", what.formattingType)
+      }
       TextEntityTypePreCode.CONSTRUCTOR -> {
         require(what is TextEntityTypePreCode)
         putString(prefix + "_language", what.language)
@@ -117,7 +122,7 @@ fun Bundle.put (prefix: String, what: TextEntityType?) {
         // Nothing additional to save
       }
       else -> {
-        assertTextEntityType_56c1e709()
+        assertTextEntityType_aefd8e69()
         throw unsupported(what)
       }
     }
@@ -159,6 +164,15 @@ fun Bundle.restoreTextEntityType (prefix: String): TextEntityType? {
         null
       }
     }
+    TextEntityTypeDateTime.CONSTRUCTOR -> {
+      val unixTime = getInt(prefix + "_unix_time", -1)
+      val formattingType = restoreDateTimeFormattingType(prefix + "_formatting_type")
+      if (unixTime != -1 || formattingType != null) {
+        TextEntityTypeDateTime(unixTime, formattingType)
+      } else {
+        null
+      }
+    }
     TextEntityTypePreCode.CONSTRUCTOR -> {
       val language = getString(prefix + "_language")
       TextEntityTypePreCode(language)
@@ -181,8 +195,74 @@ fun Bundle.restoreTextEntityType (prefix: String): TextEntityType? {
     TextEntityTypeBlockQuote.CONSTRUCTOR -> TextEntityTypeBlockQuote()
     TextEntityTypeExpandableBlockQuote.CONSTRUCTOR -> TextEntityTypeExpandableBlockQuote()
     else -> {
-      assertTextEntityType_56c1e709()
+      assertTextEntityType_aefd8e69()
       null
+    }
+  }
+}
+
+fun Bundle.restoreDateTimePartPrecision (prefix: String): DateTimePartPrecision? {
+  val constructor = getInt(prefix + "_constructor")
+  return when (constructor) {
+    DateTimePartPrecisionNone.CONSTRUCTOR ->
+      DateTimePartPrecisionNone()
+    DateTimePartPrecisionShort.CONSTRUCTOR ->
+      DateTimePartPrecisionShort()
+    DateTimePartPrecisionLong.CONSTRUCTOR ->
+      DateTimePartPrecisionLong()
+    else -> {
+      assertDateTimePartPrecision_126814c6()
+      null
+    }
+  }
+}
+
+fun Bundle.put (prefix: String, what: DateTimePartPrecision) {
+  putInt(prefix + "_constructor", what.constructor)
+}
+
+fun Bundle.restoreDateTimeFormattingType (prefix: String): DateTimeFormattingType? {
+  val constructor = getInt(prefix + "_constructor")
+  return when (constructor) {
+    DateTimeFormattingTypeAbsolute.CONSTRUCTOR -> {
+      val timePrecision = restoreDateTimePartPrecision(prefix + "_timePrecision")
+      val datePrecision = restoreDateTimePartPrecision(prefix + "_datePrecision")
+      if (timePrecision != null && datePrecision != null) {
+        val showDayOfWeek = getBoolean(prefix + "_showDayOfWeek", false)
+        DateTimeFormattingTypeAbsolute(
+          timePrecision,
+          datePrecision,
+          showDayOfWeek
+        )
+      } else {
+        null
+      }
+    }
+    DateTimeFormattingTypeRelative.CONSTRUCTOR ->
+      DateTimeFormattingTypeRelative()
+    else -> {
+      assertDateTimeFormattingType_d84ef731()
+      null
+    }
+  }
+}
+
+fun Bundle.put (prefix: String, what: DateTimeFormattingType?) {
+  if (what != null) {
+    putInt(prefix + "_constructor", what.constructor)
+    when (what.constructor) {
+      DateTimeFormattingTypeAbsolute.CONSTRUCTOR -> {
+        require(what is DateTimeFormattingTypeAbsolute)
+        put(prefix + "_timePrecision", what.timePrecision)
+        put(prefix + "_datePrecision", what.datePrecision)
+        putBoolean(prefix + "_showDayOfWeek", what.showDayOfWeek)
+      }
+      DateTimeFormattingTypeRelative.CONSTRUCTOR ->
+        DateTimeFormattingTypeRelative()
+      else -> {
+        assertDateTimeFormattingType_d84ef731()
+        throw unsupported(what)
+      }
     }
   }
 }
@@ -400,19 +480,44 @@ fun Bundle.put (prefix: String, what: InputMessageReplyTo?) {
     when (what.constructor) {
       InputMessageReplyToMessage.CONSTRUCTOR -> {
         require(what is InputMessageReplyToMessage)
+        if (COMPILE_CHECK) {
+          InputMessageReplyToMessage(
+            what.messageId,
+            what.quote,
+            what.checklistTaskId,
+            what.pollOptionId
+          )
+        }
         putLong(prefix + "_messageId", what.messageId)
         put(prefix + "_quote", what.quote)
         putInt(prefix + "_checklistTaskId", what.checklistTaskId)
+        putString(prefix + "_pollOptionId", what.pollOptionId ?: "")
       }
       InputMessageReplyToExternalMessage.CONSTRUCTOR -> {
         require(what is InputMessageReplyToExternalMessage)
+        if (COMPILE_CHECK) {
+          InputMessageReplyToExternalMessage(
+            what.chatId,
+            what.messageId,
+            what.quote,
+            what.checklistTaskId,
+            what.pollOptionId
+          )
+        }
         putLong(prefix + "_chatId", what.chatId)
         putLong(prefix + "_messageId", what.messageId)
         put(prefix + "_quote", what.quote)
         putInt(prefix + "_checklistTaskId", what.checklistTaskId)
+        putString(prefix + "_pollOptionId", what.pollOptionId ?: "")
       }
       InputMessageReplyToStory.CONSTRUCTOR -> {
         require(what is InputMessageReplyToStory)
+        if (COMPILE_CHECK) {
+          InputMessageReplyToStory(
+            what.storyPosterChatId,
+            what.storyId
+          )
+        }
         putLong(prefix + "_chatId", what.storyPosterChatId)
         putInt(prefix + "_storyId", what.storyId)
       }
@@ -432,8 +537,9 @@ fun Bundle.restoreInputMessageReplyTo (prefix: String): InputMessageReplyTo? {
       val messageId = getLong(prefix + "_messageId")
       val quote = restoreInputTextQuote(prefix + "_quote")
       val checklistTaskId = getInt(prefix + "_checklistTaskId")
+      val pollOptionId = getString(prefix + "_pollOptionId")
       if (messageId != 0L) {
-        InputMessageReplyToMessage(messageId, quote, checklistTaskId)
+        InputMessageReplyToMessage(messageId, quote, checklistTaskId, pollOptionId)
       } else {
         null
       }
@@ -443,8 +549,9 @@ fun Bundle.restoreInputMessageReplyTo (prefix: String): InputMessageReplyTo? {
       val messageId = getLong(prefix + "_messageId")
       val quote = restoreInputTextQuote(prefix + "_quote")
       val checklistTaskId = getInt(prefix + "_checklistTaskId")
+      val pollOptionId = getString(prefix + "_pollOptionId")
       if (messageId != 0L) {
-        InputMessageReplyToExternalMessage(chatId, messageId, quote, checklistTaskId)
+        InputMessageReplyToExternalMessage(chatId, messageId, quote, checklistTaskId, pollOptionId)
       } else {
         null
       }
