@@ -1359,6 +1359,7 @@ fun ChatPermissions.count (isForum: Boolean): IntRange {
   if (this.canChangeInfo) count++
   if (this.canInviteUsers) count++
   if (this.canPinMessages) count++
+  if (this.canEditTag) count++
   if (isForum && this.canCreateTopics) count++
   val maxCount = CHAT_PERMISSIONS_COUNT - if (isForum) 0 else 1
   return IntRange(count, maxCount)
@@ -1864,6 +1865,7 @@ fun ChatAdministratorRights?.setAllAdministratorRights (value: Boolean) {
     this.canEditStories = value
     this.canDeleteStories = value
     this.canManageDirectMessages = value
+    this.canManageTags = value
     this.isAnonymous = value
   }
 }
@@ -1896,13 +1898,13 @@ fun ChatAdministratorRights.isEmpty (rights: ChatPermissions? = null): Boolean {
     )
   }
   return !this.canManageChat &&
-    this.canChangeInfo == (rights?.canChangeInfo ?: false) &&
+    (!this.canChangeInfo || rights?.canChangeInfo ?: false) &&
     !this.canPostMessages &&
     !this.canEditMessages &&
     !this.canDeleteMessages &&
     !this.canRestrictMembers &&
-    this.canInviteUsers == (rights?.canInviteUsers ?: false) &&
-    this.canPinMessages == (rights?.canPinMessages ?: false) &&
+    (!this.canInviteUsers || rights?.canInviteUsers ?: false) &&
+    (!this.canPinMessages || rights?.canPinMessages ?: false) &&
     !this.canManageTopics &&
     !this.canPromoteMembers &&
     !this.canManageVideoChats &&
@@ -1910,6 +1912,7 @@ fun ChatAdministratorRights.isEmpty (rights: ChatPermissions? = null): Boolean {
     !this.canEditStories &&
     !this.canDeleteStories &&
     !this.canManageDirectMessages &&
+    !this.canManageTags &&
     !this.isAnonymous
 }
 
