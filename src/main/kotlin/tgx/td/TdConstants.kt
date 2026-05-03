@@ -19,6 +19,8 @@
 
 package tgx.td
 
+import org.drinkless.tdlib.TdApi.ChatAdministratorRights
+
 const val MAX_USERNAME_LENGTH = 32
 const val MAX_NAME_LENGTH = 64
 const val MAX_CHANNEL_DESCRIPTION_LENGTH = 255
@@ -55,3 +57,23 @@ const val MAX_NUMBER_OF_REACTIONS_PER_POST = 11
 internal const val COMPILE_CHECK = false
 
 const val TEXT_FORMAT_NEUTRAL = "neutral"
+
+@JvmField val BASIC_GROUP_ADMIN_RIGHTS = ChatAdministratorRights(
+  true,
+  true,
+  false,
+  false,
+  true,
+  true,
+  true,
+  true,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false
+)

@@ -1827,6 +1827,59 @@ fun LinkPreview.applyLinkPreviewOptions (options: LinkPreviewOptions?) {
   this.showAboveText = options?.showAboveText ?: false
 }
 
+fun ChatMemberStatus.requiresSupergroupUpgrade(): Boolean {
+  return when (this.constructor) {
+    ChatMemberStatusCreator.CONSTRUCTOR -> {
+      require(this is ChatMemberStatusCreator)
+      if (COMPILE_CHECK) {
+        ChatMemberStatusCreator(
+          true, true
+        )
+      }
+      this.isAnonymous
+    }
+
+    ChatMemberStatusAdministrator.CONSTRUCTOR -> {
+      require(this is ChatMemberStatusAdministrator)
+      if (COMPILE_CHECK) {
+        ChatAdministratorRights(
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+          )
+      }
+      !this.rights.equalsTo(BASIC_GROUP_ADMIN_RIGHTS)
+    }
+
+    ChatMemberStatusRestricted.CONSTRUCTOR,
+    ChatMemberStatusBanned.CONSTRUCTOR ->
+      true
+
+    ChatMemberStatusLeft.CONSTRUCTOR,
+    ChatMemberStatusMember.CONSTRUCTOR ->
+      false
+
+    else -> {
+      assertChatMemberStatus_33fc5755()
+      throw unsupported(this)
+    }
+  }
+}
+
 fun ChatAdministratorRights?.setAllAdministratorRights (value: Boolean) {
   this?.let {
     if (COMPILE_CHECK) {
@@ -1914,6 +1967,47 @@ fun ChatAdministratorRights.isEmpty (rights: ChatPermissions? = null): Boolean {
     !this.canManageDirectMessages &&
     !this.canManageTags &&
     !this.isAnonymous
+}
+
+fun ChatAdministratorRights.limitRights(limit: ChatAdministratorRights) {
+  if (COMPILE_CHECK) {
+    ChatAdministratorRights(
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    )
+  }
+  this.canManageChat = this.canManageChat && limit.canManageChat
+  this.canChangeInfo = this.canChangeInfo && limit.canChangeInfo
+  this.canPostMessages = this.canPostMessages && limit.canPostMessages
+  this.canEditMessages = this.canEditMessages && limit.canEditMessages
+  this.canDeleteMessages = this.canDeleteMessages && limit.canDeleteMessages
+  this.canInviteUsers = this.canInviteUsers && limit.canInviteUsers
+  this.canRestrictMembers = this.canRestrictMembers && limit.canRestrictMembers
+  this.canPinMessages = this.canPinMessages && limit.canPinMessages
+  this.canManageTopics = this.canManageTopics && limit.canManageTopics
+  this.canPromoteMembers = this.canPromoteMembers && limit.canPromoteMembers
+  this.canManageVideoChats = this.canManageVideoChats && limit.canManageVideoChats
+  this.canPostStories = this.canPostStories && limit.canPostStories
+  this.canEditStories = this.canEditStories && limit.canEditStories
+  this.canDeleteStories = this.canDeleteStories && limit.canDeleteStories
+  this.canManageDirectMessages = this.canManageDirectMessages && limit.canManageDirectMessages
+  this.canManageTags = this.canManageTags && limit.canManageTags
+  this.isAnonymous = this.isAnonymous && limit.isAnonymous
 }
 
 fun ForwardSource?.hasMessage (): Boolean = this?.let {
