@@ -36,6 +36,7 @@ fun ChatPermissions.copyTo (dst: ChatPermissions) {
       this.canSendPolls,
       this.canSendOtherMessages,
       this.canAddLinkPreviews,
+      this.canReactToMessages,
       this.canEditTag,
       this.canChangeInfo,
       this.canInviteUsers,
@@ -54,6 +55,7 @@ fun ChatPermissions.copyTo (dst: ChatPermissions) {
   dst.canSendOtherMessages = this.canSendOtherMessages
   dst.canEditTag = this.canEditTag
   dst.canAddLinkPreviews = this.canAddLinkPreviews
+  dst.canReactToMessages = this.canReactToMessages
   dst.canChangeInfo = this.canChangeInfo
   dst.canInviteUsers = this.canInviteUsers
   dst.canPinMessages = this.canPinMessages
@@ -215,6 +217,7 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
       this.canBeRepliedInAnotherChat,
       this.canBeSaved,
       this.canBeSharedInStory,
+      this.canDeleteReactions,
       this.canEditMedia,
       this.canEditSchedulingState,
       this.canEditSuggestedPostInfo,
@@ -223,6 +226,7 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
       this.canGetLink,
       this.canGetMediaTimestampLinks,
       this.canGetMessageThread,
+      this.canGetPollVoteStatistics,
       this.canGetReadDate,
       this.canGetStatistics,
       this.canGetVideoAdvertisements,
@@ -254,6 +258,7 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
   dst.canBeRepliedInAnotherChat = this.canBeRepliedInAnotherChat
   dst.canBeSaved = this.canBeSaved
   dst.canBeSharedInStory = this.canBeSharedInStory
+  dst.canDeleteReactions = this.canDeleteReactions
   dst.canEditMedia = this.canEditMedia
   dst.canEditSchedulingState = this.canEditSchedulingState
   dst.canEditSuggestedPostInfo = this.canEditSuggestedPostInfo
@@ -263,6 +268,7 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
   dst.canGetMediaTimestampLinks = this.canGetMediaTimestampLinks
   dst.canGetMessageThread = this.canGetMessageThread
   dst.canGetReadDate = this.canGetReadDate
+  dst.canGetPollVoteStatistics = this.canGetPollVoteStatistics
   dst.canGetStatistics = this.canGetStatistics
   dst.canGetVideoAdvertisements = this.canGetVideoAdvertisements
   dst.canGetViewers = this.canGetViewers
@@ -295,6 +301,7 @@ fun Message.copyTo (dst: Message) {
       this.isPaidStarSuggestedPost,
       this.isPaidTonSuggestedPost,
       this.containsUnreadMention,
+      this.containsUnreadPollVotes,
       this.date,
       this.editDate,
       this.forwardInfo,
@@ -309,6 +316,7 @@ fun Message.copyTo (dst: Message) {
       this.selfDestructIn,
       this.autoDeleteIn,
       this.viaBotUserId,
+      this.guestBotCallerId,
       this.senderBusinessBotUserId,
       this.senderBoostCount,
       this.senderTag,
@@ -335,6 +343,7 @@ fun Message.copyTo (dst: Message) {
   dst.isPaidStarSuggestedPost = this.isPaidStarSuggestedPost
   dst.isPaidTonSuggestedPost = this.isPaidTonSuggestedPost
   dst.containsUnreadMention = this.containsUnreadMention
+  dst.containsUnreadPollVotes = this.containsUnreadPollVotes
   dst.date = this.date
   dst.editDate = this.editDate
   dst.forwardInfo = this.forwardInfo
@@ -348,6 +357,7 @@ fun Message.copyTo (dst: Message) {
   dst.selfDestructIn = this.selfDestructIn
   dst.autoDeleteIn = this.autoDeleteIn
   dst.viaBotUserId = this.viaBotUserId
+  dst.guestBotCallerId = this.guestBotCallerId
   dst.senderBoostCount = this.senderBoostCount
   dst.senderTag = this.senderTag
   dst.paidMessageStarCount = this.paidMessageStarCount
@@ -452,6 +462,7 @@ fun MessageProperties?.copyOf (): MessageProperties? {
       this.canBeRepliedInAnotherChat,
       this.canBeSaved,
       this.canBeSharedInStory,
+      this.canDeleteReactions,
       this.canEditMedia,
       this.canEditSchedulingState,
       this.canEditSuggestedPostInfo,
@@ -460,12 +471,13 @@ fun MessageProperties?.copyOf (): MessageProperties? {
       this.canGetLink,
       this.canGetMediaTimestampLinks,
       this.canGetMessageThread,
+      this.canGetPollVoteStatistics,
       this.canGetReadDate,
       this.canGetStatistics,
       this.canGetVideoAdvertisements,
       this.canGetViewers,
-      this.canRecognizeSpeech,
       this.canMarkTasksAsDone,
+      this.canRecognizeSpeech,
       this.canReportChat,
       this.canReportReactions,
       this.canReportSupergroupSpam,
@@ -494,6 +506,7 @@ fun Message?.copyOf (): Message? {
       this.isPaidStarSuggestedPost,
       this.isPaidTonSuggestedPost,
       this.containsUnreadMention,
+      this.containsUnreadPollVotes,
       this.date,
       this.editDate,
       this.forwardInfo,
@@ -508,6 +521,7 @@ fun Message?.copyOf (): Message? {
       this.selfDestructIn,
       this.autoDeleteIn,
       this.viaBotUserId,
+      this.guestBotCallerId,
       this.senderBusinessBotUserId,
       this.senderBoostCount,
       this.senderTag,
@@ -586,6 +600,7 @@ fun ChatPermissions?.copyOf (): ChatPermissions? {
       this.canSendPolls,
       this.canSendOtherMessages,
       this.canAddLinkPreviews,
+      this.canReactToMessages,
       this.canEditTag,
       this.canChangeInfo,
       this.canInviteUsers,

@@ -82,11 +82,12 @@ fun LinkPreviewType.getDuration (): Int {
     LinkPreviewTypeVideoNote.CONSTRUCTOR,
     LinkPreviewTypeVoiceNote.CONSTRUCTOR,
     LinkPreviewTypeGiftAuction.CONSTRUCTOR,
+    LinkPreviewTypeTextCompositionStyle.CONSTRUCTOR,
     LinkPreviewTypeLiveStory.CONSTRUCTOR,
     LinkPreviewTypeWebApp.CONSTRUCTOR,
     LinkPreviewTypeRequestManagedBot.CONSTRUCTOR -> 0
     else -> {
-      assertLinkPreviewType_2358f218()
+      assertLinkPreviewType_883de866()
       throw unsupported(this)
     }
   }
@@ -99,7 +100,7 @@ fun LinkPreviewType.getAnimation (): Animation? {
       this.animation
     }
     else -> {
-      assertLinkPreviewType_2358f218()
+      assertLinkPreviewType_883de866()
       null
     }
   }
@@ -121,7 +122,7 @@ fun LinkPreviewType.getVideo (): Video? {
       }
     }
     else -> {
-      assertLinkPreviewType_2358f218()
+      assertLinkPreviewType_883de866()
       null
     }
   }
@@ -165,7 +166,7 @@ fun LinkPreviewType.getSticker (): Sticker? {
       this.gift.symbol.sticker
     }
     else -> {
-      assertLinkPreviewType_2358f218()
+      assertLinkPreviewType_883de866()
       null
     }
   }
@@ -268,9 +269,10 @@ fun LinkPreviewType.getPhoto (): Photo? {
     LinkPreviewTypeGiftAuction.CONSTRUCTOR,
     LinkPreviewTypeLiveStory.CONSTRUCTOR,
     LinkPreviewTypeGroupCall.CONSTRUCTOR,
+    LinkPreviewTypeTextCompositionStyle.CONSTRUCTOR,
     LinkPreviewTypeRequestManagedBot.CONSTRUCTOR -> null
     else -> {
-      assertLinkPreviewType_2358f218()
+      assertLinkPreviewType_883de866()
       throw unsupported(this)
     }
   }
@@ -449,8 +451,12 @@ fun LinkPreviewType.getThumbnail (): Thumbnail? {
       require(this is LinkPreviewTypeRequestManagedBot)
       null
     }
+    LinkPreviewTypeTextCompositionStyle.CONSTRUCTOR -> {
+      require(this is LinkPreviewTypeTextCompositionStyle)
+      null
+    }
     else -> {
-      assertLinkPreviewType_2358f218()
+      assertLinkPreviewType_883de866()
       throw unsupported(this)
     }
   }

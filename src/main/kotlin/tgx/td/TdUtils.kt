@@ -1342,6 +1342,7 @@ fun ChatPermissions.count (isForum: Boolean): IntRange {
       false,
       false,
       false,
+      false,
       false
     )
   }
@@ -1356,6 +1357,7 @@ fun ChatPermissions.count (isForum: Boolean): IntRange {
   if (this.canSendPolls) count++
   if (this.canSendOtherMessages) count++
   if (this.canAddLinkPreviews) count++
+  if (this.canReactToMessages) count++
   if (this.canChangeInfo) count++
   if (this.canInviteUsers) count++
   if (this.canPinMessages) count++

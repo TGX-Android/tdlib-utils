@@ -203,16 +203,21 @@ fun Poll.equalsTo(b: Poll, onlyTextContent: Boolean = false): Boolean {
       this.isAnonymous,
       this.allowsMultipleAnswers,
       this.allowsRevoting,
+      this.membersOnly,
+      this.countryCodes,
       this.optionOrder,
       this.type,
       this.openPeriod,
       this.closeDate,
-      this.isClosed
+      this.isClosed,
+      this.voteRestrictionReason
     )
   }
   return this.question.equalsTo(b.question) &&
     this.options.equalsTo(b.options, onlyTextContent) && (onlyTextContent || (
     this.id == b.id &&
+    this.membersOnly == b.membersOnly &&
+    this.countryCodes.contentEqualsOrEmpty(b.countryCodes) &&
     this.totalVoterCount == b.totalVoterCount &&
     this.recentVoterIds.contentEquals(b.recentVoterIds) &&
     this.canGetVoters == b.canGetVoters &&
@@ -223,7 +228,8 @@ fun Poll.equalsTo(b: Poll, onlyTextContent: Boolean = false): Boolean {
     this.type.equalsTo(b.type) &&
     this.openPeriod == b.openPeriod &&
     this.closeDate == b.closeDate &&
-    this.isClosed == b.isClosed
+    this.isClosed == b.isClosed &&
+    this.voteRestrictionReason.equalsTo(b.voteRestrictionReason)
   ))
 }
 
@@ -241,6 +247,7 @@ fun ChatPermissions.equalsTo(old: ChatPermissions, defaultPermissions: ChatPermi
       this.canSendPolls,
       this.canSendOtherMessages,
       this.canAddLinkPreviews,
+      this.canReactToMessages,
       this.canEditTag,
       this.canChangeInfo,
       this.canInviteUsers,
@@ -259,6 +266,7 @@ fun ChatPermissions.equalsTo(old: ChatPermissions, defaultPermissions: ChatPermi
     (this.canSendPolls == old.canSendPolls || !this.canSendPolls && !defaultPermissions.canSendPolls) &&
     (this.canSendOtherMessages == old.canSendOtherMessages || !this.canSendOtherMessages && !defaultPermissions.canSendOtherMessages) &&
     (this.canAddLinkPreviews == old.canAddLinkPreviews || !this.canAddLinkPreviews && !defaultPermissions.canAddLinkPreviews) &&
+    (this.canReactToMessages == old.canReactToMessages || !this.canReactToMessages && !defaultPermissions.canReactToMessages) &&
     (this.canEditTag == old.canEditTag || !this.canEditTag && !defaultPermissions.canEditTag) &&
     (this.canChangeInfo == old.canChangeInfo || !this.canChangeInfo && !defaultPermissions.canChangeInfo) &&
     (this.canInviteUsers == old.canInviteUsers || !this.canInviteUsers && !defaultPermissions.canInviteUsers) &&
