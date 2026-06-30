@@ -48,7 +48,7 @@ fun RichText?.isEmpty (): Boolean {
   if (this == null) return true
   return when (this.constructor) {
     RichTextPlain.CONSTRUCTOR -> (this as RichTextPlain).text.isNullOrEmpty()
-    RichTextIcon.CONSTRUCTOR, RichTextAnchor.CONSTRUCTOR -> false
+    RichTextIcon.CONSTRUCTOR, RichTextAnchor.CONSTRUCTOR, RichTextCustomEmoji.CONSTRUCTOR -> false
     RichTextBold.CONSTRUCTOR -> (this as RichTextBold).text.isEmpty()
     RichTextAnchorLink.CONSTRUCTOR -> (this as RichTextAnchorLink).text.isEmpty()
     RichTextEmailAddress.CONSTRUCTOR -> (this as RichTextEmailAddress).text.isEmpty()
@@ -62,14 +62,24 @@ fun RichText?.isEmpty (): Boolean {
     RichTextSuperscript.CONSTRUCTOR -> (this as RichTextSuperscript).text.isEmpty()
     RichTextUnderline.CONSTRUCTOR -> (this as RichTextUnderline).text.isEmpty()
     RichTextUrl.CONSTRUCTOR -> (this as RichTextUrl).text.isEmpty()
+    RichTextBankCardNumber.CONSTRUCTOR -> (this as RichTextBankCardNumber).text.isEmpty()
+    RichTextBotCommand.CONSTRUCTOR -> (this as RichTextBotCommand).text.isEmpty()
+    RichTextCashtag.CONSTRUCTOR -> (this as RichTextCashtag).text.isEmpty()
+    RichTextDateTime.CONSTRUCTOR -> (this as RichTextDateTime).text.isEmpty()
+    RichTextHashtag.CONSTRUCTOR -> (this as RichTextHashtag).text.isEmpty()
+    RichTextMathematicalExpression.CONSTRUCTOR -> (this as RichTextMathematicalExpression).expression.isEmpty()
+    RichTextMention.CONSTRUCTOR -> (this as RichTextMention).text.isEmpty()
+    RichTextMentionName.CONSTRUCTOR -> (this as RichTextMentionName).text.isEmpty()
+    RichTextReferenceLink.CONSTRUCTOR -> (this as RichTextReferenceLink).text.isEmpty()
+    RichTextSpoiler.CONSTRUCTOR -> (this as RichTextSpoiler).text.isEmpty()
     RichTexts.CONSTRUCTOR -> {
       for (childText in (this as RichTexts).texts) {
         if (!childText.isEmpty()) return false
       }
-      return true
+      true
     }
     else -> {
-      assertRichText_58eb3f54()
+      assertRichText_1c4c4279()
       throw unsupported(this)
     }
   }
@@ -80,9 +90,30 @@ fun DraftMessage?.isEmpty (): Boolean {
   contract {
     returns(false) implies (this@isEmpty != null)
   }
-  return (this == null) || (
-    this.replyTo == null && (this.inputMessageText as InputMessageText).text.isEmpty()
-  )
+  return (this == null) || (this.replyTo == null && this.content.let {
+    when (it.constructor) {
+      DraftMessageContentText.CONSTRUCTOR -> {
+        require(it is DraftMessageContentText)
+        it.text.isEmpty()
+      }
+      DraftMessageContentRichMessage.CONSTRUCTOR -> {
+        require(it is DraftMessageContentRichMessage)
+        it.message.blocks.isNullOrEmpty()
+      }
+      DraftMessageContentVideoNote.CONSTRUCTOR -> {
+        require(it is DraftMessageContentVideoNote)
+        it.filePath.isEmpty()
+      }
+      DraftMessageContentVoiceNote.CONSTRUCTOR -> {
+        require(it is DraftMessageContentVoiceNote)
+        it.filePath.isEmpty()
+      }
+      else -> {
+        assertDraftMessageContent_b637f166()
+        throw unsupported(this.content)
+      }
+    }
+  })
 }
 
 @ExperimentalContracts

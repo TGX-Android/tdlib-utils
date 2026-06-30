@@ -374,27 +374,153 @@ fun Bundle.restoreLinkPreviewOptions (prefix: String): LinkPreviewOptions? {
 }
 
 @ExperimentalContracts
-fun Bundle.put (prefix: String, what: InputMessageText?) {
+fun Bundle.put (prefix: String, what: DraftMessageContent?) {
   if (what != null) {
-    put(prefix + "_text", what.text)
-    put(prefix + "_linkPreviewOptions", what.linkPreviewOptions)
-    putBoolean(prefix + "_clearDraft", what.clearDraft)
+    putInt(prefix + "_constructor", what.constructor)
+    when (what.constructor) {
+      DraftMessageContentText.CONSTRUCTOR -> {
+        require(what is DraftMessageContentText)
+        if (COMPILE_CHECK) {
+          DraftMessageContentText(
+            what.text,
+            what.linkPreviewOptions
+          )
+        }
+        put(prefix + "_text", what.text)
+        put(prefix + "_linkPreviewOptions", what.linkPreviewOptions)
+      }
+      DraftMessageContentRichMessage.CONSTRUCTOR -> {
+        require(what is DraftMessageContentRichMessage)
+        if (COMPILE_CHECK) {
+          DraftMessageContentRichMessage(
+            what.message
+          )
+        }
+        // TODO?
+        // put(prefix + "_message", what.message)
+      }
+      DraftMessageContentVoiceNote.CONSTRUCTOR -> {
+        require(what is DraftMessageContentVoiceNote)
+        if (COMPILE_CHECK) {
+          DraftMessageContentVoiceNote(
+            what.filePath,
+            what.duration,
+            what.waveform,
+            what.selfDestructType
+          )
+        }
+        putString("${prefix}_filePath", what.filePath)
+        putInt("${prefix}_duration", what.duration)
+        putByteArray("${prefix}_waveform", what.waveform)
+        put("${prefix}_selfDestructType", what.selfDestructType)
+      }
+      DraftMessageContentVideoNote.CONSTRUCTOR -> {
+        require(what is DraftMessageContentVideoNote)
+        putString("${prefix}_filePath", what.filePath)
+        putInt("${prefix}_duration", what.duration)
+        putInt("${prefix}_length", what.length)
+        put("${prefix}_selfDestructType", what.selfDestructType)
+      }
+      else -> {
+        assertDraftMessageContent_b637f166()
+        throw unsupported(what)
+      }
+    }
+  }
+}
+
+fun Bundle.put (prefix: String, what: MessageSelfDestructType?) {
+  if (what != null) {
+    putInt(prefix + "_constructor", what.constructor)
+    when (what.constructor) {
+      MessageSelfDestructTypeImmediately.CONSTRUCTOR -> {}
+      MessageSelfDestructTypeTimer.CONSTRUCTOR -> {
+        require(what is MessageSelfDestructTypeTimer)
+        putInt(prefix + "_selfDestructTime", what.selfDestructTime)
+      }
+      else -> {
+        assertMessageSelfDestructType_58882d8c()
+        throw unsupported(what)
+      }
+    }
+  }
+}
+
+fun Bundle.restoreSelfDestructType (prefix: String): MessageSelfDestructType? {
+  val constructor = getInt(prefix + "_constructor")
+  return when (constructor) {
+    MessageSelfDestructTypeImmediately.CONSTRUCTOR -> {
+      MessageSelfDestructTypeImmediately()
+    }
+    MessageSelfDestructTypeTimer.CONSTRUCTOR -> {
+      MessageSelfDestructTypeTimer(
+        getInt(prefix + "_selfDestructTime")
+      )
+    }
+    else -> {
+      assertMessageSelfDestructType_58882d8c()
+      null
+    }
   }
 }
 
 @ExperimentalContracts
-fun Bundle.restoreInputMessageText (prefix: String): InputMessageText? {
-  val text = restoreFormattedText(prefix + "_text")
-  val linkPreviewOptions = restoreLinkPreviewOptions(prefix + "_linkPreviewOptions")
-  val clearDraft = getBoolean(prefix + "_clearDraft")
-  return if (!text.isEmpty()) {
-    InputMessageText(
-      text,
-      linkPreviewOptions,
-      clearDraft
-    )
-  } else {
-    null
+fun Bundle.restoreDraftMessageContent (prefix: String): DraftMessageContent? {
+  val constructor = getInt(prefix + "_constructor")
+  return when (constructor) {
+    DraftMessageContentText.CONSTRUCTOR -> {
+      val text = restoreFormattedText(prefix + "_text")
+      if (!text.isEmpty()) {
+        DraftMessageContentText(
+          text,
+          restoreLinkPreviewOptions(prefix + "_linkPreviewOptions")
+        )
+      } else {
+        null
+      }
+    }
+    DraftMessageContentRichMessage.CONSTRUCTOR -> {
+      // TODO?
+      null
+      /*val message = restoreRichMessage(prefix + "_message")
+      if (message != null) {
+        DraftMessageContentRichMessage(
+          message
+        )
+      } else {
+        null
+      }*/
+    }
+    DraftMessageContentVoiceNote.CONSTRUCTOR -> {
+      val filePath = getString("${prefix}_filePath")
+      if (!filePath.isNullOrEmpty()) {
+        DraftMessageContentVoiceNote(
+          filePath,
+          getInt("${prefix}_duration"),
+          getByteArray("${prefix}_waveform"),
+          restoreSelfDestructType("${prefix}_selfDestructType")
+        )
+      } else {
+        null
+      }
+    }
+    DraftMessageContentVideoNote.CONSTRUCTOR -> {
+      val filePath = getString("${prefix}_filePath")
+      if (!filePath.isNullOrEmpty()) {
+        DraftMessageContentVideoNote(
+          filePath,
+          getInt("${prefix}_duration"),
+          getInt("${prefix}_length"),
+          restoreSelfDestructType("${prefix}_selfDestructType")
+        )
+      } else {
+        null
+      }
+    }
+    else -> {
+      assertDraftMessageContent_b637f166()
+      null
+    }
   }
 }
 
@@ -579,15 +705,14 @@ fun Bundle.put (prefix: String, what: DraftMessage?) {
       DraftMessage(
         what.replyTo,
         what.date,
-        what.inputMessageText,
+        what.content,
         what.effectId,
         what.suggestedPostInfo
       )
     }
-    val inputMessageText = what.inputMessageText as InputMessageText?
     put(prefix + "_replyTo", what.replyTo)
     putInt(prefix + "_date", what.date)
-    put(prefix + "_text", inputMessageText)
+    put(prefix + "_content", what.content)
     putLong(prefix + "_effect", what.effectId)
     put(prefix + "_suggestedPostInfo", what.suggestedPostInfo)
   }
@@ -597,11 +722,11 @@ fun Bundle.put (prefix: String, what: DraftMessage?) {
 fun Bundle.restoreDraftMessage (prefix: String): DraftMessage? {
   val replyTo = restoreInputMessageReplyTo(prefix + "_replyTo")
   val date = getInt(prefix + "_date")
-  val inputMessageText = restoreInputMessageText(prefix + "_text")
+  val content = restoreDraftMessageContent(prefix + "_content")
   val effectId = getLong(prefix + "_effect")
   val suggestedPostInfo = restoreInputSuggestedPostInfo(prefix + "_suggestedPostInfo")
-  return if (inputMessageText != null || replyTo != null) {
-    DraftMessage(replyTo, date, inputMessageText, effectId, suggestedPostInfo)
+  return if (content != null || replyTo != null) {
+    DraftMessage(replyTo, date, content, effectId, suggestedPostInfo)
   } else {
     null
   }

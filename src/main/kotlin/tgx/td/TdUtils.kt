@@ -622,6 +622,25 @@ fun InputMessageContent?.textOrCaption (): FormattedText? {
         require(this is InputMessageText)
         this.text
       }
+      InputMessageRichMessage.CONSTRUCTOR -> {
+        require(this is InputMessageRichMessage)
+        this.message.source.let {
+          when (it.constructor) {
+            RichMessageSourceMarkdown.CONSTRUCTOR -> {
+              require(it is RichMessageSourceMarkdown)
+              FormattedText(it.text, arrayOf())
+            }
+            RichMessageSourceHtml.CONSTRUCTOR -> {
+              require(it is RichMessageSourceHtml)
+              FormattedText(it.text, arrayOf())
+            }
+            else -> {
+              assertRichMessageSource_f6423d5b()
+              throw unsupported(it)
+            }
+          }
+        }
+      }
       InputMessageAnimation.CONSTRUCTOR -> {
         require(this is InputMessageAnimation)
         this.caption
@@ -653,6 +672,7 @@ fun InputMessageContent?.textOrCaption (): FormattedText? {
       InputMessageSticker.CONSTRUCTOR,
       InputMessageVideoNote.CONSTRUCTOR,
       InputMessageLocation.CONSTRUCTOR,
+      InputMessageLiveLocation.CONSTRUCTOR,
       InputMessageVenue.CONSTRUCTOR,
       InputMessageContact.CONSTRUCTOR,
       InputMessageDice.CONSTRUCTOR,
@@ -662,9 +682,10 @@ fun InputMessageContent?.textOrCaption (): FormattedText? {
       InputMessageStory.CONSTRUCTOR,
       InputMessageForwarded.CONSTRUCTOR,
       InputMessageChecklist.CONSTRUCTOR,
-      InputMessageStakeDice.CONSTRUCTOR  -> null
+      InputMessageStakeDice.CONSTRUCTOR ->
+        null
       else -> {
-        assertInputMessageContent_eb9f33ef()
+        assertInputMessageContent_7c412303()
         throw unsupported(this)
       }
     }
@@ -680,12 +701,14 @@ fun MessageContent?.showCaptionAboveMedia (): Boolean {
     MessageAnimation.CONSTRUCTOR -> (this as MessageAnimation).showCaptionAboveMedia
     MessagePaidMedia.CONSTRUCTOR -> (this as MessagePaidMedia).showCaptionAboveMedia
     MessageText.CONSTRUCTOR,
+    MessageRichMessage.CONSTRUCTOR,
     MessageAnimatedEmoji.CONSTRUCTOR,
     MessageDocument.CONSTRUCTOR,
     MessageVoiceNote.CONSTRUCTOR,
-    MessageAudio.CONSTRUCTOR -> false
+    MessageAudio.CONSTRUCTOR ->
+      false
     else -> {
-      assertMessageContent_baa076bf()
+      assertMessageContent_bb294b24()
       false
     }
   }
@@ -698,12 +721,14 @@ fun InputMessageContent?.showCaptionAboveMedia (): Boolean {
     InputMessagePhoto.CONSTRUCTOR -> (this as InputMessagePhoto).showCaptionAboveMedia
     InputMessageVideo.CONSTRUCTOR -> (this as InputMessageVideo).showCaptionAboveMedia
     InputMessageText.CONSTRUCTOR,
+    InputMessageRichMessage.CONSTRUCTOR,
     InputMessageAudio.CONSTRUCTOR,
     InputMessageDocument.CONSTRUCTOR,
     InputMessageSticker.CONSTRUCTOR,
     InputMessageVideoNote.CONSTRUCTOR,
     InputMessageVoiceNote.CONSTRUCTOR,
     InputMessageLocation.CONSTRUCTOR,
+    InputMessageLiveLocation.CONSTRUCTOR,
     InputMessageVenue.CONSTRUCTOR,
     InputMessageContact.CONSTRUCTOR,
     InputMessageDice.CONSTRUCTOR,
@@ -715,7 +740,7 @@ fun InputMessageContent?.showCaptionAboveMedia (): Boolean {
     InputMessageStakeDice.CONSTRUCTOR ->
       false
     else -> {
-      assertInputMessageContent_eb9f33ef()
+      assertInputMessageContent_7c412303()
       false
     }
   }
@@ -846,9 +871,17 @@ fun Message?.matchesFilter(filter: SearchMessagesFilter?): Boolean {
   }
 }
 
-fun RichText.findReference(name: String): RichText? {
+fun RichText?.findReference(name: String): RichText? {
+  if (this == null) {
+    return null
+  }
   return when (this.constructor) {
-    RichTextPlain.CONSTRUCTOR, RichTextIcon.CONSTRUCTOR, RichTextAnchor.CONSTRUCTOR -> null
+    RichTextPlain.CONSTRUCTOR,
+    RichTextIcon.CONSTRUCTOR,
+    RichTextCustomEmoji.CONSTRUCTOR,
+    RichTextMathematicalExpression.CONSTRUCTOR,
+    RichTextAnchor.CONSTRUCTOR ->
+      null
     RichTexts.CONSTRUCTOR -> {
       val texts = this as RichTexts
       if (texts.texts.size == 2 && texts.texts[0].constructor == RichTextAnchor.CONSTRUCTOR && (texts.texts[0] as RichTextAnchor).name == name) {
@@ -875,8 +908,17 @@ fun RichText.findReference(name: String): RichText? {
     RichTextMarked.CONSTRUCTOR -> (this as RichTextMarked).text.findReference(name)
     RichTextPhoneNumber.CONSTRUCTOR -> (this as RichTextPhoneNumber).text.findReference(name)
     RichTextReference.CONSTRUCTOR -> (this as RichTextReference).text.findReference(name)
+    RichTextBankCardNumber.CONSTRUCTOR -> (this as RichTextBankCardNumber).text.findReference(name)
+    RichTextBotCommand.CONSTRUCTOR -> (this as RichTextBotCommand).text.findReference(name)
+    RichTextCashtag.CONSTRUCTOR -> (this as RichTextCashtag).text.findReference(name)
+    RichTextDateTime.CONSTRUCTOR -> (this as RichTextDateTime).text.findReference(name)
+    RichTextHashtag.CONSTRUCTOR -> (this as RichTextHashtag).text.findReference(name)
+    RichTextMention.CONSTRUCTOR -> (this as RichTextMention).text.findReference(name)
+    RichTextMentionName.CONSTRUCTOR -> (this as RichTextMentionName).text.findReference(name)
+    RichTextReferenceLink.CONSTRUCTOR -> (this as RichTextReferenceLink).text.findReference(name)
+    RichTextSpoiler.CONSTRUCTOR -> (this as RichTextSpoiler).text.findReference(name)
     else -> {
-      assertRichText_58eb3f54()
+      assertRichText_1c4c4279()
       throw unsupported(this)
     }
   }
@@ -884,7 +926,11 @@ fun RichText.findReference(name: String): RichText? {
 
 fun PageBlock.findReference(name: String): RichText? {
   return when (this.constructor) {
-    PageBlockAnchor.CONSTRUCTOR, PageBlockChatLink.CONSTRUCTOR, PageBlockDivider.CONSTRUCTOR -> null
+    PageBlockAnchor.CONSTRUCTOR,
+    PageBlockChatLink.CONSTRUCTOR,
+    PageBlockMathematicalExpression.CONSTRUCTOR,
+    PageBlockDivider.CONSTRUCTOR ->
+      null
     PageBlockCover.CONSTRUCTOR -> {
       (this as PageBlockCover).cover.findReference(name)
     }
@@ -920,35 +966,40 @@ fun PageBlock.findReference(name: String): RichText? {
     }
     PageBlockAnimation.CONSTRUCTOR -> {
       val caption = (this as PageBlockAnimation).caption
-      caption.text.findReference(name) ?: caption.credit.findReference(name)
+      caption?.text.findReference(name) ?: caption?.credit.findReference(name)
     }
     PageBlockAudio.CONSTRUCTOR -> {
       val caption = (this as PageBlockAudio).caption
-      caption.text.findReference(name) ?: caption.credit.findReference(name)
+      caption?.text.findReference(name) ?: caption?.credit.findReference(name)
     }
     PageBlockVideo.CONSTRUCTOR -> {
       val caption = (this as PageBlockVideo).caption
-      caption.text.findReference(name) ?: caption.credit.findReference(name)
+      caption?.text.findReference(name) ?: caption?.credit.findReference(name)
     }
     PageBlockMap.CONSTRUCTOR -> {
       val caption = (this as PageBlockMap).caption
-      caption.text.findReference(name) ?: caption.credit.findReference(name)
+      caption?.text.findReference(name) ?: caption?.credit.findReference(name)
     }
     PageBlockPhoto.CONSTRUCTOR -> {
       val caption = (this as PageBlockPhoto).caption
-      caption.text.findReference(name) ?: caption.credit.findReference(name)
+      caption?.text.findReference(name) ?: caption?.credit.findReference(name)
     }
     PageBlockVoiceNote.CONSTRUCTOR -> {
       val caption = (this as PageBlockVoiceNote).caption
-      caption.text.findReference(name) ?: caption.credit.findReference(name)
+      caption?.text.findReference(name) ?: caption?.credit.findReference(name)
     }
     PageBlockEmbedded.CONSTRUCTOR -> {
       val caption = (this as PageBlockEmbedded).caption
-      caption.text.findReference(name) ?: caption.credit.findReference(name)
+      caption?.text.findReference(name) ?: caption?.credit.findReference(name)
     }
     PageBlockBlockQuote.CONSTRUCTOR -> {
       val quote = this as PageBlockBlockQuote
-      quote.text.findReference(name) ?: quote.credit.findReference(name)
+      for (pageBlock in quote.blocks) {
+        val reference = pageBlock.findReference(name)
+        if (reference != null)
+          return reference
+      }
+      quote.credit.findReference(name)
     }
     PageBlockPullQuote.CONSTRUCTOR -> {
       val quote = this as PageBlockPullQuote
@@ -956,26 +1007,26 @@ fun PageBlock.findReference(name: String): RichText? {
     }
     PageBlockCollage.CONSTRUCTOR -> {
       val collage = this as PageBlockCollage
-      for (pageBlock in collage.pageBlocks) {
+      for (pageBlock in collage.blocks) {
         val reference = pageBlock.findReference(name)
         if (reference != null)
           return reference
       }
-      collage.caption.text.findReference(name) ?: collage.caption.credit.findReference(name)
+      collage.caption?.text.findReference(name) ?: collage.caption?.credit.findReference(name)
     }
     PageBlockSlideshow.CONSTRUCTOR -> {
       val slideshow = this as PageBlockSlideshow
-      for (pageBlock in slideshow.pageBlocks) {
+      for (pageBlock in slideshow.blocks) {
         val reference = pageBlock.findReference(name)
         if (reference != null)
           return reference
       }
-      slideshow.caption.text.findReference(name) ?: slideshow.caption.credit.findReference(name)
+      slideshow.caption?.text.findReference(name) ?: slideshow.caption?.credit.findReference(name)
     }
     PageBlockDetails.CONSTRUCTOR -> {
       val details = this as PageBlockDetails
       details.header.findReference(name) ?: let {
-        for (pageBlock in details.pageBlocks) {
+        for (pageBlock in details.blocks) {
           val reference = pageBlock.findReference(name)
           if (reference != null)
             return reference
@@ -985,16 +1036,16 @@ fun PageBlock.findReference(name: String): RichText? {
     }
     PageBlockEmbeddedPost.CONSTRUCTOR -> {
       val post = this as PageBlockEmbeddedPost
-      for (pageBlock in post.pageBlocks) {
+      for (pageBlock in post.blocks) {
         val reference = pageBlock.findReference(name)
         if (reference != null)
           return reference
       }
-      post.caption.text.findReference(name) ?: post.caption.credit.findReference(name)
+      post.caption?.text.findReference(name) ?: post.caption?.credit.findReference(name)
     }
     PageBlockList.CONSTRUCTOR -> {
       for (pageBlockListItem in (this as PageBlockList).items) {
-        for (pageBlock in pageBlockListItem.pageBlocks) {
+        for (pageBlock in pageBlockListItem.blocks) {
           val reference = pageBlock.findReference(name)
           if (reference != null)
             return reference
@@ -1013,8 +1064,16 @@ fun PageBlock.findReference(name: String): RichText? {
       }
       table.caption.findReference(name)
     }
+    PageBlockSectionHeading.CONSTRUCTOR -> {
+      require(this is PageBlockSectionHeading)
+      this.text.findReference(name)
+    }
+    PageBlockThinking.CONSTRUCTOR -> {
+      require(this is PageBlockThinking)
+      this.text.findReference(name)
+    }
     else -> {
-      assertPageBlock_b923b80b()
+      assertPageBlock_58d55262()
       throw unsupported(this)
     }
   }
@@ -1023,7 +1082,7 @@ fun PageBlock.findReference(name: String): RichText? {
 fun WebPageInstantView.findReference(name: String?): RichText? {
   if (name.isNullOrEmpty())
     return null
-  for (pageBlock in this.pageBlocks) {
+  for (pageBlock in this.blocks) {
     val reference = pageBlock.findReference(name)
     if (reference != null)
       return reference
@@ -1779,6 +1838,7 @@ fun MessageContent.isVideoNote (): Boolean = this.constructor == MessageVideoNot
 fun InputMessageContent.isVoiceNote (): Boolean = this.constructor == InputMessageVoiceNote.CONSTRUCTOR
 fun InputMessageContent.isVideoNote (): Boolean = this.constructor == InputMessageVideoNote.CONSTRUCTOR
 fun MessageContent.isText (): Boolean = this.constructor == MessageText.CONSTRUCTOR
+fun MessageContent.isRichMessage (): Boolean = this.constructor == MessageRichMessage.CONSTRUCTOR
 fun MessageContent.isDocument (): Boolean = this.constructor == MessageDocument.CONSTRUCTOR
 fun MessageContent.isAnimatedEmoji (): Boolean = this.constructor == MessageAnimatedEmoji.CONSTRUCTOR
 fun MessageContent.isDice (): Boolean = this.constructor == MessageDice.CONSTRUCTOR
@@ -1788,6 +1848,7 @@ fun MessageContent.isGame (): Boolean = this.constructor == MessageGame.CONSTRUC
 fun MessageContent.isAnimation (): Boolean = this.constructor == MessageAnimation.CONSTRUCTOR
 fun MessageContent.isPhoto (): Boolean = this.constructor == MessagePhoto.CONSTRUCTOR
 fun MessageContent.isLocation (): Boolean = this.constructor == MessageLocation.CONSTRUCTOR
+fun MessageContent.isLiveLocation (): Boolean = this.constructor == MessageLiveLocation.CONSTRUCTOR
 fun MessageContent.isProximityAlertTriggered (): Boolean = this.constructor == MessageProximityAlertTriggered.CONSTRUCTOR
 fun MessageContent.isCall (): Boolean = this.constructor == MessageCall.CONSTRUCTOR
 fun MessageContent.isPinned (): Boolean = this.constructor == MessagePinMessage.CONSTRUCTOR
