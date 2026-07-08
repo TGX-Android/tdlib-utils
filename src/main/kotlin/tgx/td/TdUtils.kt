@@ -2228,3 +2228,10 @@ fun ChatTheme?.themeName (): String = this?.let {
     }
   }
 } ?: ""
+
+fun DraftMessage?.textContent (): FormattedText? = this?.takeIf {
+  it.content.constructor == DraftMessageContentText.CONSTRUCTOR
+}?.content?.let {
+  require(it is DraftMessageContentText)
+  it.text
+}
