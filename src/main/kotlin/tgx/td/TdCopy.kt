@@ -289,6 +289,7 @@ fun Message.copyTo (dst: Message) {
     Message(
       this.id,
       this.senderId,
+      this.receiverId,
       this.chatId,
       this.sendingState,
       this.schedulingState,
@@ -299,7 +300,7 @@ fun Message.copyTo (dst: Message) {
       this.hasTimestampedMedia,
       this.isChannelPost,
       this.isPaidStarSuggestedPost,
-      this.isPaidTonSuggestedPost,
+      this.isPaidGramSuggestedPost,
       this.containsUnreadMention,
       this.containsUnreadPollVotes,
       this.date,
@@ -327,11 +328,13 @@ fun Message.copyTo (dst: Message) {
       this.restrictionInfo,
       this.summaryLanguageCode,
       this.content,
-      this.replyMarkup
+      this.replyMarkup,
+      this.ephemeralMessageId
     )
   }
   dst.id = this.id
   dst.senderId = this.senderId
+  dst.receiverId = this.receiverId
   dst.chatId = this.chatId
   dst.sendingState = this.sendingState
   dst.schedulingState = this.schedulingState
@@ -341,7 +344,7 @@ fun Message.copyTo (dst: Message) {
   dst.hasTimestampedMedia = this.hasTimestampedMedia
   dst.isChannelPost = this.isChannelPost
   dst.isPaidStarSuggestedPost = this.isPaidStarSuggestedPost
-  dst.isPaidTonSuggestedPost = this.isPaidTonSuggestedPost
+  dst.isPaidGramSuggestedPost = this.isPaidGramSuggestedPost
   dst.containsUnreadMention = this.containsUnreadMention
   dst.containsUnreadPollVotes = this.containsUnreadPollVotes
   dst.date = this.date
@@ -368,6 +371,7 @@ fun Message.copyTo (dst: Message) {
   dst.summaryLanguageCode = this.summaryLanguageCode
   dst.content = this.content
   dst.replyMarkup = this.replyMarkup
+  dst.ephemeralMessageId = this.ephemeralMessageId
 }
 
 fun LinkPreviewOptions?.copyTo (dst: LinkPreviewOptions) {
@@ -494,6 +498,7 @@ fun Message?.copyOf (): Message? {
     Message(
       this.id,
       this.senderId,
+      this.receiverId,
       this.chatId,
       this.sendingState,
       this.schedulingState,
@@ -504,7 +509,7 @@ fun Message?.copyOf (): Message? {
       this.hasTimestampedMedia,
       this.isChannelPost,
       this.isPaidStarSuggestedPost,
-      this.isPaidTonSuggestedPost,
+      this.isPaidGramSuggestedPost,
       this.containsUnreadMention,
       this.containsUnreadPollVotes,
       this.date,
@@ -532,7 +537,8 @@ fun Message?.copyOf (): Message? {
       this.restrictionInfo,
       this.summaryLanguageCode,
       this.content,
-      this.replyMarkup
+      this.replyMarkup,
+      this.ephemeralMessageId
     )
   }
 }

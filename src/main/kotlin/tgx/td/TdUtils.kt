@@ -615,6 +615,103 @@ fun MessageContent?.textOrCaption (): FormattedText? {
   }
 }
 
+fun InputPageBlock?.text (): RichText? {
+  return if (this != null) {
+    when (this.constructor) {
+      InputPageBlockSectionHeading.CONSTRUCTOR -> {
+        require(this is InputPageBlockSectionHeading)
+        this.text
+      }
+      InputPageBlockParagraph.CONSTRUCTOR -> {
+        require(this is InputPageBlockParagraph)
+        this.text
+      }
+      InputPageBlockPreformatted.CONSTRUCTOR -> {
+        require(this is InputPageBlockPreformatted)
+        this.text
+      }
+      InputPageBlockFooter.CONSTRUCTOR -> {
+        require(this is InputPageBlockFooter)
+        this.footer
+      }
+      InputPageBlockThinking.CONSTRUCTOR -> {
+        require(this is InputPageBlockThinking)
+        this.text
+      }
+      InputPageBlockDivider.CONSTRUCTOR -> {
+        require(this is InputPageBlockDivider)
+        null
+      }
+      InputPageBlockMathematicalExpression.CONSTRUCTOR -> {
+        require(this is InputPageBlockMathematicalExpression)
+        null
+      }
+      InputPageBlockAnchor.CONSTRUCTOR -> {
+        require(this is InputPageBlockAnchor)
+        null
+      }
+      InputPageBlockList.CONSTRUCTOR -> {
+        require(this is InputPageBlockList)
+        TODO()
+      }
+      InputPageBlockBlockQuote.CONSTRUCTOR -> {
+        require(this is InputPageBlockBlockQuote)
+        TODO()
+      }
+      InputPageBlockPullQuote.CONSTRUCTOR -> {
+        require(this is InputPageBlockPullQuote)
+        this.text
+      }
+      InputPageBlockAnimation.CONSTRUCTOR -> {
+        require(this is InputPageBlockAnimation)
+        this.caption?.text
+      }
+      InputPageBlockAudio.CONSTRUCTOR -> {
+        require(this is InputPageBlockAudio)
+        this.caption?.text
+      }
+      InputPageBlockPhoto.CONSTRUCTOR -> {
+        require(this is InputPageBlockPhoto)
+        this.caption?.text
+      }
+      InputPageBlockVideo.CONSTRUCTOR -> {
+        require(this is InputPageBlockVideo)
+        this.caption?.text
+      }
+      InputPageBlockVoiceNote.CONSTRUCTOR -> {
+        require(this is InputPageBlockVoiceNote)
+        this.caption?.text
+      }
+      InputPageBlockCollage.CONSTRUCTOR -> {
+        require(this is InputPageBlockCollage)
+        this.caption?.text
+      }
+      InputPageBlockSlideshow.CONSTRUCTOR -> {
+        require(this is InputPageBlockSlideshow)
+        this.caption?.text
+      }
+      InputPageBlockTable.CONSTRUCTOR -> {
+        require(this is InputPageBlockTable)
+        this.caption
+      }
+      InputPageBlockDetails.CONSTRUCTOR -> {
+        require(this is InputPageBlockDetails)
+        this.header
+      }
+      InputPageBlockMap.CONSTRUCTOR -> {
+        require(this is InputPageBlockMap)
+        this.caption?.text
+      }
+      else -> {
+        assertInputPageBlock_51b7ddf5()
+        throw unsupported(this)
+      }
+    }
+  } else {
+    null
+  }
+}
+
 fun InputMessageContent?.textOrCaption (): FormattedText? {
   return if (this != null) {
     when (this.constructor) {
@@ -634,8 +731,21 @@ fun InputMessageContent?.textOrCaption (): FormattedText? {
               require(it is RichMessageSourceHtml)
               FormattedText(it.text, arrayOf())
             }
+            RichMessageSourceBlocks.CONSTRUCTOR -> {
+              require(it is RichMessageSourceBlocks)
+              it.blocks.firstOrNull()?.let { block ->
+                
+                when (block.constructor) {
+                  
+                  else -> {
+                    assertRichMessageSource_4a0690ed()
+                    throw unsupported(block)
+                  }
+                }
+              }
+            }
             else -> {
-              assertRichMessageSource_f6423d5b()
+              assertRichMessageSource_4a0690ed()
               throw unsupported(it)
             }
           }
@@ -708,7 +818,7 @@ fun MessageContent?.showCaptionAboveMedia (): Boolean {
     MessageAudio.CONSTRUCTOR ->
       false
     else -> {
-      assertMessageContent_bb294b24()
+      assertMessageContent_a80283cf()
       false
     }
   }
@@ -895,6 +1005,10 @@ fun RichText?.findReference(name: String): RichText? {
         null
       }
     }
+    RichTextDiff.CONSTRUCTOR -> {
+      require(this is RichTextDiff)
+      this.oldText.findReference(name) ?: this.text.findReference(name)
+    }
     RichTextAnchorLink.CONSTRUCTOR -> (this as RichTextAnchorLink).text.findReference(name)
     RichTextBold.CONSTRUCTOR -> (this as RichTextBold).text.findReference(name)
     RichTextItalic.CONSTRUCTOR -> (this as RichTextItalic).text.findReference(name)
@@ -918,7 +1032,7 @@ fun RichText?.findReference(name: String): RichText? {
     RichTextReferenceLink.CONSTRUCTOR -> (this as RichTextReferenceLink).text.findReference(name)
     RichTextSpoiler.CONSTRUCTOR -> (this as RichTextSpoiler).text.findReference(name)
     else -> {
-      assertRichText_1c4c4279()
+      assertRichText_d57ed958()
       throw unsupported(this)
     }
   }

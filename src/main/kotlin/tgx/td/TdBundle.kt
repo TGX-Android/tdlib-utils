@@ -537,17 +537,17 @@ fun Bundle.put (prefix: String, what: SuggestedPostPrice?) {
         }
         putLong(prefix + "_starCount", what.starCount)
       }
-      SuggestedPostPriceTon.CONSTRUCTOR -> {
-        require(what is SuggestedPostPriceTon)
+      SuggestedPostPriceGram.CONSTRUCTOR -> {
+        require(what is SuggestedPostPriceGram)
         if (COMPILE_CHECK) {
-          SuggestedPostPriceTon(
-            what.toncoinCentCount
+          SuggestedPostPriceGram(
+            what.gramCentCount
           )
         }
-        putLong(prefix + "_toncoinCentCount", what.toncoinCentCount)
+        putLong(prefix + "_gramCentCount", what.gramCentCount)
       }
       else -> {
-        assertSuggestedPostPrice_d4a0c0ea()
+        assertSuggestedPostPrice_e3fd9668()
         throw unsupported(what)
       }
     }
@@ -562,13 +562,13 @@ fun Bundle.restoreSuggestedPostPrice (prefix: String): SuggestedPostPrice? {
         getLong(prefix + "_starCount")
       )
     }
-    SuggestedPostPriceTon.CONSTRUCTOR -> {
-      SuggestedPostPriceTon(
-        getLong(prefix + "_toncoinCentCount")
+    SuggestedPostPriceGram.CONSTRUCTOR -> {
+      SuggestedPostPriceGram(
+        getLong(prefix + "_gramCentCount")
       )
     }
     else -> {
-      assertSuggestedPostPrice_d4a0c0ea()
+      assertSuggestedPostPrice_e3fd9668()
       null
     }
   }
@@ -647,8 +647,17 @@ fun Bundle.put (prefix: String, what: InputMessageReplyTo?) {
         putLong(prefix + "_chatId", what.storyPosterChatId)
         putInt(prefix + "_storyId", what.storyId)
       }
+      InputMessageReplyToEphemeralMessage.CONSTRUCTOR -> {
+        require(what is InputMessageReplyToEphemeralMessage)
+        if (COMPILE_CHECK) {
+          InputMessageReplyToEphemeralMessage(
+            what.ephemeralMessageId
+          )
+        }
+        putInt("${prefix}_ephemeralMessageId", what.ephemeralMessageId)
+      }
       else -> {
-        assertInputMessageReplyTo_acef6f3a()
+        assertInputMessageReplyTo_a271ad89()
         throw unsupported(what)
       }
     }
@@ -691,8 +700,16 @@ fun Bundle.restoreInputMessageReplyTo (prefix: String): InputMessageReplyTo? {
         null
       }
     }
+    InputMessageReplyToEphemeralMessage.CONSTRUCTOR -> {
+      val ephemeralMessageId = getInt("${prefix}_ephemeralMessageId")
+      if (ephemeralMessageId != 0) {
+        InputMessageReplyToEphemeralMessage(ephemeralMessageId)
+      } else {
+        null
+      }
+    }
     else -> {
-      assertInputMessageReplyTo_acef6f3a()
+      assertInputMessageReplyTo_a271ad89()
       null
     }
   }

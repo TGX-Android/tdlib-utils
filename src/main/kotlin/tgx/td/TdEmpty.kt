@@ -72,6 +72,10 @@ fun RichText?.isEmpty (): Boolean {
     RichTextMentionName.CONSTRUCTOR -> (this as RichTextMentionName).text.isEmpty()
     RichTextReferenceLink.CONSTRUCTOR -> (this as RichTextReferenceLink).text.isEmpty()
     RichTextSpoiler.CONSTRUCTOR -> (this as RichTextSpoiler).text.isEmpty()
+    RichTextDiff.CONSTRUCTOR -> {
+      require(this is RichTextDiff)
+      this.text.isEmpty() && this.oldText.isEmpty()
+    }
     RichTexts.CONSTRUCTOR -> {
       for (childText in (this as RichTexts).texts) {
         if (!childText.isEmpty()) return false
@@ -79,7 +83,7 @@ fun RichText?.isEmpty (): Boolean {
       true
     }
     else -> {
-      assertRichText_1c4c4279()
+      assertRichText_d57ed958()
       throw unsupported(this)
     }
   }
