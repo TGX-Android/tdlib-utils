@@ -1957,6 +1957,7 @@ fun MessageContent.isDocument (): Boolean = this.constructor == MessageDocument.
 fun MessageContent.isAnimatedEmoji (): Boolean = this.constructor == MessageAnimatedEmoji.CONSTRUCTOR
 fun MessageContent.isDice (): Boolean = this.constructor == MessageDice.CONSTRUCTOR
 fun MessageContent.isPoll (): Boolean = this.constructor == MessagePoll.CONSTRUCTOR
+fun MessageContent.isChecklist (): Boolean = this.constructor == MessageChecklist.CONSTRUCTOR
 fun MessageContent.isInvoice (): Boolean = this.constructor == MessageInvoice.CONSTRUCTOR
 fun MessageContent.isGame (): Boolean = this.constructor == MessageGame.CONSTRUCTOR
 fun MessageContent.isAnimation (): Boolean = this.constructor == MessageAnimation.CONSTRUCTOR
