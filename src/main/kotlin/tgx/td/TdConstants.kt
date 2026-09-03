@@ -75,5 +75,6 @@ const val TEXT_FORMAT_NEUTRAL = "neutral"
   false,
   false,
   true,
+  false,
   false
 )

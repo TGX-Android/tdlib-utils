@@ -389,6 +389,16 @@ fun Bundle.put (prefix: String, what: DraftMessageContent?) {
         put(prefix + "_text", what.text)
         put(prefix + "_linkPreviewOptions", what.linkPreviewOptions)
       }
+      DraftMessageContentInputRichMessage.CONSTRUCTOR -> {
+        require(what is DraftMessageContentInputRichMessage)
+        if (COMPILE_CHECK) {
+          DraftMessageContentInputRichMessage(
+            what.message
+          )
+        }
+        // TODO?
+        // put(prefix + "_message", what.message)
+      }
       DraftMessageContentRichMessage.CONSTRUCTOR -> {
         require(what is DraftMessageContentRichMessage)
         if (COMPILE_CHECK) {
@@ -422,7 +432,7 @@ fun Bundle.put (prefix: String, what: DraftMessageContent?) {
         put("${prefix}_selfDestructType", what.selfDestructType)
       }
       else -> {
-        assertDraftMessageContent_b637f166()
+        assertDraftMessageContent_f690069b()
         throw unsupported(what)
       }
     }
@@ -479,6 +489,7 @@ fun Bundle.restoreDraftMessageContent (prefix: String): DraftMessageContent? {
         null
       }
     }
+    DraftMessageContentInputRichMessage.CONSTRUCTOR,
     DraftMessageContentRichMessage.CONSTRUCTOR -> {
       // TODO?
       null
@@ -518,7 +529,7 @@ fun Bundle.restoreDraftMessageContent (prefix: String): DraftMessageContent? {
       }
     }
     else -> {
-      assertDraftMessageContent_b637f166()
+      assertDraftMessageContent_f690069b()
       null
     }
   }

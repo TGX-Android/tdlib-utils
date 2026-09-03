@@ -328,8 +328,10 @@ fun Message.copyTo (dst: Message) {
       this.restrictionInfo,
       this.summaryLanguageCode,
       this.content,
+      this.ephemeralContent,
       this.replyMarkup,
-      this.ephemeralMessageId
+      this.ephemeralMessageId,
+      this.chatInstance
     )
   }
   dst.id = this.id
@@ -370,8 +372,10 @@ fun Message.copyTo (dst: Message) {
   dst.restrictionInfo = this.restrictionInfo
   dst.summaryLanguageCode = this.summaryLanguageCode
   dst.content = this.content
+  dst.ephemeralContent = this.ephemeralContent
   dst.replyMarkup = this.replyMarkup
   dst.ephemeralMessageId = this.ephemeralMessageId
+  dst.chatInstance = this.chatInstance
 }
 
 fun LinkPreviewOptions?.copyTo (dst: LinkPreviewOptions) {
@@ -537,8 +541,10 @@ fun Message?.copyOf (): Message? {
       this.restrictionInfo,
       this.summaryLanguageCode,
       this.content,
+      this.ephemeralContent,
       this.replyMarkup,
-      this.ephemeralMessageId
+      this.ephemeralMessageId,
+      this.chatInstance
     )
   }
 }
@@ -566,6 +572,7 @@ fun Chat?.copyOf (): Chat? {
       this.isMarkedAsUnread,
       this.viewAsTopics,
       this.hasScheduledMessages,
+      this.hasWelcomeMessages,
       this.canBeDeletedOnlyForSelf,
       this.canBeDeletedForAllUsers,
       this.canBeReported,
@@ -679,6 +686,7 @@ fun ChatAdministratorRights?.copyOf (): ChatAdministratorRights? {
       this.canDeleteStories,
       this.canManageDirectMessages,
       this.canManageTags,
+      this.canSendWelcomeMessages,
       this.isAnonymous
     )
   }

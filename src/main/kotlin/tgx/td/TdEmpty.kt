@@ -64,6 +64,7 @@ fun RichText?.isEmpty (): Boolean {
     RichTextUrl.CONSTRUCTOR -> (this as RichTextUrl).text.isEmpty()
     RichTextBankCardNumber.CONSTRUCTOR -> (this as RichTextBankCardNumber).text.isEmpty()
     RichTextBotCommand.CONSTRUCTOR -> (this as RichTextBotCommand).text.isEmpty()
+    RichTextButton.CONSTRUCTOR -> (this as RichTextButton).button.text.isEmpty()
     RichTextCashtag.CONSTRUCTOR -> (this as RichTextCashtag).text.isEmpty()
     RichTextDateTime.CONSTRUCTOR -> (this as RichTextDateTime).text.isEmpty()
     RichTextHashtag.CONSTRUCTOR -> (this as RichTextHashtag).text.isEmpty()
@@ -83,7 +84,7 @@ fun RichText?.isEmpty (): Boolean {
       true
     }
     else -> {
-      assertRichText_d57ed958()
+      assertRichText_caec3729()
       throw unsupported(this)
     }
   }
@@ -100,6 +101,29 @@ fun DraftMessage?.isEmpty (): Boolean {
         require(it is DraftMessageContentText)
         it.text.isEmpty()
       }
+      DraftMessageContentInputRichMessage.CONSTRUCTOR -> {
+        require(it is DraftMessageContentInputRichMessage)
+        it.message.source.let {
+          when (it.constructor) {
+            RichMessageSourceBlocks.CONSTRUCTOR -> {
+              require(it is RichMessageSourceBlocks)
+              it.blocks.isNullOrEmpty()
+            }
+            RichMessageSourceHtml.CONSTRUCTOR -> {
+              require(it is RichMessageSourceHtml)
+              it.text.isNullOrEmpty()
+            }
+            RichMessageSourceMarkdown.CONSTRUCTOR -> {
+              require(it is RichMessageSourceMarkdown)
+              it.text.isNullOrEmpty()
+            }
+            else -> {
+              assertRichMessageSource_4a0690ed()
+              throw unsupported(it)
+            }
+          }
+        }
+      }
       DraftMessageContentRichMessage.CONSTRUCTOR -> {
         require(it is DraftMessageContentRichMessage)
         it.message.blocks.isNullOrEmpty()
@@ -113,7 +137,7 @@ fun DraftMessage?.isEmpty (): Boolean {
         it.filePath.isEmpty()
       }
       else -> {
-        assertDraftMessageContent_b637f166()
+        assertDraftMessageContent_f690069b()
         throw unsupported(this.content)
       }
     }

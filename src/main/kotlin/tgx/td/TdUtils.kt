@@ -615,6 +615,11 @@ fun MessageContent?.textOrCaption (): FormattedText? {
   }
 }
 
+@OptIn(ExperimentalContracts::class)
+fun PageBlockCaption.textOrCredit (): RichText? =
+  this.text.takeIf { !it.isEmpty() } ?: this.credit
+
+@OptIn(ExperimentalContracts::class)
 fun InputPageBlock?.text (): RichText? {
   return if (this != null) {
     when (this.constructor) {
@@ -664,31 +669,31 @@ fun InputPageBlock?.text (): RichText? {
       }
       InputPageBlockAnimation.CONSTRUCTOR -> {
         require(this is InputPageBlockAnimation)
-        this.caption?.text
+        this.caption?.textOrCredit()
       }
       InputPageBlockAudio.CONSTRUCTOR -> {
         require(this is InputPageBlockAudio)
-        this.caption?.text
+        this.caption?.textOrCredit()
       }
       InputPageBlockPhoto.CONSTRUCTOR -> {
         require(this is InputPageBlockPhoto)
-        this.caption?.text
+        this.caption?.textOrCredit()
       }
       InputPageBlockVideo.CONSTRUCTOR -> {
         require(this is InputPageBlockVideo)
-        this.caption?.text
+        this.caption?.textOrCredit()
       }
       InputPageBlockVoiceNote.CONSTRUCTOR -> {
         require(this is InputPageBlockVoiceNote)
-        this.caption?.text
+        this.caption?.textOrCredit()
       }
       InputPageBlockCollage.CONSTRUCTOR -> {
         require(this is InputPageBlockCollage)
-        this.caption?.text
+        this.caption?.textOrCredit()
       }
       InputPageBlockSlideshow.CONSTRUCTOR -> {
         require(this is InputPageBlockSlideshow)
-        this.caption?.text
+        this.caption?.textOrCredit()
       }
       InputPageBlockTable.CONSTRUCTOR -> {
         require(this is InputPageBlockTable)
@@ -700,10 +705,24 @@ fun InputPageBlock?.text (): RichText? {
       }
       InputPageBlockMap.CONSTRUCTOR -> {
         require(this is InputPageBlockMap)
-        this.caption?.text
+        this.caption?.textOrCredit()
+      }
+      InputPageBlockButtonRow.CONSTRUCTOR -> {
+        require(this is InputPageBlockButtonRow)
+        RichTexts(this.buttons.map {
+          it.text
+        }.toTypedArray())
+      }
+      InputPageBlockDocument.CONSTRUCTOR -> {
+        require(this is InputPageBlockDocument)
+        this.caption?.textOrCredit()
+      }
+      InputPageBlockExpandableBlockQuote.CONSTRUCTOR -> {
+        require(this is InputPageBlockExpandableBlockQuote)
+        this.text.takeIf { !it.isEmpty() } ?: this.credit
       }
       else -> {
-        assertInputPageBlock_51b7ddf5()
+        assertInputPageBlock_4e0f453e()
         throw unsupported(this)
       }
     }
@@ -818,7 +837,7 @@ fun MessageContent?.showCaptionAboveMedia (): Boolean {
     MessageAudio.CONSTRUCTOR ->
       false
     else -> {
-      assertMessageContent_a80283cf()
+      assertMessageContent_af730a78()
       false
     }
   }
@@ -997,12 +1016,9 @@ fun RichText?.findReference(name: String): RichText? {
       if (texts.texts.size == 2 && texts.texts[0].constructor == RichTextAnchor.CONSTRUCTOR && (texts.texts[0] as RichTextAnchor).name == name) {
         texts.texts[1]
       } else {
-        for (text in texts.texts) {
-          val found = text.findReference(name)
-          if (found != null)
-            return found
+        texts.texts.firstNotNullOfOrNull { text ->
+          text.findReference(name)
         }
-        null
       }
     }
     RichTextDiff.CONSTRUCTOR -> {
@@ -1024,6 +1040,7 @@ fun RichText?.findReference(name: String): RichText? {
     RichTextReference.CONSTRUCTOR -> (this as RichTextReference).text.findReference(name)
     RichTextBankCardNumber.CONSTRUCTOR -> (this as RichTextBankCardNumber).text.findReference(name)
     RichTextBotCommand.CONSTRUCTOR -> (this as RichTextBotCommand).text.findReference(name)
+    RichTextButton.CONSTRUCTOR -> (this as RichTextButton).button.text.findReference(name)
     RichTextCashtag.CONSTRUCTOR -> (this as RichTextCashtag).text.findReference(name)
     RichTextDateTime.CONSTRUCTOR -> (this as RichTextDateTime).text.findReference(name)
     RichTextHashtag.CONSTRUCTOR -> (this as RichTextHashtag).text.findReference(name)
@@ -1032,7 +1049,7 @@ fun RichText?.findReference(name: String): RichText? {
     RichTextReferenceLink.CONSTRUCTOR -> (this as RichTextReferenceLink).text.findReference(name)
     RichTextSpoiler.CONSTRUCTOR -> (this as RichTextSpoiler).text.findReference(name)
     else -> {
-      assertRichText_d57ed958()
+      assertRichText_caec3729()
       throw unsupported(this)
     }
   }
@@ -1107,76 +1124,54 @@ fun PageBlock.findReference(name: String): RichText? {
       caption?.text.findReference(name) ?: caption?.credit.findReference(name)
     }
     PageBlockBlockQuote.CONSTRUCTOR -> {
-      val quote = this as PageBlockBlockQuote
-      for (pageBlock in quote.blocks) {
-        val reference = pageBlock.findReference(name)
-        if (reference != null)
-          return reference
-      }
-      quote.credit.findReference(name)
+      require(this is PageBlockBlockQuote)
+      this.blocks.firstNotNullOfOrNull { block ->
+        block.findReference(name)
+      } ?: this.credit.findReference(name)
     }
     PageBlockPullQuote.CONSTRUCTOR -> {
       val quote = this as PageBlockPullQuote
       quote.text.findReference(name) ?: quote.credit.findReference(name)
     }
     PageBlockCollage.CONSTRUCTOR -> {
-      val collage = this as PageBlockCollage
-      for (pageBlock in collage.blocks) {
-        val reference = pageBlock.findReference(name)
-        if (reference != null)
-          return reference
-      }
-      collage.caption?.text.findReference(name) ?: collage.caption?.credit.findReference(name)
+      require(this is PageBlockCollage)
+      this.blocks.firstNotNullOfOrNull { block ->
+        block.findReference(name)
+      } ?: this.caption?.textOrCredit()
     }
     PageBlockSlideshow.CONSTRUCTOR -> {
-      val slideshow = this as PageBlockSlideshow
-      for (pageBlock in slideshow.blocks) {
-        val reference = pageBlock.findReference(name)
-        if (reference != null)
-          return reference
-      }
-      slideshow.caption?.text.findReference(name) ?: slideshow.caption?.credit.findReference(name)
+      require(this is PageBlockSlideshow)
+      this.blocks.firstNotNullOfOrNull { block ->
+        block.findReference(name)
+      } ?: this.caption?.textOrCredit()
     }
     PageBlockDetails.CONSTRUCTOR -> {
-      val details = this as PageBlockDetails
-      details.header.findReference(name) ?: let {
-        for (pageBlock in details.blocks) {
-          val reference = pageBlock.findReference(name)
-          if (reference != null)
-            return reference
-        }
-        null
+      require(this is PageBlockDetails)
+      this.header.findReference(name) ?: this.blocks.firstNotNullOfOrNull { block ->
+        block.findReference(name)
       }
     }
     PageBlockEmbeddedPost.CONSTRUCTOR -> {
-      val post = this as PageBlockEmbeddedPost
-      for (pageBlock in post.blocks) {
-        val reference = pageBlock.findReference(name)
-        if (reference != null)
-          return reference
-      }
-      post.caption?.text.findReference(name) ?: post.caption?.credit.findReference(name)
+      require(this is PageBlockEmbeddedPost)
+      this.blocks.firstNotNullOfOrNull { block ->
+        block.findReference(name)
+      } ?: this.caption?.text.findReference(name) ?: this.caption?.credit.findReference(name)
     }
     PageBlockList.CONSTRUCTOR -> {
-      for (pageBlockListItem in (this as PageBlockList).items) {
-        for (pageBlock in pageBlockListItem.blocks) {
-          val reference = pageBlock.findReference(name)
-          if (reference != null)
-            return reference
+      require(this is PageBlockList)
+      this.items.firstNotNullOfOrNull { listItem ->
+        listItem.blocks.firstNotNullOfOrNull { block ->
+          block.findReference(name)
         }
       }
-      null
     }
     PageBlockTable.CONSTRUCTOR -> {
-      val table = this as PageBlockTable
-      for (row in table.cells) {
-        for (cell in row) {
-          val reference = cell.text?.findReference(name)
-          if (reference != null)
-            return reference
+      require(this is PageBlockTable)
+      this.cells.firstNotNullOfOrNull { row ->
+        row.firstNotNullOfOrNull { cell ->
+          cell.text?.findReference(name)
         }
-      }
-      table.caption.findReference(name)
+      } ?: this.caption.findReference(name)
     }
     PageBlockSectionHeading.CONSTRUCTOR -> {
       require(this is PageBlockSectionHeading)
@@ -1186,8 +1181,26 @@ fun PageBlock.findReference(name: String): RichText? {
       require(this is PageBlockThinking)
       this.text.findReference(name)
     }
+    PageBlockButtonRow.CONSTRUCTOR -> {
+      require(this is PageBlockButtonRow)
+      this.buttons.firstNotNullOfOrNull { button ->
+        button.text.findReference(name)
+      }
+    }
+    PageBlockDocument.CONSTRUCTOR -> {
+      require(this is PageBlockDocument)
+      this.caption?.textOrCredit()
+    }
+    PageBlockExpandableBlockQuote.CONSTRUCTOR -> {
+      require(this is PageBlockExpandableBlockQuote)
+      this.text.findReference(name) ?:
+      this.credit.findReference(name)
+    }
+    PageBlockUnsupported.CONSTRUCTOR -> {
+      null
+    }
     else -> {
-      assertPageBlock_58d55262()
+      assertPageBlock_4c80c997()
       throw unsupported(this)
     }
   }
@@ -2037,6 +2050,7 @@ fun ChatMemberStatus.requiresSupergroupUpgrade(): Boolean {
             false,
             false,
             false,
+          false,
             false
           )
       }
@@ -2078,6 +2092,7 @@ fun ChatAdministratorRights?.setAllAdministratorRights (value: Boolean) {
         false,
         false,
         false,
+        false,
         false
       )
     }
@@ -2097,6 +2112,7 @@ fun ChatAdministratorRights?.setAllAdministratorRights (value: Boolean) {
     this.canDeleteStories = value
     this.canManageDirectMessages = value
     this.canManageTags = value
+    this.canSendWelcomeMessages = value
     this.isAnonymous = value
   }
 }
@@ -2109,6 +2125,7 @@ fun ChatMemberStatusAdministrator.isEmpty (rights: ChatPermissions? = null): Boo
 fun ChatAdministratorRights.isEmpty (rights: ChatPermissions? = null): Boolean {
   if (COMPILE_CHECK) {
     ChatAdministratorRights(
+      false,
       false,
       false,
       false,
@@ -2144,12 +2161,14 @@ fun ChatAdministratorRights.isEmpty (rights: ChatPermissions? = null): Boolean {
     !this.canDeleteStories &&
     !this.canManageDirectMessages &&
     !this.canManageTags &&
+    !this.canSendWelcomeMessages &&
     !this.isAnonymous
 }
 
 fun ChatAdministratorRights.limitRights(limit: ChatAdministratorRights) {
   if (COMPILE_CHECK) {
     ChatAdministratorRights(
+      false,
       false,
       false,
       false,
@@ -2185,6 +2204,7 @@ fun ChatAdministratorRights.limitRights(limit: ChatAdministratorRights) {
   this.canDeleteStories = this.canDeleteStories && limit.canDeleteStories
   this.canManageDirectMessages = this.canManageDirectMessages && limit.canManageDirectMessages
   this.canManageTags = this.canManageTags && limit.canManageTags
+  this.canSendWelcomeMessages = this.canSendWelcomeMessages && limit.canSendWelcomeMessages
   this.isAnonymous = this.isAnonymous && limit.isAnonymous
 }
 
