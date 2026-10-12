@@ -837,7 +837,7 @@ fun MessageContent?.showCaptionAboveMedia (): Boolean {
     MessageAudio.CONSTRUCTOR ->
       false
     else -> {
-      assertMessageContent_af730a78()
+      assertMessageContent_f7758f8b()
       false
     }
   }
@@ -1048,8 +1048,9 @@ fun RichText?.findReference(name: String): RichText? {
     RichTextMentionName.CONSTRUCTOR -> (this as RichTextMentionName).text.findReference(name)
     RichTextReferenceLink.CONSTRUCTOR -> (this as RichTextReferenceLink).text.findReference(name)
     RichTextSpoiler.CONSTRUCTOR -> (this as RichTextSpoiler).text.findReference(name)
+    RichTextTonAddress.CONSTRUCTOR -> (this as RichTextTonAddress).text.findReference(name)
     else -> {
-      assertRichText_caec3729()
+      assertRichText_801eae96()
       throw unsupported(this)
     }
   }
@@ -1619,11 +1620,13 @@ fun PushMessageContent.getText (): String? {
     PushMessageContentInviteVideoChatParticipants.CONSTRUCTOR,
     PushMessageContentProximityAlertTriggered.CONSTRUCTOR,
     PushMessageContentVideoChatEnded.CONSTRUCTOR,
+    PushMessageContentTonConnectRequest.CONSTRUCTOR,
+    PushMessageContentTonWalletTransfer.CONSTRUCTOR,
     PushMessageContentVideoChatStarted.CONSTRUCTOR ->
       null
     // unsupported
     else -> {
-      assertPushMessageContent_fd03564b()
+      assertPushMessageContent_497d2f0c()
       throw unsupported(this)
     }
   }
@@ -1698,12 +1701,14 @@ fun PushMessageContent.isPinned (): Boolean = when (this.constructor) {
   PushMessageContentVideoChatEnded.CONSTRUCTOR,
   PushMessageContentVideoChatStarted.CONSTRUCTOR,
   PushMessageContentChecklistTasksDone.CONSTRUCTOR,
-  PushMessageContentPollOptionAdded.CONSTRUCTOR ->
+  PushMessageContentPollOptionAdded.CONSTRUCTOR,
+  PushMessageContentTonConnectRequest.CONSTRUCTOR,
+  PushMessageContentTonWalletTransfer.CONSTRUCTOR ->
     false
 
   // unsupported
   else -> {
-    assertPushMessageContent_fd03564b()
+    assertPushMessageContent_497d2f0c()
     throw unsupported(this)
   }
 }
@@ -1911,6 +1916,7 @@ fun TextEntityType.isUrl (): Boolean = this.constructor == TextEntityTypeUrl.CON
 fun TextEntityType.isTextUrl (): Boolean = this.constructor == TextEntityTypeTextUrl.CONSTRUCTOR
 fun TextEntityType.isEmailAddress (): Boolean = this.constructor == TextEntityTypeEmailAddress.CONSTRUCTOR
 fun TextEntityType.isBankCardNumber (): Boolean = this.constructor == TextEntityTypeBankCardNumber.CONSTRUCTOR
+fun TextEntityType.isTonAddress (): Boolean = this.constructor == TextEntityTypeTonAddress.CONSTRUCTOR
 fun TextEntityType.isBotCommand (): Boolean = this.constructor == TextEntityTypeBotCommand.CONSTRUCTOR
 fun TextEntityType.isHashtag (): Boolean = this.constructor == TextEntityTypeHashtag.CONSTRUCTOR
 fun TextEntityType.isMention (): Boolean = this.constructor == TextEntityTypeMention.CONSTRUCTOR
@@ -1951,10 +1957,11 @@ fun TextEntityType.canBeNested (): Boolean = when (this.constructor) {
   TextEntityTypeEmailAddress.CONSTRUCTOR,
   TextEntityTypePhoneNumber.CONSTRUCTOR,
   TextEntityTypeBankCardNumber.CONSTRUCTOR,
-  TextEntityTypeMediaTimestamp.CONSTRUCTOR -> true
+  TextEntityTypeMediaTimestamp.CONSTRUCTOR,
+  TextEntityTypeTonAddress.CONSTRUCTOR  -> true
   // Unsupported
   else -> {
-    assertTextEntityType_aefd8e69()
+    assertTextEntityType_b8214790()
     throw unsupported(this)
   }
 }

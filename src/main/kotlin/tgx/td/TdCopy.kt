@@ -237,6 +237,7 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
       this.canReportReactions,
       this.canReportSupergroupSpam,
       this.canSetFactCheck,
+      this.customEmojiIds,
       this.hasProtectedContentByCurrentUser,
       this.hasProtectedContentByOtherUser,
       this.needShowStatistics
@@ -278,6 +279,7 @@ fun MessageProperties.copyTo (dst: MessageProperties) {
   dst.canReportReactions = this.canReportReactions
   dst.canReportSupergroupSpam = this.canReportSupergroupSpam
   dst.canSetFactCheck = this.canSetFactCheck
+  dst.customEmojiIds = this.customEmojiIds
   dst.hasProtectedContentByCurrentUser = this.hasProtectedContentByCurrentUser
   dst.hasProtectedContentByOtherUser = this.hasProtectedContentByOtherUser
   dst.needShowStatistics = this.needShowStatistics
@@ -490,6 +492,7 @@ fun MessageProperties?.copyOf (): MessageProperties? {
       this.canReportReactions,
       this.canReportSupergroupSpam,
       this.canSetFactCheck,
+      this.customEmojiIds,
       this.hasProtectedContentByCurrentUser,
       this.hasProtectedContentByOtherUser,
       this.needShowStatistics
@@ -780,7 +783,8 @@ fun Usernames.copyOf (): Usernames = Usernames(
   this.activeUsernames.copyOf(),
   this.disabledUsernames.copyOf(),
   this.editableUsername,
-  this.collectibleUsernames.copyOf()
+  this.collectibleUsernames.copyOf(),
+  this.secondaryUsername
 )
 
 fun ChatFolder.copyOf (): ChatFolder = ChatFolder(

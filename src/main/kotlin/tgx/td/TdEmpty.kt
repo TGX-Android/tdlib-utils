@@ -45,8 +45,7 @@ fun RichText?.isEmpty (): Boolean {
   contract {
     returns(false) implies (this@isEmpty != null)
   }
-  if (this == null) return true
-  return when (this.constructor) {
+  return (this == null) || when (this.constructor) {
     RichTextPlain.CONSTRUCTOR -> (this as RichTextPlain).text.isNullOrEmpty()
     RichTextIcon.CONSTRUCTOR, RichTextAnchor.CONSTRUCTOR, RichTextCustomEmoji.CONSTRUCTOR -> false
     RichTextBold.CONSTRUCTOR -> (this as RichTextBold).text.isEmpty()
@@ -73,18 +72,21 @@ fun RichText?.isEmpty (): Boolean {
     RichTextMentionName.CONSTRUCTOR -> (this as RichTextMentionName).text.isEmpty()
     RichTextReferenceLink.CONSTRUCTOR -> (this as RichTextReferenceLink).text.isEmpty()
     RichTextSpoiler.CONSTRUCTOR -> (this as RichTextSpoiler).text.isEmpty()
+    RichTextTonAddress.CONSTRUCTOR -> (this as RichTextTonAddress).text.isEmpty()
     RichTextDiff.CONSTRUCTOR -> {
       require(this is RichTextDiff)
       this.text.isEmpty() && this.oldText.isEmpty()
     }
+
     RichTexts.CONSTRUCTOR -> {
       for (childText in (this as RichTexts).texts) {
         if (!childText.isEmpty()) return false
       }
       true
     }
+
     else -> {
-      assertRichText_caec3729()
+      assertRichText_801eae96()
       throw unsupported(this)
     }
   }
