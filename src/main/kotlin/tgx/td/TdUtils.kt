@@ -1701,6 +1701,7 @@ fun PushMessageContent.isPinned (): Boolean = when (this.constructor) {
   PushMessageContentVideoChatEnded.CONSTRUCTOR,
   PushMessageContentVideoChatStarted.CONSTRUCTOR,
   PushMessageContentChecklistTasksDone.CONSTRUCTOR,
+  PushMessageContentChecklistTasksAdded.CONSTRUCTOR,
   PushMessageContentPollOptionAdded.CONSTRUCTOR,
   PushMessageContentTonConnectRequest.CONSTRUCTOR,
   PushMessageContentTonWalletTransfer.CONSTRUCTOR ->
