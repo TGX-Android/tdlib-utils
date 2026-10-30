@@ -456,6 +456,10 @@ fun assertEmojiCategoryType_710c6ccb (): EmojiCategoryType? = null
 // UpgradedGift
 fun assertEmojiStatusType_acfd58c8 (): EmojiStatusType? = null
 
+// CustomEmoji
+// Regular
+fun assertEmojiType_3b2c0760 (): EmojiType? = null
+
 // Animation
 // Audio
 // Document
@@ -719,6 +723,10 @@ fun assertInputPollMedia_ad2f2872 (): InputPollMedia? = null
 // Quiz
 // Regular
 fun assertInputPollType_6b046268 (): InputPollType? = null
+
+// Emoji
+// UpgradedGift
+fun assertInputProfileShareTheme_d748eff (): InputProfileShareTheme? = null
 
 // FoundVenue
 // Link
@@ -987,6 +995,7 @@ fun assertMaskPoint_40914d4e (): MaskPoint? = null
 // MessageText
 // MessageTonConnectRequest
 // MessageTonWalletTransfer
+// MessageUnpaidMessagesAllowedByLink
 // MessageUnsupported
 // MessageUpgradedGift
 // MessageUpgradedGiftPurchaseOffer
@@ -1001,7 +1010,7 @@ fun assertMaskPoint_40914d4e (): MaskPoint? = null
 // MessageVoiceNote
 // MessageWebAppDataReceived
 // MessageWebAppDataSent
-fun assertMessageContent_f7758f8b (): MessageContent? = null
+fun assertMessageContent_cc875c63 (): MessageContent? = null
 
 // EmojiReaction
 // PremiumSticker
@@ -1313,6 +1322,10 @@ fun assertPremiumSource_daf37913 (): PremiumSource? = null
 // VideoQuality
 fun assertPremiumStoryFeature_17d0292c (): PremiumStoryFeature? = null
 
+// Emoji
+// UpgradedGift
+fun assertProfileShareTheme_6d0eeaa3 (): ProfileShareTheme? = null
+
 // Files
 // Gifs
 // Gifts
@@ -1326,7 +1339,8 @@ fun assertProfileTab_ebfdc642 (): ProfileTab? = null
 // Http
 // Mtproto
 // Socks5
-fun assertProxyType_bc1a1076 (): ProxyType? = null
+// Web
+fun assertProxyType_40673e07 (): ProxyType? = null
 
 // HasUsername
 // IsLocationBased
@@ -1858,8 +1872,9 @@ fun assertTonWalletTransactionState_738e0461 (): TonWalletTransactionState? = nu
 // KeyChange
 // NftTransfer
 // OnRampDeposit
+// TelegramGiftTransfer
 // Transfer
-fun assertTonWalletTransactionType_3bfa7b12 (): TonWalletTransactionType? = null
+fun assertTonWalletTransactionType_766cf3b8 (): TonWalletTransactionType? = null
 
 // Address
 // User
@@ -2074,7 +2089,10 @@ fun assertTransactionDirection_1e845e35 (): TransactionDirection? = null
 // VideoPublished
 // WebAppMessageSent
 // WebBrowserSettings
-fun assertUpdate_c11d0a6d (): Update? = null
+// WebProxyCarrierClosed
+// WebProxyCarrierData
+// WebProxyCarrierOpened
+fun assertUpdate_2a2bec96 (): Update? = null
 
 // Backdrop
 // Model
@@ -2152,3 +2170,14 @@ fun assertWebAppOpenMode_b354c84f (): WebAppOpenMode? = null
 // External
 // InApp
 fun assertWebBrowserType_e5c60eca (): WebBrowserType? = null
+
+// LoadFailed
+// Paused
+// Refused
+// Terminated
+// Unsupported
+fun assertWebProxyCarrierError_438e4ecb (): WebProxyCarrierError? = null
+
+// Binary
+// Text
+fun assertWebProxyCarrierMessage_e2244822 (): WebProxyCarrierMessage? = null

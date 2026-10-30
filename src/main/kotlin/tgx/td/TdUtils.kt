@@ -837,7 +837,7 @@ fun MessageContent?.showCaptionAboveMedia (): Boolean {
     MessageAudio.CONSTRUCTOR ->
       false
     else -> {
-      assertMessageContent_f7758f8b()
+      assertMessageContent_cc875c63()
       false
     }
   }

@@ -344,7 +344,8 @@ fun Bundle.restoreInputTextQuote (prefix: String): InputTextQuote? {
   val text = restoreFormattedText(prefix + "_text")
   return if (!text.isEmpty()) {
     val position = getInt(prefix + "_position")
-    InputTextQuote(text, position)
+    // Quotes of rich messages, the only ones with richTexts, aren't saved
+    InputTextQuote(text, emptyArray(), position)
   } else {
     null
   }

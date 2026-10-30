@@ -1394,13 +1394,15 @@ fun TextQuote?.equalsTo(other: TextQuote?): Boolean = this.safeEqualsTo(other) {
   if (COMPILE_CHECK) {
     TextQuote(
       this.text,
+      this.richTexts,
       this.position,
       this.isManual
     )
   }
   this.position == b.position &&
   this.isManual == b.isManual &&
-  this.text.equalsTo(b.text)
+  this.text.equalsTo(b.text) &&
+  this.richTexts.equalsTo(b.richTexts)
 }
 
 fun ThemeSettings?.equalsTo(other: ThemeSettings?): Boolean = this.safeEqualsTo(other) { b ->
@@ -1474,6 +1476,7 @@ fun UpgradedGift?.equalsTo(other: UpgradedGift?): Boolean = this.safeEqualsTo(ot
       this.ownerAddress,
       this.ownerName,
       this.giftAddress,
+      this.canBeTonWalletCardBackground,
       this.model,
       this.symbol,
       this.backdrop,
@@ -1498,6 +1501,7 @@ fun UpgradedGift?.equalsTo(other: UpgradedGift?): Boolean = this.safeEqualsTo(ot
   this.isPremium == b.isPremium &&
   this.isThemeAvailable == b.isThemeAvailable &&
   this.usedThemeChatId == b.usedThemeChatId &&
+  this.canBeTonWalletCardBackground == b.canBeTonWalletCardBackground &&
   this.canSendPurchaseOffer == b.canSendPurchaseOffer &&
   this.craftProbabilityPerMille == b.craftProbabilityPerMille &&
   this.valueAmount == b.valueAmount &&
@@ -3679,12 +3683,14 @@ fun InternalLinkType?.equalsTo(other: InternalLinkType?): Boolean = this.safeEqu
         InternalLinkTypePublicChat(
           this.chatUsername,
           this.draftText,
-          this.openProfile
+          this.openProfile,
+          this.unpaidMessagesToken
         )
       }
       this.openProfile == b.openProfile &&
       this.chatUsername.equalsOrEmpty(b.chatUsername) &&
-      this.draftText.equalsOrEmpty(b.draftText)
+      this.draftText.equalsOrEmpty(b.draftText) &&
+      this.unpaidMessagesToken.equalsOrEmpty(b.unpaidMessagesToken)
     }
     InternalLinkTypeRequestManagedBot.CONSTRUCTOR -> {
       require(this is InternalLinkTypeRequestManagedBot && b is InternalLinkTypeRequestManagedBot)
@@ -3824,21 +3830,25 @@ fun InternalLinkType?.equalsTo(other: InternalLinkType?): Boolean = this.safeEqu
         InternalLinkTypeUserPhoneNumber(
           this.phoneNumber,
           this.draftText,
-          this.openProfile
+          this.openProfile,
+          this.unpaidMessagesToken
         )
       }
       this.openProfile == b.openProfile &&
       this.phoneNumber.equalsOrEmpty(b.phoneNumber) &&
-      this.draftText.equalsOrEmpty(b.draftText)
+      this.draftText.equalsOrEmpty(b.draftText) &&
+      this.unpaidMessagesToken.equalsOrEmpty(b.unpaidMessagesToken)
     }
     InternalLinkTypeUserToken.CONSTRUCTOR -> {
       require(this is InternalLinkTypeUserToken && b is InternalLinkTypeUserToken)
       if (COMPILE_CHECK) {
         InternalLinkTypeUserToken(
-          this.token
+          this.token,
+          this.unpaidMessagesToken
         )
       }
-      this.token.equalsOrEmpty(b.token)
+      this.token.equalsOrEmpty(b.token) &&
+      this.unpaidMessagesToken.equalsOrEmpty(b.unpaidMessagesToken)
     }
     InternalLinkTypeVideoChat.CONSTRUCTOR -> {
       require(this is InternalLinkTypeVideoChat && b is InternalLinkTypeVideoChat)
@@ -5103,8 +5113,19 @@ fun ProxyType?.equalsTo(other: ProxyType?): Boolean = this.safeEqualsTo(other) {
       this.username.equalsOrEmpty(b.username) &&
       this.password.equalsOrEmpty(b.password)
     }
+    ProxyTypeWeb.CONSTRUCTOR -> {
+      require(this is ProxyTypeWeb && b is ProxyTypeWeb)
+      if (COMPILE_CHECK) {
+        ProxyTypeWeb(
+          this.path,
+          this.secret
+        )
+      }
+      this.path.equalsOrEmpty(b.path) &&
+      this.secret.equalsOrEmpty(b.secret)
+    }
     else -> {
-      assertProxyType_bc1a1076()
+      assertProxyType_40673e07()
       throw unsupported(this)
     }
   }
