@@ -1930,6 +1930,7 @@ fun TextEntityType.isItalic (): Boolean = this.constructor == TextEntityTypeItal
 fun TextEntityType.isCode (): Boolean = this.constructor == TextEntityTypeCode.CONSTRUCTOR
 fun TextEntityType.isPreCode (): Boolean = this.constructor == TextEntityTypePreCode.CONSTRUCTOR
 fun TextEntityType.isPre (): Boolean = this.constructor == TextEntityTypePre.CONSTRUCTOR
+fun TextEntityType.isMonospaceTextOrBlock (): Boolean = isCode() || isPre() || isPreCode()
 fun TextEntityType.isCustomEmoji (): Boolean = this.constructor == TextEntityTypeCustomEmoji.CONSTRUCTOR
 
 fun TextEntityType.canBeNested (): Boolean = when (this.constructor) {
