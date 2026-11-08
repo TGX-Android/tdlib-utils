@@ -1023,7 +1023,8 @@ fun RichText?.findReference(name: String): RichText? {
     }
     RichTextDiff.CONSTRUCTOR -> {
       require(this is RichTextDiff)
-      this.oldText.findReference(name) ?: this.text.findReference(name)
+      this.oldText.findReference(name) ?:
+      this.text.findReference(name)
     }
     RichTextAnchorLink.CONSTRUCTOR -> (this as RichTextAnchorLink).text.findReference(name)
     RichTextBold.CONSTRUCTOR -> (this as RichTextBold).text.findReference(name)
@@ -1037,7 +1038,13 @@ fun RichText?.findReference(name: String): RichText? {
     RichTextSuperscript.CONSTRUCTOR -> (this as RichTextSuperscript).text.findReference(name)
     RichTextMarked.CONSTRUCTOR -> (this as RichTextMarked).text.findReference(name)
     RichTextPhoneNumber.CONSTRUCTOR -> (this as RichTextPhoneNumber).text.findReference(name)
-    RichTextReference.CONSTRUCTOR -> (this as RichTextReference).text.findReference(name)
+    RichTextReference.CONSTRUCTOR -> {
+      require(this is RichTextReference)
+      this.text.takeIf {
+        this.name == name
+      } ?:
+      this.text.findReference(name)
+    }
     RichTextBankCardNumber.CONSTRUCTOR -> (this as RichTextBankCardNumber).text.findReference(name)
     RichTextBotCommand.CONSTRUCTOR -> (this as RichTextBotCommand).text.findReference(name)
     RichTextButton.CONSTRUCTOR -> (this as RichTextButton).button.text.findReference(name)
@@ -1138,13 +1145,17 @@ fun PageBlock.findReference(name: String): RichText? {
       require(this is PageBlockCollage)
       this.blocks.firstNotNullOfOrNull { block ->
         block.findReference(name)
-      } ?: this.caption?.textOrCredit()
+      } ?:
+      this.caption?.text.findReference(name) ?:
+      this.caption?.credit.findReference(name)
     }
     PageBlockSlideshow.CONSTRUCTOR -> {
       require(this is PageBlockSlideshow)
       this.blocks.firstNotNullOfOrNull { block ->
         block.findReference(name)
-      } ?: this.caption?.textOrCredit()
+      } ?:
+      this.caption?.text.findReference(name) ?:
+      this.caption?.credit.findReference(name)
     }
     PageBlockDetails.CONSTRUCTOR -> {
       require(this is PageBlockDetails)
@@ -1156,7 +1167,9 @@ fun PageBlock.findReference(name: String): RichText? {
       require(this is PageBlockEmbeddedPost)
       this.blocks.firstNotNullOfOrNull { block ->
         block.findReference(name)
-      } ?: this.caption?.text.findReference(name) ?: this.caption?.credit.findReference(name)
+      } ?:
+      this.caption?.text.findReference(name) ?:
+      this.caption?.credit.findReference(name)
     }
     PageBlockList.CONSTRUCTOR -> {
       require(this is PageBlockList)
@@ -1190,7 +1203,8 @@ fun PageBlock.findReference(name: String): RichText? {
     }
     PageBlockDocument.CONSTRUCTOR -> {
       require(this is PageBlockDocument)
-      this.caption?.textOrCredit()
+      this.caption?.text.findReference(name) ?:
+      this.caption?.credit.findReference(name)
     }
     PageBlockExpandableBlockQuote.CONSTRUCTOR -> {
       require(this is PageBlockExpandableBlockQuote)
