@@ -251,3 +251,4 @@ fun unsupported (data: WebAppOpenMode): NotImplementedError = NotImplementedErro
 fun unsupported (data: WebBrowserType): NotImplementedError = NotImplementedError(data.toString())
 fun unsupported (data: WebProxyCarrierError): NotImplementedError = NotImplementedError(data.toString())
 fun unsupported (data: WebProxyCarrierMessage): NotImplementedError = NotImplementedError(data.toString())
+fun unsupported (data: WidgetQueryType): NotImplementedError = NotImplementedError(data.toString())

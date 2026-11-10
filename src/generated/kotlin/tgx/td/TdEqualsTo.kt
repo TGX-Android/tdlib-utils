@@ -2787,6 +2787,21 @@ fun InputMessageContent?.equalsTo(other: InputMessageContent?): Boolean = this.s
       this.clearDraft == b.clearDraft &&
       this.message.equalsTo(b.message)
     }
+    InputMessageSharedWidget.CONSTRUCTOR -> {
+      require(this is InputMessageSharedWidget && b is InputMessageSharedWidget)
+      if (COMPILE_CHECK) {
+        InputMessageSharedWidget(
+          this.widgetId,
+          this.chatData,
+          this.caption,
+          this.showCaptionAboveMedia
+        )
+      }
+      this.widgetId == b.widgetId &&
+      this.showCaptionAboveMedia == b.showCaptionAboveMedia &&
+      this.chatData.equalsOrEmpty(b.chatData) &&
+      this.caption.equalsTo(b.caption)
+    }
     InputMessageStakeDice.CONSTRUCTOR -> {
       require(this is InputMessageStakeDice && b is InputMessageStakeDice)
       if (COMPILE_CHECK) {
@@ -2885,8 +2900,33 @@ fun InputMessageContent?.equalsTo(other: InputMessageContent?): Boolean = this.s
       this.caption.equalsTo(b.caption) &&
       this.selfDestructType.equalsTo(b.selfDestructType)
     }
+    InputMessageWidget.CONSTRUCTOR -> {
+      require(this is InputMessageWidget && b is InputMessageWidget)
+      if (COMPILE_CHECK) {
+        InputMessageWidget(
+          this.width,
+          this.height,
+          this.html,
+          this.publicData,
+          this.chatData,
+          this.caption,
+          this.showCaptionAboveMedia,
+          this.allowQueries,
+          this.isShared
+        )
+      }
+      this.width == b.width &&
+      this.height == b.height &&
+      this.showCaptionAboveMedia == b.showCaptionAboveMedia &&
+      this.allowQueries == b.allowQueries &&
+      this.isShared == b.isShared &&
+      this.html.equalsOrEmpty(b.html) &&
+      this.publicData.equalsOrEmpty(b.publicData) &&
+      this.chatData.equalsOrEmpty(b.chatData) &&
+      this.caption.equalsTo(b.caption)
+    }
     else -> {
-      assertInputMessageContent_7c412303()
+      assertInputMessageContent_758b3691()
       throw unsupported(this)
     }
   }

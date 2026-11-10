@@ -637,6 +637,7 @@ fun assertInputInvoice_98c544d7 (): InputInvoice? = null
 // InputMessagePhoto
 // InputMessagePoll
 // InputMessageRichMessage
+// InputMessageSharedWidget
 // InputMessageStakeDice
 // InputMessageSticker
 // InputMessageStory
@@ -645,7 +646,8 @@ fun assertInputInvoice_98c544d7 (): InputInvoice? = null
 // InputMessageVideo
 // InputMessageVideoNote
 // InputMessageVoiceNote
-fun assertInputMessageContent_7c412303 (): InputMessageContent? = null
+// InputMessageWidget
+fun assertInputMessageContent_758b3691 (): InputMessageContent? = null
 
 // EphemeralMessage
 // ExternalMessage
@@ -728,7 +730,6 @@ fun assertInputPollType_6b046268 (): InputPollType? = null
 // UpgradedGift
 fun assertInputProfileShareTheme_d748eff (): InputProfileShareTheme? = null
 
-// FoundVenue
 // Link
 // Location
 // Message
@@ -736,7 +737,7 @@ fun assertInputProfileShareTheme_d748eff (): InputProfileShareTheme? = null
 // SuggestedReaction
 // UpgradedGift
 // Weather
-fun assertInputStoryAreaType_e88e9665 (): InputStoryAreaType? = null
+fun assertInputStoryAreaType_eb04f68d (): InputStoryAreaType? = null
 
 // Photo
 // Video
@@ -1010,7 +1011,8 @@ fun assertMaskPoint_40914d4e (): MaskPoint? = null
 // MessageVoiceNote
 // MessageWebAppDataReceived
 // MessageWebAppDataSent
-fun assertMessageContent_cc875c63 (): MessageContent? = null
+// MessageWidget
+fun assertMessageContent_37851fea (): MessageContent? = null
 
 // EmojiReaction
 // PremiumSticker
@@ -2026,10 +2028,13 @@ fun assertTransactionDirection_1e845e35 (): TransactionDirection? = null
 // NewGuestQuery
 // NewInlineCallbackQuery
 // NewInlineQuery
+// NewInlineWidgetQuery
 // NewMessage
 // NewOauthRequest
 // NewPreCheckoutQuery
 // NewShippingQuery
+// NewWidgetCopyQuery
+// NewWidgetQuery
 // Notification
 // NotificationGroup
 // Option
@@ -2054,6 +2059,7 @@ fun assertTransactionDirection_1e845e35 (): TransactionDirection? = null
 // ScopeNotificationSettings
 // SecretChat
 // ServiceNotification
+// SpeechRecognitionInFile
 // SpeechRecognitionTrial
 // SpeedLimitNotification
 // StakeDiceState
@@ -2092,7 +2098,7 @@ fun assertTransactionDirection_1e845e35 (): TransactionDirection? = null
 // WebProxyCarrierClosed
 // WebProxyCarrierData
 // WebProxyCarrierOpened
-fun assertUpdate_2a2bec96 (): Update? = null
+fun assertUpdate_2f0de2f1 (): Update? = null
 
 // Backdrop
 // Model
@@ -2181,3 +2187,8 @@ fun assertWebProxyCarrierError_438e4ecb (): WebProxyCarrierError? = null
 // Binary
 // Text
 fun assertWebProxyCarrierMessage_e2244822 (): WebProxyCarrierMessage? = null
+
+// Data
+// SentTransaction
+// SignData
+fun assertWidgetQueryType_1014aae4 (): WidgetQueryType? = null

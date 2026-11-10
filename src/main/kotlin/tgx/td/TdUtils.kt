@@ -611,6 +611,7 @@ fun MessageContent?.textOrCaption (): FormattedText? {
     MessageAnimation.CONSTRUCTOR -> (this as MessageAnimation).caption
     MessageVoiceNote.CONSTRUCTOR -> (this as MessageVoiceNote).caption
     MessageAudio.CONSTRUCTOR -> (this as MessageAudio).caption
+    MessageWidget.CONSTRUCTOR -> (this as MessageWidget).caption
     else -> null
   }
 }
@@ -798,6 +799,14 @@ fun InputMessageContent?.textOrCaption (): FormattedText? {
         require(this is InputMessageVoiceNote)
         this.caption
       }
+      InputMessageWidget.CONSTRUCTOR -> {
+        require(this is InputMessageWidget)
+        this.caption
+      }
+      InputMessageSharedWidget.CONSTRUCTOR -> {
+        require(this is InputMessageSharedWidget)
+        this.caption
+      }
       InputMessageSticker.CONSTRUCTOR,
       InputMessageVideoNote.CONSTRUCTOR,
       InputMessageLocation.CONSTRUCTOR,
@@ -814,7 +823,7 @@ fun InputMessageContent?.textOrCaption (): FormattedText? {
       InputMessageStakeDice.CONSTRUCTOR ->
         null
       else -> {
-        assertInputMessageContent_7c412303()
+        assertInputMessageContent_758b3691()
         throw unsupported(this)
       }
     }
@@ -829,6 +838,7 @@ fun MessageContent?.showCaptionAboveMedia (): Boolean {
     MessageVideo.CONSTRUCTOR -> (this as MessageVideo).showCaptionAboveMedia
     MessageAnimation.CONSTRUCTOR -> (this as MessageAnimation).showCaptionAboveMedia
     MessagePaidMedia.CONSTRUCTOR -> (this as MessagePaidMedia).showCaptionAboveMedia
+    MessageWidget.CONSTRUCTOR -> (this as MessageWidget).showCaptionAboveMedia
     MessageText.CONSTRUCTOR,
     MessageRichMessage.CONSTRUCTOR,
     MessageAnimatedEmoji.CONSTRUCTOR,
@@ -837,7 +847,7 @@ fun MessageContent?.showCaptionAboveMedia (): Boolean {
     MessageAudio.CONSTRUCTOR ->
       false
     else -> {
-      assertMessageContent_cc875c63()
+      assertMessageContent_37851fea()
       false
     }
   }
@@ -849,6 +859,9 @@ fun InputMessageContent?.showCaptionAboveMedia (): Boolean {
     InputMessagePaidMedia.CONSTRUCTOR -> (this as InputMessagePaidMedia).showCaptionAboveMedia
     InputMessagePhoto.CONSTRUCTOR -> (this as InputMessagePhoto).showCaptionAboveMedia
     InputMessageVideo.CONSTRUCTOR -> (this as InputMessageVideo).showCaptionAboveMedia
+    InputMessageWidget.CONSTRUCTOR -> (this as InputMessageWidget).showCaptionAboveMedia
+    InputMessageSharedWidget.CONSTRUCTOR ->
+      (this as InputMessageSharedWidget).showCaptionAboveMedia
     InputMessageText.CONSTRUCTOR,
     InputMessageRichMessage.CONSTRUCTOR,
     InputMessageAudio.CONSTRUCTOR,
@@ -869,7 +882,7 @@ fun InputMessageContent?.showCaptionAboveMedia (): Boolean {
     InputMessageStakeDice.CONSTRUCTOR ->
       false
     else -> {
-      assertInputMessageContent_7c412303()
+      assertInputMessageContent_758b3691()
       false
     }
   }
