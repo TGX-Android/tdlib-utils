@@ -720,7 +720,9 @@ fun InputPageBlock?.text (): RichText? {
       }
       InputPageBlockExpandableBlockQuote.CONSTRUCTOR -> {
         require(this is InputPageBlockExpandableBlockQuote)
-        this.text.takeIf { !it.isEmpty() } ?: this.credit
+        this.blocks.firstNotNullOfOrNull { block ->
+          block.text()?.takeIf { !it.isEmpty() }
+        } ?: this.credit
       }
       else -> {
         assertInputPageBlock_4e0f453e()
@@ -847,7 +849,7 @@ fun MessageContent?.showCaptionAboveMedia (): Boolean {
     MessageAudio.CONSTRUCTOR ->
       false
     else -> {
-      assertMessageContent_37851fea()
+      assertMessageContent_e4738066()
       false
     }
   }
@@ -1221,8 +1223,9 @@ fun PageBlock.findReference(name: String): RichText? {
     }
     PageBlockExpandableBlockQuote.CONSTRUCTOR -> {
       require(this is PageBlockExpandableBlockQuote)
-      this.text.findReference(name) ?:
-      this.credit.findReference(name)
+      this.blocks.firstNotNullOfOrNull { block ->
+        block.findReference(name)
+      } ?: this.credit.findReference(name)
     }
     PageBlockUnsupported.CONSTRUCTOR -> {
       null

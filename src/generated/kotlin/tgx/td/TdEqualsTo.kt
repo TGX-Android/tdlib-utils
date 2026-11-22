@@ -489,12 +489,18 @@ fun GiftResaleParameters?.equalsTo(other: GiftResaleParameters?): Boolean = this
     GiftResaleParameters(
       this.starCount,
       this.gramCentCount,
-      this.gramOnly
+      this.gramAmount,
+      this.gramOnly,
+      this.isFixedOnChain,
+      this.canBeManaged
     )
   }
   this.starCount == b.starCount &&
   this.gramCentCount == b.gramCentCount &&
-  this.gramOnly == b.gramOnly
+  this.gramAmount == b.gramAmount &&
+  this.gramOnly == b.gramOnly &&
+  this.isFixedOnChain == b.isFixedOnChain &&
+  this.canBeManaged == b.canBeManaged
 }
 
 fun GroupCall?.equalsTo(other: GroupCall?): Boolean = this.safeEqualsTo(other) { b ->
@@ -1482,8 +1488,11 @@ fun UpgradedGift?.equalsTo(other: UpgradedGift?): Boolean = this.safeEqualsTo(ot
       this.backdrop,
       this.originalDetails,
       this.colors,
+      this.usesOnChainResale,
       this.resaleParameters,
+      this.feeBasisPoints,
       this.canSendPurchaseOffer,
+      this.minOnChainPurchaseOfferGramAmount,
       this.craftProbabilityPerMille,
       this.valueCurrency,
       this.valueAmount,
@@ -1502,7 +1511,10 @@ fun UpgradedGift?.equalsTo(other: UpgradedGift?): Boolean = this.safeEqualsTo(ot
   this.isThemeAvailable == b.isThemeAvailable &&
   this.usedThemeChatId == b.usedThemeChatId &&
   this.canBeTonWalletCardBackground == b.canBeTonWalletCardBackground &&
+  this.usesOnChainResale == b.usesOnChainResale &&
+  this.feeBasisPoints == b.feeBasisPoints &&
   this.canSendPurchaseOffer == b.canSendPurchaseOffer &&
+  this.minOnChainPurchaseOfferGramAmount == b.minOnChainPurchaseOfferGramAmount &&
   this.craftProbabilityPerMille == b.craftProbabilityPerMille &&
   this.valueAmount == b.valueAmount &&
   this.valueUsdAmount == b.valueUsdAmount &&
@@ -2001,6 +2013,19 @@ fun ChatActionBar?.equalsTo(other: ChatActionBar?): Boolean = this.safeEqualsTo(
     ChatActionBarInviteMembers.CONSTRUCTOR,
     ChatActionBarSharePhoneNumber.CONSTRUCTOR ->
       true // nothing to compare
+    ChatActionBarBotInvite.CONSTRUCTOR -> {
+      require(this is ChatActionBarBotInvite && b is ChatActionBarBotInvite)
+      if (COMPILE_CHECK) {
+        ChatActionBarBotInvite(
+          this.canUnarchive,
+          this.inviterUserId,
+          this.ownerUserId
+        )
+      }
+      this.canUnarchive == b.canUnarchive &&
+      this.inviterUserId == b.inviterUserId &&
+      this.ownerUserId == b.ownerUserId
+    }
     ChatActionBarJoinRequest.CONSTRUCTOR -> {
       require(this is ChatActionBarJoinRequest && b is ChatActionBarJoinRequest)
       if (COMPILE_CHECK) {
@@ -2035,7 +2060,7 @@ fun ChatActionBar?.equalsTo(other: ChatActionBar?): Boolean = this.safeEqualsTo(
       this.canUnarchive == b.canUnarchive
     }
     else -> {
-      assertChatActionBar_eedc82ed()
+      assertChatActionBar_8cc14ec5()
       throw unsupported(this)
     }
   }
@@ -3030,11 +3055,11 @@ fun InputPageBlock?.equalsTo(other: InputPageBlock?): Boolean = this.safeEqualsT
       require(this is InputPageBlockExpandableBlockQuote && b is InputPageBlockExpandableBlockQuote)
       if (COMPILE_CHECK) {
         InputPageBlockExpandableBlockQuote(
-          this.text,
+          this.blocks,
           this.credit
         )
       }
-      this.text.equalsTo(b.text) &&
+      this.blocks.equalsTo(b.blocks) &&
       this.credit.equalsTo(b.credit)
     }
     InputPageBlockFooter.CONSTRUCTOR -> {
@@ -3414,6 +3439,15 @@ fun InternalLinkType?.equalsTo(other: InternalLinkType?): Boolean = this.safeEqu
       }
       this.botUsername.equalsOrEmpty(b.botUsername) &&
       this.administratorRights.equalsTo(b.administratorRights)
+    }
+    InternalLinkTypeBotInvite.CONSTRUCTOR -> {
+      require(this is InternalLinkTypeBotInvite && b is InternalLinkTypeBotInvite)
+      if (COMPILE_CHECK) {
+        InternalLinkTypeBotInvite(
+          this.botUsername
+        )
+      }
+      this.botUsername.equalsOrEmpty(b.botUsername)
     }
     InternalLinkTypeBotStart.CONSTRUCTOR -> {
       require(this is InternalLinkTypeBotStart && b is InternalLinkTypeBotStart)
@@ -3919,7 +3953,7 @@ fun InternalLinkType?.equalsTo(other: InternalLinkType?): Boolean = this.safeEqu
       this.mode.equalsTo(b.mode)
     }
     else -> {
-      assertInternalLinkType_c232a5d5()
+      assertInternalLinkType_166bd314()
       throw unsupported(this)
     }
   }
@@ -4073,6 +4107,7 @@ fun Array<LinkPreviewAlbumMedia>?.equalsTo(other: Array<LinkPreviewAlbumMedia>?)
   this.contentEqualsOrEmpty(other, LinkPreviewAlbumMedia::equalsTo)
 fun LinkPreviewType?.equalsTo(other: LinkPreviewType?): Boolean = this.safeEqualsTo(other) { b ->
   when (this.constructor) {
+    LinkPreviewTypeBotInvite.CONSTRUCTOR,
     LinkPreviewTypeGroupCall.CONSTRUCTOR,
     LinkPreviewTypeInvoice.CONSTRUCTOR,
     LinkPreviewTypeMessage.CONSTRUCTOR,
@@ -4449,7 +4484,7 @@ fun LinkPreviewType?.equalsTo(other: LinkPreviewType?): Boolean = this.safeEqual
       this.photo.equalsTo(b.photo)
     }
     else -> {
-      assertLinkPreviewType_883de866()
+      assertLinkPreviewType_821de27a()
       throw unsupported(this)
     }
   }
@@ -4822,11 +4857,11 @@ fun PageBlock?.equalsTo(other: PageBlock?): Boolean = this.safeEqualsTo(other) {
       require(this is PageBlockExpandableBlockQuote && b is PageBlockExpandableBlockQuote)
       if (COMPILE_CHECK) {
         PageBlockExpandableBlockQuote(
-          this.text,
+          this.blocks,
           this.credit
         )
       }
-      this.text.equalsTo(b.text) &&
+      this.blocks.equalsTo(b.blocks) &&
       this.credit.equalsTo(b.credit)
     }
     PageBlockFooter.CONSTRUCTOR -> {

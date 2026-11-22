@@ -94,6 +94,11 @@ fun assertBackgroundType_eedb1e16 (): BackgroundType? = null
 // Stories
 fun assertBlockList_bbade95a (): BlockList? = null
 
+// Auto
+// Default
+// Inline
+fun assertBotCallbackQueryMode_36b31dc (): BotCallbackQueryMode? = null
+
 // AllChatAdministrators
 // AllGroupChats
 // AllPrivateChats
@@ -102,6 +107,23 @@ fun assertBlockList_bbade95a (): BlockList? = null
 // ChatMember
 // Default
 fun assertBotCommandScope_fd010640 (): BotCommandScope? = null
+
+// AllowsUsersToCreateTopics
+// CallbackQueryMode
+// CanCommunicateWithBots
+// CanConnectToBusiness
+// CanJoinGroups
+// CanManageBots
+// CanReadAllGroupMessages
+// HasTopicSidebar
+// HasTopics
+// InlineFeedback
+// InlineQueryPlaceholder
+// IsGuard
+// IsInline
+// NeedLocation
+// SupportsGuestQueries
+fun assertBotSetting_1b70a889 (): BotSetting? = null
 
 // AcceptedRequest
 // AddedToAttachmentMenu
@@ -220,12 +242,13 @@ fun assertCanTransferOwnershipResult_ac091006 (): CanTransferOwnershipResult? = 
 fun assertChatAction_e6a90de7 (): ChatAction? = null
 
 // AddContact
+// BotInvite
 // InviteMembers
 // JoinRequest
 // ReportAddBlock
 // ReportSpam
 // SharePhoneNumber
-fun assertChatActionBar_eedc82ed (): ChatActionBar? = null
+fun assertChatActionBar_8cc14ec5 (): ChatActionBar? = null
 
 // All
 // Some
@@ -501,6 +524,19 @@ fun assertFirebaseDeviceVerificationParameters_21a9fc9c (): FirebaseDeviceVerifi
 fun assertGiftForResaleOrder_8b9dfb69 (): GiftForResaleOrder? = null
 
 // Accepted
+// Canceled
+// Canceling
+// Declined
+// Expired
+// Pending
+// Settled
+fun assertGiftOnChainPurchaseOfferState_43069b1 (): GiftOnChainPurchaseOfferState? = null
+
+// FixedPrice
+// Fragment
+fun assertGiftOnChainSaleTransaction_ad697fde (): GiftOnChainSaleTransaction? = null
+
+// Accepted
 // Pending
 // Rejected
 fun assertGiftPurchaseOfferState_4b8cc464 (): GiftPurchaseOfferState? = null
@@ -747,6 +783,7 @@ fun assertInputStoryContent_6b57a59a (): InputStoryContent? = null
 // AuthenticationCode
 // Background
 // BotAddToChannel
+// BotInvite
 // BotStart
 // BotStartInGroup
 // BusinessChat
@@ -802,7 +839,7 @@ fun assertInputStoryContent_6b57a59a (): InputStoryContent? = null
 // UserToken
 // VideoChat
 // WebApp
-fun assertInternalLinkType_c232a5d5 (): InternalLinkType? = null
+fun assertInternalLinkType_166bd314 (): InternalLinkType? = null
 
 // Success
 // UserAlreadyParticipant
@@ -852,6 +889,7 @@ fun assertLinkPreviewAlbumMedia_8c33c943 (): LinkPreviewAlbumMedia? = null
 // Article
 // Audio
 // Background
+// BotInvite
 // ChannelBoost
 // Chat
 // DirectMessagesChat
@@ -886,7 +924,7 @@ fun assertLinkPreviewAlbumMedia_8c33c943 (): LinkPreviewAlbumMedia? = null
 // VideoNote
 // VoiceNote
 // WebApp
-fun assertLinkPreviewType_883de866 (): LinkPreviewType? = null
+fun assertLinkPreviewType_821de27a (): LinkPreviewType? = null
 
 // Default
 // Empty
@@ -907,6 +945,7 @@ fun assertMaskPoint_40914d4e (): MaskPoint? = null
 // MessageAnimation
 // MessageAudio
 // MessageBasicGroupChatCreate
+// MessageBotInvite
 // MessageBotWriteAccessAllowed
 // MessageCall
 // MessageChatAddMembers
@@ -999,6 +1038,7 @@ fun assertMaskPoint_40914d4e (): MaskPoint? = null
 // MessageUnpaidMessagesAllowedByLink
 // MessageUnsupported
 // MessageUpgradedGift
+// MessageUpgradedGiftOnChainPurchaseOffer
 // MessageUpgradedGiftPurchaseOffer
 // MessageUpgradedGiftPurchaseOfferRejected
 // MessageUsersShared
@@ -1012,7 +1052,7 @@ fun assertMaskPoint_40914d4e (): MaskPoint? = null
 // MessageWebAppDataReceived
 // MessageWebAppDataSent
 // MessageWidget
-fun assertMessageContent_37851fea (): MessageContent? = null
+fun assertMessageContent_e4738066 (): MessageContent? = null
 
 // EmojiReaction
 // PremiumSticker
@@ -1874,9 +1914,18 @@ fun assertTonWalletTransactionState_738e0461 (): TonWalletTransactionState? = nu
 // KeyChange
 // NftTransfer
 // OnRampDeposit
+// TelegramGiftDelisting
+// TelegramGiftListing
+// TelegramGiftOfferAcceptance
+// TelegramGiftOfferCancellation
+// TelegramGiftOfferCreation
+// TelegramGiftOfferDecline
+// TelegramGiftOfferExpiration
+// TelegramGiftPurchase
+// TelegramGiftSale
 // TelegramGiftTransfer
 // Transfer
-fun assertTonWalletTransactionType_766cf3b8 (): TonWalletTransactionType? = null
+fun assertTonWalletTransactionType_e90318dd (): TonWalletTransactionType? = null
 
 // Address
 // User
@@ -1953,6 +2002,7 @@ fun assertTransactionDirection_1e845e35 (): TransactionDirection? = null
 // ChatRemovedFromList
 // ChatReplyMarkup
 // ChatRevenueAmount
+// ChatTextCompositionParameters
 // ChatTheme
 // ChatTitle
 // ChatUnreadMentionCount
@@ -2098,7 +2148,7 @@ fun assertTransactionDirection_1e845e35 (): TransactionDirection? = null
 // WebProxyCarrierClosed
 // WebProxyCarrierData
 // WebProxyCarrierOpened
-fun assertUpdate_2f0de2f1 (): Update? = null
+fun assertUpdate_fdfa812a (): Update? = null
 
 // Backdrop
 // Model
@@ -2115,11 +2165,13 @@ fun assertUpgradedGiftAttributeRarity_23ca7218 (): UpgradedGiftAttributeRarity? 
 // Blockchain
 // Craft
 // Offer
+// OnChainOffer
+// OnChainResale
 // PrepaidUpgrade
 // Resale
 // Transfer
 // Upgrade
-fun assertUpgradedGiftOrigin_24ffa210 (): UpgradedGiftOrigin? = null
+fun assertUpgradedGiftOrigin_42f42f8e (): UpgradedGiftOrigin? = null
 
 // AllowCalls
 // AllowChatInvites

@@ -85,9 +85,10 @@ fun LinkPreviewType.getDuration (): Int {
     LinkPreviewTypeTextCompositionStyle.CONSTRUCTOR,
     LinkPreviewTypeLiveStory.CONSTRUCTOR,
     LinkPreviewTypeWebApp.CONSTRUCTOR,
-    LinkPreviewTypeRequestManagedBot.CONSTRUCTOR -> 0
+    LinkPreviewTypeRequestManagedBot.CONSTRUCTOR,
+    LinkPreviewTypeBotInvite.CONSTRUCTOR -> 0
     else -> {
-      assertLinkPreviewType_883de866()
+      assertLinkPreviewType_821de27a()
       throw unsupported(this)
     }
   }
@@ -100,7 +101,7 @@ fun LinkPreviewType.getAnimation (): Animation? {
       this.animation
     }
     else -> {
-      assertLinkPreviewType_883de866()
+      assertLinkPreviewType_821de27a()
       null
     }
   }
@@ -122,7 +123,7 @@ fun LinkPreviewType.getVideo (): Video? {
       }
     }
     else -> {
-      assertLinkPreviewType_883de866()
+      assertLinkPreviewType_821de27a()
       null
     }
   }
@@ -166,7 +167,7 @@ fun LinkPreviewType.getSticker (): Sticker? {
       this.gift.symbol.sticker
     }
     else -> {
-      assertLinkPreviewType_883de866()
+      assertLinkPreviewType_821de27a()
       null
     }
   }
@@ -270,9 +271,10 @@ fun LinkPreviewType.getPhoto (): Photo? {
     LinkPreviewTypeLiveStory.CONSTRUCTOR,
     LinkPreviewTypeGroupCall.CONSTRUCTOR,
     LinkPreviewTypeTextCompositionStyle.CONSTRUCTOR,
-    LinkPreviewTypeRequestManagedBot.CONSTRUCTOR -> null
+    LinkPreviewTypeRequestManagedBot.CONSTRUCTOR,
+    LinkPreviewTypeBotInvite.CONSTRUCTOR -> null
     else -> {
-      assertLinkPreviewType_883de866()
+      assertLinkPreviewType_821de27a()
       throw unsupported(this)
     }
   }
@@ -451,12 +453,16 @@ fun LinkPreviewType.getThumbnail (): Thumbnail? {
       require(this is LinkPreviewTypeRequestManagedBot)
       null
     }
+    LinkPreviewTypeBotInvite.CONSTRUCTOR -> {
+      require(this is LinkPreviewTypeBotInvite)
+      null
+    }
     LinkPreviewTypeTextCompositionStyle.CONSTRUCTOR -> {
       require(this is LinkPreviewTypeTextCompositionStyle)
       null
     }
     else -> {
-      assertLinkPreviewType_883de866()
+      assertLinkPreviewType_821de27a()
       throw unsupported(this)
     }
   }

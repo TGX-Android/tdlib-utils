@@ -598,6 +598,7 @@ fun Chat?.copyOf (): Chat? {
       this.pendingJoinRequests,
       this.replyMarkupMessageId,
       this.draftMessage,
+      this.textCompositionParameters,
       this.clientData
     )
   }
